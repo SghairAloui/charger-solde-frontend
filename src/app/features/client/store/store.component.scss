@@ -294,3 +294,112 @@
 @keyframes float      { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
 
 .fade-in-up { animation: fadeInUp 0.5s ease both; }
+
+
+@media (max-width: 768px) {
+
+  .stepper {
+    justify-content: flex-start;
+    padding-bottom: 8px;
+  }
+
+  .stepper__line {
+    width: 20px;
+  }
+
+  .stepper__label {
+    font-size: 10px;
+  }
+
+  .stepper__circle {
+    width: 30px;
+    height: 30px;
+    font-size: 11px;
+  }
+
+  .store-step {
+    padding: 0 12px;
+  }
+
+  .step-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .step-title {
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 768px) {
+
+  .operator-grid,
+  .plan-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .op-card,
+  .plan-card {
+    padding: 16px;
+  }
+}
+
+
+@media (max-width: 768px) {
+
+  .phone-card {
+    padding: 20px;
+    max-width: 100%;
+  }
+
+  .phone-input-wrap {
+    flex-direction: row;
+  }
+
+  .phone-prefix {
+    font-size: 12px;
+    padding: 0 10px;
+  }
+
+  .phone-input {
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 768px) {
+
+  .summary-wrap {
+    width: 100%;
+  }
+
+  .summary-price {
+    font-size: 22px;
+  }
+
+  .confirm-btn {
+    font-size: 14px;
+    padding: 14px;
+  }
+}
+
+
+@media (max-width: 400px) {
+
+  .stepper__label {
+    display: none;
+  }
+
+  .plan-amount {
+    font-size: 22px;
+  }
+
+  .op-card__name {
+    font-size: 13px;
+  }
+}
+
+
+html, body {
+  overflow-x: hidden;
+}

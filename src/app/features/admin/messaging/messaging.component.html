@@ -1,7 +1,7 @@
 <app-page-header title="Messagerie" subtitle="Conversations avec les clients en temps réel"></app-page-header>
 
-<div class="chat-shell fade-in-up">
-
+<div class="chat-shell fade-in-up"
+     [class.mobile-chat-open]="selectedConv">
   <!-- ── Conversations List ── -->
   <aside class="conv-panel">
     <div class="conv-panel__search">
@@ -41,7 +41,10 @@
 
   <!-- ── Chat Area ── -->
   <section class="chat-area" *ngIf="selectedConv; else noChatSelected">
-
+<button class="mobile-back"
+        (click)="selectedConv = null">
+  <span nz-icon nzType="arrow-left" nzTheme="outline"></span>
+</button>
     <!-- Chat Header -->
     <div class="chat-header">
       <div class="chat-header__left">
