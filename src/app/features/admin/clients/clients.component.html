@@ -1,0 +1,204 @@
+<app-page-header title="Gestion des clients" subtitle="Créez, gérez et suivez vos clients">
+  <button header-actions class="add-btn" (click)="showCreateModal()">
+    <span nz-icon nzType="user-add" nzTheme="outline"></span>
+    Nouveau client
+  </button>
+</app-page-header>
+
+<!-- ── Toolbar ── -->
+<div class="clients-toolbar fade-in-up">
+  <div class="search-box">
+    <span nz-icon nzType="search" nzTheme="outline" class="search-box__icon"></span>
+    <input
+      class="search-box__input"
+      placeholder="Rechercher par nom, prénom ou email..."
+      [(ngModel)]="searchTerm"
+      (input)="onSearch()"
+    />
+    <button class="search-box__clear" *ngIf="searchTerm" (click)="clearSearch()">
+      <span nz-icon nzType="close-circle" nzTheme="fill"></span>
+    </button>
+  </div>
+  <div class="toolbar-stats">
+    <span class="toolbar-stat">
+      <span class="toolbar-stat__dot toolbar-stat__dot--active"></span>
+      {{ activeCount }} actifs
+    </span>
+    <span class="toolbar-stat">
+      <span class="toolbar-stat__dot toolbar-stat__dot--suspended"></span>
+      {{ suspendedCount }} suspendus
+    </span>
+  </div>
+</div>
+
+<!-- ── Grid ── -->
+<div class="clients-container fade-in-up" style="animation-delay:0.1s">
+  <div class="clients-grid" *ngIf="!loading; else skelLoader">
+    <div class="client-card" *ngFor="let client of filteredClients; let i = index"
+         [style.animation-delay]="(i * 0.05) + 's'">
+         
+      <!-- Header -->
+      <div class="client-card__header">
+        <div class="client-avatar" [style.background]="getColor(client.prenom)">
+          {{ client.prenom.charAt(0).toUpperCase() }}{{ client.nom.charAt(0).toUpperCase() }}
+        </div>
+        <span class="status-pill" [class.status-pill--active]="client.active"
+              [class.status-pill--suspended]="!client.active">
+          <span class="status-pill__dot"></span>
+          {{ client.active ? 'Actif' : 'Suspendu' }}
+        </span>
+      </div>
+
+      <!-- Body -->
+      <div class="client-card__body">
+        <h3 class="client-name">{{ client.prenom }} {{ client.nom }}</h3>
+        
+        <div class="client-details">
+          <div class="detail-item" nz-tooltip nzTooltipTitle="Email">
+            <span nz-icon nzType="mail" nzTheme="outline"></span>
+            <span>{{ client.email }}</span>
+          </div>
+          <div class="detail-item" nz-tooltip nzTooltipTitle="Téléphone">
+            <span nz-icon nzType="phone" nzTheme="outline"></span>
+            <span>{{ client.numTel || 'Non renseigné' }}</span>
+          </div>
+          <div class="detail-item" nz-tooltip nzTooltipTitle="Date d'inscription">
+            <span nz-icon nzType="calendar" nzTheme="outline"></span>
+            <span>{{ client.createdAt | dateFormat }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer / Actions -->
+      <div class="client-card__footer">
+        <button class="action-btn action-btn--info"
+                nz-tooltip nzTooltipTitle="Envoyer un message"
+                (click)="sendMessage(client)">
+          <span nz-icon nzType="message" nzTheme="outline"></span>
+        </button>
+        <button class="action-btn"
+                [class.action-btn--danger]="client.active"
+                [class.action-btn--success]="!client.active"
+                (click)="toggleStatus(client)">
+          <span nz-icon [nzType]="client.active ? 'stop' : 'check-circle'" nzTheme="outline"></span>
+          {{ client.active ? 'Suspendre' : 'Activer' }}
+        </button>
+      </div>
+
+    </div>
+
+    <!-- Empty State -->
+    <div class="empty-state" *ngIf="filteredClients.length === 0">
+      <span nz-icon nzType="team" nzTheme="outline"></span>
+      <p>Aucun client trouvé pour "{{ searchTerm }}"</p>
+      <button class="add-btn" (click)="clearSearch()">Réinitialiser</button>
+    </div>
+  </div>
+
+  <ng-template #skelLoader>
+    <div class="clients-grid">
+      <div class="skel-card" *ngFor="let i of [1,2,3,4,5,6]"></div>
+    </div>
+  </ng-template>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════
+     MODAL — Créer un client
+══════════════════════════════════════════════════════════════ -->
+<div class="modal-overlay" *ngIf="isModalVisible" (click)="closeModal()">
+  <div class="modal-card" (click)="$event.stopPropagation()">
+
+    <!-- Header -->
+    <div class="modal-card__header">
+      <div class="modal-card__icon">
+        <span nz-icon nzType="user-add" nzTheme="outline"></span>
+      </div>
+      <div>
+        <h3 class="modal-card__title">Créer un nouveau client</h3>
+        <p class="modal-card__sub">Un email avec les identifiants sera envoyé automatiquement</p>
+      </div>
+      <button class="modal-card__close" (click)="closeModal()">
+        <span nz-icon nzType="close" nzTheme="outline"></span>
+      </button>
+    </div>
+
+    <!-- Body -->
+    <div class="modal-card__body">
+      <div class="form-row">
+        <div class="field-group">
+          <label class="field-label">
+            <span nz-icon nzType="user" nzTheme="outline"></span>
+            Prénom <span class="required">*</span>
+          </label>
+          <input class="field-input" [(ngModel)]="newClient.prenom"
+                 placeholder="Ahmed" [class.field-input--error]="!newClient.prenom && submitted" />
+          <span class="field-error" *ngIf="!newClient.prenom && submitted">Champ requis</span>
+        </div>
+        <div class="field-group">
+          <label class="field-label">
+            <span nz-icon nzType="user" nzTheme="outline"></span>
+            Nom <span class="required">*</span>
+          </label>
+          <input class="field-input" [(ngModel)]="newClient.nom"
+                 placeholder="Ben Ali" [class.field-input--error]="!newClient.nom && submitted" />
+          <span class="field-error" *ngIf="!newClient.nom && submitted">Champ requis</span>
+        </div>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">
+          <span nz-icon nzType="mail" nzTheme="outline"></span>
+          Email <span class="required">*</span>
+        </label>
+        <input class="field-input" [(ngModel)]="newClient.email" type="email"
+               placeholder="ahmed@exemple.com" [class.field-input--error]="!newClient.email && submitted" />
+        <span class="field-error" *ngIf="!newClient.email && submitted">Champ requis</span>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">
+          <span nz-icon nzType="phone" nzTheme="outline"></span>
+          Téléphone
+        </label>
+        <input class="field-input" [(ngModel)]="newClient.numTel" placeholder="+216 XX XXX XXX" />
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">
+          <span nz-icon nzType="lock" nzTheme="outline"></span>
+          Mot de passe <span class="required">*</span>
+        </label>
+        <div class="field-input-wrap">
+          <input class="field-input" [(ngModel)]="newClient.password"
+                 [type]="showNewPwd ? 'text' : 'password'"
+                 placeholder="Mot de passe temporaire"
+                 [class.field-input--error]="!newClient.password && submitted" />
+          <button type="button" class="field-eye" (click)="showNewPwd = !showNewPwd">
+            <span nz-icon [nzType]="showNewPwd ? 'eye-invisible' : 'eye'" nzTheme="outline"></span>
+          </button>
+        </div>
+        <span class="field-error" *ngIf="!newClient.password && submitted">Champ requis</span>
+      </div>
+
+      <!-- Email notice -->
+      <div class="email-notice">
+        <span nz-icon nzType="mail" nzTheme="fill" class="email-notice__icon"></span>
+        <div>
+          <strong>Email automatique</strong>
+          <p>Le client recevra un email avec ses identifiants de connexion à l'adresse renseignée ci-dessus.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="modal-card__footer">
+      <button class="modal-btn modal-btn--cancel" (click)="closeModal()">Annuler</button>
+      <button class="modal-btn modal-btn--submit" (click)="createClient()" [disabled]="submitting">
+        <span nz-icon nzType="loading" nzTheme="outline" *ngIf="submitting" class="spin-icon"></span>
+        <span nz-icon nzType="user-add" nzTheme="outline" *ngIf="!submitting"></span>
+        {{ submitting ? 'Création...' : 'Créer le client' }}
+      </button>
+    </div>
+
+  </div>
+</div>

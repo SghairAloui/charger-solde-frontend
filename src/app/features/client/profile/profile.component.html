@@ -1,0 +1,200 @@
+<div class="profile-page fade-in-up">
+
+  <div class="profile-header">
+    <div class="profile-header__info">
+      <h2>Mon Profil</h2>
+      <p>Gérez vos informations personnelles et sécurisez votre compte</p>
+    </div>
+  </div>
+
+  <div class="profile-content">
+    
+    <!-- ── Left Sidebar (Identity) ── -->
+    <div class="profile-sidebar">
+      <div class="identity-card">
+        <div class="identity-card__bg"></div>
+        <div class="identity-card__avatar-wrap">
+          <div class="identity-avatar" [style.background]="getAvatarColor()">
+            <span *ngIf="!avatarPreview">{{ profile?.prenom?.charAt(0)?.toUpperCase() }}{{ profile?.nom?.charAt(0)?.toUpperCase() }}</span>
+            <img *ngIf="avatarPreview" [src]="avatarPreview" alt="Avatar" />
+          </div>
+          <input
+            #fileInput
+            type="file"
+            accept="image/jpeg,image/png,image/webp"
+            (change)="onFileSelected($event)"
+            hidden
+          />
+          <button class="upload-icon-btn" (click)="fileInput.value = ''; fileInput.click()">
+            <span nz-icon nzType="camera" nzTheme="outline"></span>
+          </button>
+        </div>
+
+        <div class="identity-card__info">
+          <h3 class="identity-name">{{ profile?.prenom }} {{ profile?.nom }}</h3>
+          <span class="identity-role">Client Charge Pay</span>
+        </div>
+
+        <div class="identity-meta">
+          <div class="identity-meta__row">
+            <span nz-icon nzType="mail" nzTheme="outline" class="meta-icon"></span>
+            <span>{{ profile?.email }}</span>
+          </div>
+          <div class="identity-meta__row" *ngIf="profile?.numTel">
+            <span nz-icon nzType="phone" nzTheme="outline" class="meta-icon"></span>
+            <span>+216 {{ profile?.numTel }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Right Area (Tabs) ── -->
+    <div class="profile-main">
+      <div class="custom-tabs">
+        <button class="custom-tab-btn" [class.active]="activeTab === 'info'" (click)="activeTab = 'info'">
+          <span nz-icon nzType="user" nzTheme="outline"></span>
+          Informations Personnelles
+        </button>
+        <button class="custom-tab-btn" [class.active]="activeTab === 'security'" (click)="activeTab = 'security'">
+          <span nz-icon nzType="safety-certificate" nzTheme="outline"></span>
+          Sécurité & Mot de passe
+        </button>
+      </div>
+
+      <div class="profile-tabs-container">
+        
+        <!-- Tab 1: Informations Personnelles -->
+        <div class="tab-pane" *ngIf="activeTab === 'info'">
+          <div class="tab-content">
+            <div class="tab-header">
+              <h3>Détails du compte</h3>
+              <p>Mettez à jour vos informations publiques</p>
+            </div>
+
+            <form nz-form [formGroup]="profileForm" (ngSubmit)="updateProfile()" nzLayout="vertical" class="modern-form">
+              <div class="form-row-2">
+                <nz-form-item>
+                  <nz-form-label nzRequired>Prénom</nz-form-label>
+                  <nz-form-control nzErrorTip="Le prénom est requis">
+                    <input nz-input formControlName="prenom" placeholder="Votre prénom" />
+                  </nz-form-control>
+                </nz-form-item>
+
+                <nz-form-item>
+                  <nz-form-label nzRequired>Nom</nz-form-label>
+                  <nz-form-control nzErrorTip="Le nom est requis">
+                    <input nz-input formControlName="nom" placeholder="Votre nom" />
+                  </nz-form-control>
+                </nz-form-item>
+              </div>
+
+              <div class="form-row-2">
+                <nz-form-item>
+                  <nz-form-label>Adresse Email</nz-form-label>
+                  <nz-form-control>
+                    <input nz-input formControlName="email" placeholder="Email" />
+                  </nz-form-control>
+                </nz-form-item>
+
+                <nz-form-item>
+                  <nz-form-label>Numéro de téléphone</nz-form-label>
+                  <nz-form-control nzErrorTip="Le numéro doit contenir 8 chiffres">
+                    <nz-input-group nzAddOnBefore="+216">
+                      <input nz-input formControlName="numTel" placeholder="XX XXX XXX" />
+                    </nz-input-group>
+                  </nz-form-control>
+                </nz-form-item>
+              </div>
+
+              <div class="form-footer">
+                <button nz-button nzType="primary" nzSize="large" [nzLoading]="saving" class="submit-btn">
+                  Enregistrer les modifications
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <!-- Tab 2: Sécurité -->
+        <div class="tab-pane" *ngIf="activeTab === 'security'">
+          <div class="tab-content">
+            <div class="tab-header">
+              <h3>Changer le mot de passe</h3>
+              <p>Assurez-vous de choisir un mot de passe robuste et unique.</p>
+            </div>
+
+            <form nz-form [formGroup]="passwordForm" (ngSubmit)="changePassword()" nzLayout="vertical" class="modern-form">
+              
+              <nz-form-item>
+                <nz-form-label nzRequired>Mot de passe actuel</nz-form-label>
+                <nz-form-control nzErrorTip="Veuillez saisir votre mot de passe actuel">
+                  <nz-input-group [nzSuffix]="suffixOldPwd">
+                    <input nz-input formControlName="oldPassword" [type]="showOldPwd ? 'text' : 'password'" placeholder="••••••••" />
+                  </nz-input-group>
+                </nz-form-control>
+              </nz-form-item>
+
+              <div class="form-row-2">
+                <nz-form-item>
+                  <nz-form-label nzRequired>Nouveau mot de passe</nz-form-label>
+                  <nz-form-control [nzErrorTip]="newPwdErrorTpl">
+                    <nz-input-group [nzSuffix]="suffixNewPwd">
+                      <input nz-input formControlName="newPassword" [type]="showNewPwd ? 'text' : 'password'" placeholder="••••••••" />
+                    </nz-input-group>
+                    
+                    <div class="pwd-strength" *ngIf="passwordForm.get('newPassword')?.value">
+                      <div class="pwd-strength__bars">
+                        <div class="pwd-strength__bar" [class.pwd-strength__bar--active]="pwdStrength >= 1" [class.pwd-strength__bar--danger]="pwdStrength === 1"></div>
+                        <div class="pwd-strength__bar" [class.pwd-strength__bar--active]="pwdStrength >= 2" [class.pwd-strength__bar--warning]="pwdStrength === 2"></div>
+                        <div class="pwd-strength__bar" [class.pwd-strength__bar--active]="pwdStrength >= 3" [class.pwd-strength__bar--success]="pwdStrength >= 3"></div>
+                      </div>
+                      <span class="pwd-strength__label">{{ pwdStrengthLabel }}</span>
+                    </div>
+                  </nz-form-control>
+                </nz-form-item>
+
+                <nz-form-item>
+                  <nz-form-label nzRequired>Confirmer le mot de passe</nz-form-label>
+                  <nz-form-control [nzErrorTip]="confirmPwdErrorTpl">
+                    <nz-input-group [nzSuffix]="suffixConfirmPwd">
+                      <input nz-input formControlName="confirmPassword" [type]="showConfirmPwd ? 'text' : 'password'" placeholder="••••••••" />
+                    </nz-input-group>
+                  </nz-form-control>
+                </nz-form-item>
+              </div>
+
+              <div class="form-footer">
+                <button nz-button nzType="primary" nzSize="large" [nzLoading]="savingPassword" class="submit-btn submit-btn--danger">
+                  Mettre à jour le mot de passe
+                </button>
+              </div>
+
+            </form>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <ng-template #suffixOldPwd>
+    <span nz-icon [nzType]="showOldPwd ? 'eye-invisible' : 'eye'" (click)="showOldPwd = !showOldPwd" class="pwd-toggle"></span>
+  </ng-template>
+  <ng-template #suffixNewPwd>
+    <span nz-icon [nzType]="showNewPwd ? 'eye-invisible' : 'eye'" (click)="showNewPwd = !showNewPwd" class="pwd-toggle"></span>
+  </ng-template>
+  <ng-template #suffixConfirmPwd>
+    <span nz-icon [nzType]="showConfirmPwd ? 'eye-invisible' : 'eye'" (click)="showConfirmPwd = !showConfirmPwd" class="pwd-toggle"></span>
+  </ng-template>
+
+  <ng-template #newPwdErrorTpl let-control>
+    <ng-container *ngIf="control.hasError('required')">Le nouveau mot de passe est requis</ng-container>
+    <ng-container *ngIf="control.hasError('minlength')">Le mot de passe doit contenir au moins 6 caractères</ng-container>
+  </ng-template>
+  
+  <ng-template #confirmPwdErrorTpl let-control>
+    <ng-container *ngIf="control.hasError('required')">Veuillez confirmer le mot de passe</ng-container>
+    <ng-container *ngIf="passwordForm.hasError('mismatch')">Les mots de passe ne correspondent pas</ng-container>
+  </ng-template>
+
+</div>

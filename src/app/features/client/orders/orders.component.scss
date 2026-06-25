@@ -1,0 +1,136 @@
+// ═══════════════════════════════════════════════════════
+//  Client Orders — Premium
+// ═══════════════════════════════════════════════════════
+@import 'styles/variables';
+@import 'styles/mixins';
+
+.orders-tabs {
+  display: flex; gap: 4px;
+  background: $bg-card; border: 1px solid $border-subtle;
+  border-radius: $border-radius-pill; padding: 4px;
+  width: fit-content; margin-bottom: 20px; flex-wrap: wrap;
+}
+
+.orders-tab {
+  display: flex; align-items: center; gap: 7px;
+  padding: 8px 18px; border-radius: $border-radius-pill;
+  border: none; background: none; color: $text-secondary;
+  font-size: 13px; font-weight: 500; font-family: $font-family;
+  cursor: pointer; transition: $transition-fast; white-space: nowrap;
+
+  &--active { background: linear-gradient(135deg, $accent, $accent-dark) !important; color: #fff; box-shadow: 0 4px 12px rgba(var(--accent-rgb), 0.35); }
+  &--warning.orders-tab--active { background: rgba(var(--warning-rgb), 0.15) !important; color: $warning; box-shadow: none; }
+  &--success.orders-tab--active { background: rgba(var(--success-rgb), 0.15) !important; color: $success; box-shadow: none; }
+  &--danger.orders-tab--active  { background: rgba(var(--danger-rgb), 0.15) !important;  color: $danger;  box-shadow: none; }
+  &:hover:not(.orders-tab--active) { background: rgba(255,255,255,0.06); color: $text-primary; }
+}
+
+.tab-count {
+  background: rgba(255,255,255,0.12); font-size: 11px; font-weight: 700;
+  padding: 1px 7px; border-radius: 10px;
+}
+
+.orders-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+}
+
+.order-card {
+  background: $bg-card;
+  border: 1px solid $border-subtle;
+  border-radius: 12px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  box-shadow: $shadow-sm;
+  transition: $transition-spring;
+  animation: fadeInUp 0.4s ease both;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: $shadow-md;
+    border-color: rgba(var(--primary-rgb), 0.2);
+  }
+
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px dashed $border-subtle;
+    padding-bottom: 12px;
+    margin-bottom: 4px;
+  }
+
+  &__body {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+}
+
+.order-plan {
+  font-family: $font-display;
+  font-weight: 700;
+  font-size: 14px;
+  color: $text-primary;
+}
+
+.order-detail {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: $text-secondary;
+
+  span[nz-icon] {
+    color: $primary-light;
+    font-size: 14px;
+  }
+}
+
+.operator-text { font-size: 13px; font-weight: 600; color: $primary; }
+.phone-text { font-family: monospace; font-size: 13px; font-weight: 500; color: $text-primary; }
+.date-text  { font-size: 12px; color: $text-muted; }
+
+.amount-badge {
+  display: inline-flex; align-items: center;
+  background: rgba(var(--accent-rgb), 0.1); color: $accent;
+  font-weight: 700; font-size: 12px; padding: 3px 10px;
+  border-radius: 20px; border: 1px solid rgba(var(--accent-rgb), 0.2); white-space: nowrap;
+}
+
+.status-badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 11px; font-weight: 700; padding: 4px 10px;
+  border-radius: 20px; white-space: nowrap;
+  .status-dot { width: 6px; height: 6px; border-radius: 50%; }
+  &--success { background: rgba(var(--success-rgb), 0.12); color: $success; border: 1px solid rgba(var(--success-rgb), 0.25);
+    .status-dot { background: $success; animation: pulseDot 2s infinite; } }
+  &--danger  { background: rgba(var(--danger-rgb), 0.12);  color: $danger;  border: 1px solid rgba(var(--danger-rgb), 0.25);
+    .status-dot { background: $danger; } }
+  &--warning { background: rgba(var(--warning-rgb), 0.12); color: $warning; border: 1px solid rgba(var(--warning-rgb), 0.25);
+    .status-dot { background: $warning; animation: pulseDot 1.5s infinite; } }
+}
+
+.empty-state {
+  grid-column: 1 / -1;
+  text-align: center; padding: 48px 20px;
+  background: $bg-surface; border: 1px dashed $border-default;
+  border-radius: 12px; color: $text-muted;
+  span[nz-icon] { font-size: 36px; display: block; margin-bottom: 10px; opacity: 0.25; }
+  p { font-size: 14px; margin: 0; color: $text-secondary; }
+}
+
+.skel-card {
+  height: 140px; border-radius: 12px; margin-bottom: 8px;
+  background: linear-gradient(90deg,rgba(var(--primary-rgb),0.02) 0%,rgba(var(--primary-rgb),0.06) 50%,rgba(var(--primary-rgb),0.02) 100%);
+  background-size: 200% 100%; animation: shimmer 1.5s ease infinite; 
+}
+
+@keyframes fadeInUp { from { opacity:0; transform: translateY(12px); } to { opacity:1; transform:translateY(0); } }
+@keyframes shimmer  { 0% { background-position: -200% center; } 100% { background-position: 200% center; } }
+@keyframes pulseDot { 0%,100% { box-shadow: 0 0 0 0 rgba(0,184,148,0.6); } 50% { box-shadow: 0 0 0 4px rgba(0,184,148,0); } }
+
+.fade-in-up { animation: fadeInUp 0.5s ease both; }

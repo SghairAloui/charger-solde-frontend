@@ -1,0 +1,114 @@
+<div class="dashboard-page fade-in-up">
+  
+  <!-- ── 1. Welcome Banner ── -->
+  <div class="welcome-banner">
+    <div class="welcome-banner__icon">
+      <span nz-icon nzType="credit-card" nzTheme="outline"></span>
+    </div>
+    <div class="welcome-banner__text">
+      <h2>Mon espace <span>personnel</span></h2>
+      <p>Gérez vos recharges et commandes en toute simplicité</p>
+    </div>
+    <div class="welcome-banner__action">
+      <button nz-button nzType="primary" nzSize="large" nzShape="round" routerLink="/client/store">
+        Nouvelle recharge
+      </button>
+    </div>
+  </div>
+
+  <!-- ── 2. KPI Cards ── -->
+  <div class="kpi-grid">
+    <div class="kpi-card kpi-card--total">
+      <div class="kpi-card__icon"><span nz-icon nzType="ordered-list" nzTheme="outline"></span></div>
+      <div class="kpi-card__info">
+        <span class="kpi-card__label">TOTAL COMMANDES</span>
+        <div class="kpi-card__val-row">
+          <span class="kpi-card__value">{{ totalOrders }}</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="kpi-card kpi-card--pending">
+      <div class="kpi-card__icon"><span nz-icon nzType="clock-circle" nzTheme="outline"></span></div>
+      <div class="kpi-card__info">
+        <span class="kpi-card__label">EN ATTENTE</span>
+        <span class="kpi-card__value">{{ pendingOrders }}</span>
+      </div>
+    </div>
+
+    <div class="kpi-card kpi-card--success">
+      <div class="kpi-card__icon"><span nz-icon nzType="check-circle" nzTheme="outline"></span></div>
+      <div class="kpi-card__info">
+        <span class="kpi-card__label">VALIDÉES</span>
+        <div class="kpi-card__val-row">
+          <span class="kpi-card__value">{{ validatedOrders }}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="kpi-card kpi-card--balance">
+      <div class="kpi-card__icon"><span nz-icon nzType="wallet" nzTheme="outline"></span></div>
+      <div class="kpi-card__info">
+        <span class="kpi-card__label">MONTANT TOTAL</span>
+        <span class="kpi-card__value">{{ totalSpent | number:'1.2-2' }} TND</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── 3. Quick Action Operators ── -->
+  <div class="quick-operators">
+    <h3 class="section-title">RECHARGE RAPIDE PAR OPÉRATEUR</h3>
+    <div class="operator-pills">
+      <button class="op-pill" *ngFor="let op of operators"
+              routerLink="/client/store" [queryParams]="{op: op.name}">
+        <div class="op-icon" [style.background]="getOpColor(op.name)">
+          {{ getOpInitial(op.name) }}
+        </div>
+        <span>{{ op.name }}</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- ── 4. Recent Orders ── -->
+  <div class="recent-orders">
+    <div class="recent-orders__header">
+      <h3 class="section-title"><span nz-icon nzType="history" nzTheme="outline"></span> Mes dernières commandes</h3>
+      <a routerLink="/client/orders" class="view-all-link">Voir tout</a>
+    </div>
+
+    <div class="orders-list">
+      <div class="order-card" *ngFor="let order of recentOrders">
+        <div class="order-card__header">
+          <span class="order-amount">{{ order.amount }} TND</span>
+          <nz-tag [nzColor]="order.status === 'VALIDATED' ? 'success' : order.status === 'REJECTED' ? 'error' : 'warning'" [nzBordered]="false">
+            <span nz-icon [nzType]="order.status === 'VALIDATED' ? 'check-circle' : order.status === 'REJECTED' ? 'close-circle' : 'clock-circle'"></span>
+            {{ order.status | statusLabel }}
+          </nz-tag>
+        </div>
+        <div class="order-card__body">
+          <div class="order-detail" *ngIf="order.plan.operator?.name">
+            <span nz-icon nzType="build" nzTheme="outline"></span>
+            <span class="order-detail__operator">{{ order.plan.operator?.name }}</span>
+          </div>
+          <div class="order-detail">
+            <span class="order-detail__phone">{{ order.phoneNumber }}</span>
+          </div>
+          <div class="order-meta">
+            <span class="order-meta__badge">
+              <span nz-icon nzType="wallet" nzTheme="outline"></span> {{ order.amount }} TND
+            </span>
+            <span class="order-meta__date">
+              <span nz-icon nzType="calendar" nzTheme="outline"></span> {{ order.createdAt | dateFormat }}
+            </span>
+          </div>
+        </div>
+      </div>
+      
+      <div class="empty-orders" *ngIf="recentOrders.length === 0 && !loading">
+        <span nz-icon nzType="inbox" nzTheme="outline"></span>
+        <p>Aucune commande récente trouvée.</p>
+      </div>
+    </div>
+  </div>
+
+</div>

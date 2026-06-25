@@ -1,0 +1,23 @@
+<div class="confirm-overlay" *ngIf="visible" (click)="close()">
+  <div class="confirm-card" (click)="$event.stopPropagation()">
+    <div class="confirm-card__icon" [class.confirm-card__icon--danger]="danger">
+      <span nz-icon [nzType]="danger ? 'delete' : 'exclamation'" nzTheme="outline"></span>
+    </div>
+
+    <h3 class="confirm-card__title">{{ title }}</h3>
+    <p class="confirm-card__msg">
+      {{ message }}
+      <strong *ngIf="itemName">"{{ itemName }}"</strong>
+    </p>
+
+    <div class="confirm-card__actions">
+      <button class="confirm-btn confirm-btn--cancel" (click)="onCancel()" [disabled]="loading">
+        {{ cancelText }}
+      </button>
+      <button class="confirm-btn confirm-btn--danger" (click)="onConfirm()" [disabled]="loading">
+        <span nz-icon [nzType]="loading ? 'loading' : danger ? 'delete' : 'check'" nzTheme="outline" *ngIf="loading || danger"></span>
+        {{ loading ? 'Suppression...' : confirmText }}
+      </button>
+    </div>
+  </div>
+</div>

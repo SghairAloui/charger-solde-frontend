@@ -1,0 +1,67 @@
+<app-page-header title="Mes commandes" subtitle="Suivez l'état de toutes vos demandes de recharge"></app-page-header>
+
+<!-- Filter tabs -->
+<div class="orders-tabs fade-in-up">
+  <button class="orders-tab" [class.orders-tab--active]="activeTab === 'all'"       (click)="setTab('all')">
+    Toutes <span class="tab-count">{{ orders.length }}</span>
+  </button>
+  <button class="orders-tab orders-tab--warning" [class.orders-tab--active]="activeTab === 'pending'"   (click)="setTab('pending')">
+    En attente <span class="tab-count">{{ pendingOrders.length }}</span>
+  </button>
+  <button class="orders-tab orders-tab--success" [class.orders-tab--active]="activeTab === 'validated'" (click)="setTab('validated')">
+    Validées <span class="tab-count">{{ validatedOrders.length }}</span>
+  </button>
+  <button class="orders-tab orders-tab--danger"  [class.orders-tab--active]="activeTab === 'rejected'"  (click)="setTab('rejected')">
+    Rejetées <span class="tab-count">{{ rejectedOrders.length }}</span>
+  </button>
+</div>
+
+<!-- Orders grid -->
+<div class="orders-grid-wrap fade-in-up" style="animation-delay:0.1s">
+  <div class="orders-grid" *ngIf="!loading; else skelLoader">
+    <div class="order-card" *ngFor="let order of displayedOrders; let i = index"
+         [style.animation-delay]="(i * 0.04) + 's'">
+         
+      <div class="order-card__header">
+        <span class="order-plan">{{ order.plan.label || 'Offre inconnue' }}</span>
+        <span class="status-badge"
+              [class.status-badge--success]="order.status === 'VALIDATED'"
+              [class.status-badge--danger]="order.status === 'REJECTED'"
+              [class.status-badge--warning]="order.status === 'PENDING'">
+          <span class="status-dot"></span>
+          {{ order.status | statusLabel }}
+        </span>
+      </div>
+
+      <div class="order-card__body">
+        <div class="order-detail" *ngIf="order.plan.operator?.name">
+          <span nz-icon nzType="build" nzTheme="outline"></span>
+          <span class="operator-text">{{ order.plan.operator?.name }}</span>
+        </div>
+        <div class="order-detail">
+          <span nz-icon nzType="phone" nzTheme="outline"></span>
+          <span class="phone-text">{{ order.phoneNumber }}</span>
+        </div>
+        <div class="order-detail">
+          <span nz-icon nzType="wallet" nzTheme="outline"></span>
+          <span class="amount-badge">{{ order.amount }} TND</span>
+        </div>
+        <div class="order-detail">
+          <span nz-icon nzType="calendar" nzTheme="outline"></span>
+          <span class="date-text">{{ order.createdAt | dateFormat }}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="empty-state" *ngIf="displayedOrders.length === 0">
+      <span nz-icon nzType="inbox" nzTheme="outline"></span>
+      <p>Aucune commande dans cette catégorie</p>
+    </div>
+  </div>
+
+  <ng-template #skelLoader>
+    <div class="orders-grid">
+      <div class="skel-card" *ngFor="let i of [1,2,3,4,5,6]"></div>
+    </div>
+  </ng-template>
+</div>

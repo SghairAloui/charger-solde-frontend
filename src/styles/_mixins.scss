@@ -1,0 +1,77 @@
+// ============================
+// TuniTopUp Pro — Mixins SCSS
+// ============================
+
+// ── Glass card ────────────────────────────────────────────────────────────────
+@mixin glass-card($blur: 20px) {
+  background: var(--glass-bg);
+  backdrop-filter: blur($blur);
+  -webkit-backdrop-filter: blur($blur);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--border-radius);
+}
+
+// ── Gradient text ─────────────────────────────────────────────────────────────
+@mixin gradient-text($gradient: var(--gradient-brand)) {
+  background: $gradient;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+// ── Glow box shadow ───────────────────────────────────────────────────────────
+@mixin glow($color: #6C5CE7, $intensity: 0.35) {
+  box-shadow: 0 0 20px rgba($color, $intensity), 0 0 40px rgba($color, $intensity * 0.5);
+}
+
+// ── Neon border ───────────────────────────────────────────────────────────────
+@mixin neon-border($color: #6C5CE7) {
+  border: 1px solid rgba(var(--color-rgb), 0.5);
+  box-shadow: 0 0 10px rgba(var(--color-rgb), 0.2), inset 0 0 10px rgba(var(--color-rgb), 0.05);
+}
+
+// ── Flex center ───────────────────────────────────────────────────────────────
+@mixin flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+// ── Flex between ──────────────────────────────────────────────────────────────
+@mixin flex-between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+// ── Truncate text ─────────────────────────────────────────────────────────────
+@mixin truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+// ── Card hover lift ───────────────────────────────────────────────────────────
+@mixin hover-lift($y: -4px) {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  &:hover {
+    transform: translateY($y);
+    box-shadow: var(--shadow-lg);
+  }
+}
+
+// ── Scrollbar custom ──────────────────────────────────────────────────────────
+@mixin custom-scrollbar($width: 4px, $color: #6C5CE7) {
+  &::-webkit-scrollbar { width: $width; }
+  &::-webkit-scrollbar-track { background: transparent; }
+  &::-webkit-scrollbar-thumb {
+    background: rgba(var(--color-rgb), 0.4);
+    border-radius: 10px;
+    &:hover { background: rgba(var(--color-rgb), 0.7); }
+  }
+}
+
+// ── Responsive ────────────────────────────────────────────────────────────────
+@mixin mobile { @media (max-width: 768px) { @content; } }
+@mixin tablet { @media (max-width: 992px) { @content; } }
+@mixin desktop { @media (min-width: 1200px) { @content; } }

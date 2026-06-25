@@ -1,0 +1,25 @@
+<div class="stat-card" [style.--accent-color]="accentColor">
+  <div class="stat-card__glow" [style.background]="accentColor" aria-hidden="true"></div>
+
+  <div class="stat-card__body">
+    <div class="stat-card__icon-wrap" [style.background]="accentBg">
+      <div class="stat-card__icon-inner" [style.background]="gradient">
+        <span nz-icon [nzType]="icon" nzTheme="outline"></span>
+      </div>
+    </div>
+
+    <div class="stat-card__info">
+      <span class="stat-card__label">{{ label }}</span>
+      <span class="stat-card__value">{{ displayValue }}</span>
+      <span class="stat-card__trend" *ngIf="trend !== null">
+        <span nz-icon [nzType]="trend >= 0 ? 'rise' : 'fall'" nzTheme="outline"
+              [class.up]="trend >= 0" [class.down]="trend < 0"></span>
+        {{ trend >= 0 ? '+' : '' }}{{ trend }}%
+      </span>
+    </div>
+  </div>
+
+  <div class="stat-card__progress" *ngIf="progress !== null">
+    <div class="stat-card__progress-bar" [style.width.%]="progress" [style.background]="gradient"></div>
+  </div>
+</div>

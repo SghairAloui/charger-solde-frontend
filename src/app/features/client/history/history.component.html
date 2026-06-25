@@ -1,0 +1,63 @@
+<app-page-header title="Historique" subtitle="Toutes vos activités de recharge dans le temps"></app-page-header>
+
+<div class="history-wrap fade-in-up">
+  <!-- Timeline -->
+  <div class="timeline" *ngIf="orders.length > 0; else empty">
+    <div class="timeline-item"
+         *ngFor="let order of orders; let i = index"
+         [style.animation-delay]="(i * 0.06) + 's'">
+
+      <!-- Left: indicator -->
+      <div class="timeline-indicator">
+        <div class="timeline-dot"
+             [class.timeline-dot--success]="order.status === 'VALIDATED'"
+             [class.timeline-dot--danger]="order.status === 'REJECTED'"
+             [class.timeline-dot--warning]="order.status === 'PENDING'">
+          <span nz-icon
+                [nzType]="order.status === 'VALIDATED' ? 'check' : order.status === 'REJECTED' ? 'close' : 'clock-circle'"
+                nzTheme="outline"></span>
+        </div>
+        <div class="timeline-line" *ngIf="i < orders.length - 1"></div>
+      </div>
+
+      <!-- Right: content -->
+      <div class="timeline-content">
+        <div class="timeline-content__header">
+          <div class="timeline-content__info">
+            <h4 class="timeline-content__plan">{{ order.plan.label || 'Recharge' }}</h4>
+            <span class="timeline-content__operator" *ngIf="order.plan.operator?.name">
+              <span nz-icon nzType="build" nzTheme="outline"></span>
+              {{ order.plan.operator?.name }}
+            </span>
+            <br>
+            <span class="timeline-content__phone">{{ order.phoneNumber }}</span>
+          </div>
+          <div class="timeline-content__meta">
+            <span class="timeline-amount">{{ order.amount }} TND</span>
+            <span class="status-badge"
+                  [class.status-badge--success]="order.status === 'VALIDATED'"
+                  [class.status-badge--danger]="order.status === 'REJECTED'"
+                  [class.status-badge--warning]="order.status === 'PENDING'">
+              {{ order.status | statusLabel }}
+            </span>
+          </div>
+        </div>
+        <span class="timeline-date">{{ order.createdAt | dateFormat }}</span>
+      </div>
+    </div>
+  </div>
+
+  <ng-template #empty>
+    <div class="history-empty">
+      <div class="history-empty__icon">
+        <span nz-icon nzType="history" nzTheme="outline"></span>
+      </div>
+      <h3>Aucun historique</h3>
+      <p>Vos activités de recharge apparaîtront ici</p>
+      <a class="start-btn" routerLink="/client/store">
+        <span nz-icon nzType="thunderbolt" nzTheme="fill"></span>
+        Commencer une recharge
+      </a>
+    </div>
+  </ng-template>
+</div>

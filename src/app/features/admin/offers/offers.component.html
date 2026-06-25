@@ -1,0 +1,110 @@
+<app-page-header title="Offres & Forfaits" subtitle="Créez et gérez les forfaits de recharge par opérateur">
+  <button header-actions class="add-btn" (click)="showCreateModal()">
+    <span nz-icon nzType="plus" nzTheme="outline"></span>
+    Nouvelle offre
+  </button>
+</app-page-header>
+
+<!-- Offers grid -->
+<div class="offers-grid fade-in-up" *ngIf="!loading; else skelLoader">
+  <div class="offer-card" *ngFor="let offer of offers; let i = index"
+       [style.animation-delay]="(i * 0.06) + 's'">
+
+    <div class="offer-card__top">
+      <div class="offer-card__operator">
+        <span class="op-dot" [style.background]="getOpColor(offer.operator?.name)"></span>
+        {{ offer.operator?.name || 'Inconnu' }}
+      </div>
+    </div>
+
+    <div class="offer-card__body">
+      <h3 class="offer-card__name">{{ offer.label }}</h3>
+      <div class="offer-card__price">
+        <span class="price-amount">{{ offer.price }}</span>
+        <span class="price-unit">TND</span>
+      </div>
+    </div>
+
+    <div class="offer-card__meta">
+      <div class="meta-item">
+        <span nz-icon nzType="calendar" nzTheme="outline"></span>
+        {{ offer.validityDays }} jour{{ offer.validityDays > 1 ? 's' : '' }} de validité
+      </div>
+    </div>
+
+    <div class="offer-card__actions">
+      <button class="offer-action-btn offer-action-btn--edit" nz-tooltip nzTooltipTitle="Modifier" (click)="showEditModal(offer)">
+        <span nz-icon nzType="edit" nzTheme="outline"></span>
+        Modifier
+      </button>
+      <button class="offer-action-btn offer-action-btn--delete" nz-tooltip nzTooltipTitle="Supprimer" (click)="confirmDeleteOffer(offer)">
+        <span nz-icon nzType="delete" nzTheme="outline"></span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<ng-template #skelLoader>
+  <div class="offers-grid">
+    <div class="offer-skel" *ngFor="let i of [1,2,3,4,5,6]"></div>
+  </div>
+</ng-template>
+
+<div class="offers-empty fade-in-up" *ngIf="!loading && offers.length === 0">
+  <span nz-icon nzType="gift" nzTheme="outline"></span>
+  <h3>Aucune offre disponible</h3>
+  <p>Créez votre première offre de recharge</p>
+</div>
+
+<app-confirm-modal
+  [visible]="showConfirmDelete"
+  [itemName]="offerToDelete?.label || ''"
+  [loading]="deleting"
+  [message]="'Voulez-vous vraiment supprimer l\'offre '"
+  (confirm)="deleteOffer()"
+  (cancel)="showConfirmDelete = false; offerToDelete = null"
+></app-confirm-modal>
+
+<!-- Modal -->
+<div class="modal-overlay" *ngIf="isModalVisible" (click)="closeModal()">
+  <div class="modal-card" (click)="$event.stopPropagation()">
+    <div class="modal-card__header">
+      <div class="modal-card__icon"><span nz-icon nzType="gift" nzTheme="outline"></span></div>
+      <div>
+        <h3 class="modal-card__title">{{ isEditMode ? 'Modifier l\'offre' : 'Créer une nouvelle offre' }}</h3>
+        <p class="modal-card__sub">{{ isEditMode ? 'Modifiez les paramètres du forfait' : 'Définissez les paramètres du forfait' }}</p>
+      </div>
+      <button class="modal-card__close" (click)="closeModal()"><span nz-icon nzType="close" nzTheme="outline"></span></button>
+    </div>
+    <div class="modal-card__body">
+      <div class="field-group">
+        <label class="field-label">Nom de l'offre <span class="required">*</span></label>
+        <input class="field-input" [(ngModel)]="offerForm.label" placeholder="Ex: Forfait 5 TND" />
+      </div>
+      <div class="field-group">
+        <label class="field-label">Opérateur <span class="required">*</span></label>
+        <select class="field-select" [(ngModel)]="offerForm.operatorId">
+          <option value="" disabled>Sélectionner un opérateur</option>
+          <option *ngFor="let op of operators" [value]="op.id">{{ op.name }}</option>
+        </select>
+      </div>
+      <div class="form-row">
+        <div class="field-group">
+          <label class="field-label">Prix (TND) <span class="required">*</span></label>
+          <input class="field-input" type="number" [(ngModel)]="offerForm.price" placeholder="0.000" min="0" step="0.5" />
+        </div>
+        <div class="field-group">
+          <label class="field-label">Validité (jours)</label>
+          <input class="field-input" type="number" [(ngModel)]="offerForm.validityDays" placeholder="30" min="1" />
+        </div>
+      </div>
+    </div>
+    <div class="modal-card__footer">
+      <button class="modal-btn modal-btn--cancel" (click)="closeModal()">Annuler</button>
+      <button class="modal-btn modal-btn--submit" (click)="submitOffer()" [disabled]="submitting">
+        <span nz-icon [nzType]="submitting ? 'loading' : isEditMode ? 'save' : 'plus'" nzTheme="outline"></span>
+        {{ isEditMode ? 'Enregistrer' : 'Créer l\'offre' }}
+      </button>
+    </div>
+  </div>
+</div>

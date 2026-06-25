@@ -1,0 +1,154 @@
+// ============================
+// TuniTopUp Pro — Bee-Kids Theme Variables
+// ============================
+
+:root {
+  // Brand Colors
+  --primary-rgb: 99, 102, 241;        // #6366F1 (Indigo)
+  --primary-light-rgb: 129, 140, 248; // #818CF8
+  --primary-dark-rgb: 79, 70, 229;    // #4F46E5
+
+  --accent-rgb: 14, 165, 233;         // #0EA5E9 (Cyan/Light Blue)
+  --accent-light-rgb: 56, 189, 248;   // #38BDF8
+  --accent-dark-rgb: 2, 132, 199;     // #0284C7
+
+  --success-rgb: 16, 185, 129;        // #10B981
+  --warning-rgb: 245, 158, 11;        // #F59E0B
+  --danger-rgb: 239, 68, 68;          // #EF4444
+  --info-rgb: 59, 130, 246;           // #3B82F6
+
+  // Background Layers (Light Mode - Default)
+  --bg-deep-rgb: 243, 244, 246;       // #F3F4F6 (gray-100)
+  --bg-dark-rgb: 249, 250, 251;       // #F9FAFB (gray-50)
+  --bg-surface-rgb: 255, 255, 255;    // #FFFFFF
+  --bg-card-rgb: 255, 255, 255;       // #FFFFFF
+  --bg-input-rgb: 249, 250, 251;      // #F9FAFB
+  --bg-input-hover-rgb: 243, 244, 246;// #F3F4F6
+
+  // Text Colors
+  --text-primary-rgb: 17, 24, 39;     // #111827 (gray-900)
+  --text-secondary-rgb: 75, 85, 99;   // #4B5563 (gray-600)
+  --text-muted-rgb: 156, 163, 175;    // #9CA3AF (gray-400)
+  --text-disabled-rgb: 209, 213, 219; // #D1D5DB (gray-300)
+
+  // Borders
+  --border-subtle-rgb: 229, 231, 235; // #E5E7EB
+  --border-default-rgb: 209, 213, 219;// #D1D5DB
+}
+
+[data-theme="dark"] {
+  // Background Layers (Dark Mode)
+  --bg-deep-rgb: 15, 23, 42;          // #0F172A (slate-900)
+  --bg-dark-rgb: 2, 6, 23;            // #020617 (slate-950)
+  --bg-surface-rgb: 30, 41, 59;       // #1E293B (slate-800)
+  --bg-card-rgb: 30, 41, 59;          // #1E293B
+  --bg-input-rgb: 51, 65, 85;         // #334155 (slate-700)
+  --bg-input-hover-rgb: 71, 85, 105;  // #475569
+
+  // Text Colors
+  --text-primary-rgb: 248, 250, 252;  // #F8FAFC
+  --text-secondary-rgb: 148, 163, 184;// #94A3B8
+  --text-muted-rgb: 100, 116, 139;    // #64748B
+  --text-disabled-rgb: 71, 85, 105;   // #475569
+
+  // Borders
+  --border-subtle-rgb: 51, 65, 85;    // #334155
+  --border-default-rgb: 71, 85, 105;  // #475569
+}
+
+// ── SCSS Variables mapped to CSS Variables ─────────────────────────────────────
+$primary:        rgb(var(--primary-rgb));
+$primary-dark:   rgb(var(--primary-dark-rgb));
+$primary-light:  rgb(var(--primary-light-rgb));
+$primary-glow:   rgba(var(--primary-rgb), 0.35);
+
+$accent:         rgb(var(--accent-rgb));
+$accent-dark:    rgb(var(--accent-dark-rgb));
+$accent-light:   rgb(var(--accent-light-rgb));
+$accent-glow:    rgba(var(--accent-rgb), 0.3);
+
+$success:        rgb(var(--success-rgb));
+$warning:        rgb(var(--warning-rgb));
+$danger:         rgb(var(--danger-rgb));
+$info:           rgb(var(--info-rgb));
+
+$bg-deep:        rgb(var(--bg-deep-rgb));
+$bg-dark:        rgb(var(--bg-dark-rgb));
+$bg-surface:     rgb(var(--bg-surface-rgb));
+$bg-card:        rgb(var(--bg-card-rgb));
+$bg-card-hover:  rgba(var(--text-primary-rgb), 0.05);
+$bg-input:       rgb(var(--bg-input-rgb));
+$bg-input-hover: rgb(var(--bg-input-hover-rgb));
+
+$text-primary:   rgb(var(--text-primary-rgb));
+$text-color:     $text-primary;
+$text-secondary: rgb(var(--text-secondary-rgb));
+$text-muted:     rgb(var(--text-muted-rgb));
+$text-disabled:  rgb(var(--text-disabled-rgb));
+
+$border-subtle:  rgb(var(--border-subtle-rgb));
+$border-default: rgb(var(--border-default-rgb));
+$border-active:  $primary;
+
+// ── Glassmorphism ─────────────────────────────────────────────────────────────
+$glass-bg:       rgba(var(--bg-surface-rgb), 0.7);
+$glass-border:   rgba(var(--primary-rgb), 0.15);
+$glass-blur:     20px;
+
+// ── Radius & Shadows ───────────────────────────────────────────────────────────
+$border-radius:  12px;
+$border-radius-sm: 8px;
+$border-radius-lg: 20px;
+$border-radius-pill: 50px;
+
+$shadow-sm:      0 2px 8px rgba(0, 0, 0, 0.05);
+$shadow-md:      0 4px 20px rgba(0, 0, 0, 0.08);
+$shadow-lg:      0 8px 40px rgba(0, 0, 0, 0.12);
+$shadow-glow:    0 0 30px $primary-glow;
+$shadow-accent:  0 0 30px $accent-glow;
+
+// ── Gradients ─────────────────────────────────────────────────────────────────
+$gradient-brand:   linear-gradient(135deg, $primary 0%, $primary-light 100%);
+$gradient-accent:  linear-gradient(135deg, $accent 0%, $accent-light 100%);
+$gradient-dark:    linear-gradient(135deg, $bg-surface 0%, $bg-card 100%);
+$gradient-sidebar: $bg-surface;
+$gradient-hero:    $gradient-brand;
+
+// ── Transitions ───────────────────────────────────────────────────────────────
+$transition-base:  all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+$transition-fast:  all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+$transition-slow:  all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+$transition-spring: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+
+// ── Typography ────────────────────────────────────────────────────────────────
+$font-family:      'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+$font-display:     'Inter', sans-serif;
+$font-size-xs:     11px;
+$font-size-sm:     13px;
+$font-size-base:   14px;
+$font-size-md:     15px;
+$font-size-lg:     16px;
+$font-size-xl:     20px;
+$font-size-xxl:    24px;
+$font-size-3xl:    32px;
+$font-size-4xl:    40px;
+
+// ── Spacing ───────────────────────────────────────────────────────────────────
+$spacing-xs:   4px;
+$spacing-sm:   8px;
+$spacing-md:   16px;
+$spacing-lg:   24px;
+$spacing-xl:   32px;
+$spacing-2xl:  48px;
+$spacing-3xl:  64px;
+
+// ── Layout ────────────────────────────────────────────────────────────────────
+$header-height:  70px;
+$sidebar-width:  280px;
+$sidebar-collapsed: 80px;
+$content-padding: 32px;
+
+// ── Operator Colors ───────────────────────────────────────────────────────────
+$ooredoo:          #e3003e;
+$orange-op:        #ff7900;
+$tunisie-telecom:  #003366;

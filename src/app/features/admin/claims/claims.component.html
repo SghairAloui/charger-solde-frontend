@@ -1,0 +1,123 @@
+<app-page-header title="Réclamations" subtitle="Traitement et suivi des réclamations clients">
+  <div header-actions class="header-stat">
+    <span class="open-badge" *ngIf="openCount > 0">
+      <span nz-icon nzType="exclamation-circle" nzTheme="fill"></span>
+      {{ openCount }} en attente
+    </span>
+  </div>
+</app-page-header>
+
+<!-- Skeleton -->
+<div class="claim-cards fade-in-up" *ngIf="loading">
+  <div class="skel-card" *ngFor="let i of [1,2,3]"></div>
+</div>
+
+<!-- Error -->
+<div class="claims-error fade-in-up" *ngIf="errorMsg && !loading">
+  <span nz-icon nzType="warning" nzTheme="outline"></span>
+  <h3>{{ errorMsg }}</h3>
+  <button class="retry-btn" (click)="loadClaims()">
+    <span nz-icon nzType="reload" nzTheme="outline"></span>
+    Réessayer
+  </button>
+</div>
+
+<!-- Cards grid -->
+<div class="claim-cards fade-in-up" *ngIf="!loading && !errorMsg">
+  <div class="claim-card"
+       *ngFor="let claim of claims; let i = index"
+       [style.animation-delay]="(i * 0.06) + 's'"
+       [ngClass]="getStatusClass(claim.status)">
+
+    <div class="claim-card__header">
+      <div class="claim-card__left">
+        <div class="claim-avatar">{{ (claim.userName || 'C').charAt(0).toUpperCase() }}</div>
+        <div>
+          <span class="claim-client">{{ claim.userName }}</span>
+          <span class="claim-subject">{{ claim.subject }}</span>
+        </div>
+      </div>
+      <div class="claim-card__right">
+        <span class="claim-status-badge" [ngClass]="getStatusClass(claim.status)">
+          <span class="claim-status-dot"></span>
+          {{ getStatusLabel(claim.status) }}
+        </span>
+        <span class="claim-date">{{ claim.createdAt | dateFormat }}</span>
+      </div>
+    </div>
+
+    <p class="claim-desc">{{ claim.description }}</p>
+
+    <div class="claim-admin-response" *ngIf="claim.adminResponse">
+      <div class="response-icon"><span nz-icon nzType="message" nzTheme="outline"></span></div>
+      <div class="response-text">{{ claim.adminResponse }}</div>
+    </div>
+
+    <div class="claim-card__actions" *ngIf="claim.status !== 'RESOLVED' && claim.status !== 'REJECTED'">
+      <button class="claim-btn claim-btn--reply" (click)="openStatusModal(claim)">
+        <span nz-icon nzType="edit" nzTheme="outline"></span>
+        Changer statut
+      </button>
+      <button class="claim-btn claim-btn--resolve" (click)="resolveClaim(claim)">
+        <span nz-icon nzType="check-circle" nzTheme="outline"></span>
+        Résoudre
+      </button>
+    </div>
+    <div class="claim-resolved-badge" *ngIf="claim.status === 'RESOLVED'">
+      <span nz-icon nzType="check-circle" nzTheme="fill"></span>
+      Réclamation résolue
+    </div>
+    <div class="claim-resolved-badge claim-resolved-badge--danger" *ngIf="claim.status === 'REJECTED'">
+      <span nz-icon nzType="close-circle" nzTheme="fill"></span>
+      Réclamation rejetée
+    </div>
+  </div>
+
+  <div class="claims-empty" *ngIf="claims.length === 0">
+    <span nz-icon nzType="file-exclamation" nzTheme="outline"></span>
+    <h3>Aucune réclamation</h3>
+    <p>Toutes les réclamations ont été traitées</p>
+  </div>
+</div>
+
+<!-- Status Update Modal -->
+<div class="modal-overlay" *ngIf="isModalVisible" (click)="closeModal()">
+  <div class="modal-card" (click)="$event.stopPropagation()">
+    <div class="modal-card__header">
+      <div class="modal-card__icon">
+        <span nz-icon nzType="edit" nzTheme="outline"></span>
+      </div>
+      <div>
+        <h3 class="modal-card__title">Mettre à jour le statut</h3>
+        <p class="modal-card__sub">{{ selectedClaim?.subject }}</p>
+      </div>
+      <button class="modal-card__close" (click)="closeModal()">
+        <span nz-icon nzType="close" nzTheme="outline"></span>
+      </button>
+    </div>
+    <div class="modal-card__body">
+      <div class="field-group">
+        <label class="field-label">Réponse au client</label>
+        <textarea class="field-textarea" [(ngModel)]="responseText" placeholder="Écrivez votre réponse au client..."></textarea>
+      </div>
+      <div class="field-group">
+        <label class="field-label">Nouveau statut</label>
+        <div class="status-options">
+          <label class="status-option" *ngFor="let s of ['IN_PROGRESS', 'RESOLVED', 'REJECTED']"
+                 [class.status-option--active]="selectedStatus === s"
+                 (click)="selectedStatus = $any(s)">
+            <span class="status-option-dot" [ngClass]="getStatusClass($any(s))"></span>
+            {{ getStatusLabel($any(s)) }}
+          </label>
+        </div>
+      </div>
+    </div>
+    <div class="modal-card__footer">
+      <button class="modal-btn modal-btn--cancel" (click)="closeModal()">Annuler</button>
+      <button class="modal-btn modal-btn--submit" (click)="submitStatusUpdate()" [disabled]="submitting">
+        <span nz-icon [nzType]="submitting ? 'loading' : 'save'" nzTheme="outline"></span>
+        Enregistrer
+      </button>
+    </div>
+  </div>
+</div>

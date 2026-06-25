@@ -1,0 +1,105 @@
+<app-page-header title="Historique des recharges" subtitle="Consultez l'historique complet des recharges par client">
+  <div header-actions class="toolbar-inline">
+    <button class="refresh-btn" (click)="refresh()" [class.spinning]="loading">
+      <span nz-icon nzType="reload" nzTheme="outline"></span>
+      Actualiser
+    </button>
+  </div>
+</app-page-header>
+
+<!-- Toolbar -->
+<div class="history-toolbar fade-in-up">
+  <div class="search-box">
+    <span nz-icon nzType="search" nzTheme="outline"></span>
+    <input class="search-box__input" placeholder="Rechercher par nom, prénom ou email..."
+           [(ngModel)]="searchTerm" (input)="onSearch()" />
+    <button class="search-box__clear" *ngIf="searchTerm" (click)="clearSearch()">
+      <span nz-icon nzType="close-circle" nzTheme="fill"></span>
+    </button>
+  </div>
+
+  <div class="filter-pills">
+    <button class="filter-pill" [class.filter-pill--active]="statusFilter === 'ALL'" (click)="setFilter('ALL')">
+      Tous <span class="pill-count">{{ clients.length }}</span>
+    </button>
+    <button class="filter-pill filter-pill--warning" [class.filter-pill--active]="statusFilter === 'PENDING'" (click)="setFilter('PENDING')">
+      En attente <span class="pill-count" *ngIf="getPendingTotal() > 0">{{ getPendingTotal() }}</span>
+    </button>
+    <button class="filter-pill filter-pill--success" [class.filter-pill--active]="statusFilter === 'VALIDATED'" (click)="setFilter('VALIDATED')">
+      Validées
+    </button>
+    <button class="filter-pill filter-pill--danger" [class.filter-pill--active]="statusFilter === 'REJECTED'" (click)="setFilter('REJECTED')">
+      Rejetées
+    </button>
+  </div>
+
+  <span class="history-count">{{ filteredClients.length }} client(s)</span>
+</div>
+
+<!-- Cards Grid -->
+<div class="history-container fade-in-up" style="animation-delay:0.1s">
+  <div class="history-grid" *ngIf="!loading; else skelLoader">
+    <div class="client-card" *ngFor="let client of filteredClients; let i = index"
+         [style.animation-delay]="(i * 0.05) + 's'" (click)="viewClientDetail(client)">
+
+      <!-- Header -->
+      <div class="client-card__header">
+        <div class="client-info">
+          <div class="client-avatar" [style.background]="getAvatarColor(client.prenom)">
+            {{ client.prenom.charAt(0).toUpperCase() }}{{ client.nom.charAt(0).toUpperCase() }}
+          </div>
+          <div class="client-name-wrap">
+            <span class="client-name">{{ client.prenom }} {{ client.nom }}</span>
+            <span class="client-email">{{ client.email }}</span>
+          </div>
+        </div>
+        <span class="card-arrow">
+          <span nz-icon nzType="arrow-right" nzTheme="outline"></span>
+        </span>
+      </div>
+
+      <!-- Stats -->
+      <div class="client-card__stats">
+        <div class="stat-item">
+          <span class="stat-value">{{ client.totalRecharges }}</span>
+          <span class="stat-label">Recharges</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-item">
+          <span class="stat-value stat-value--amount">{{ client.totalAmount }} TND</span>
+          <span class="stat-label">Montant total</span>
+        </div>
+      </div>
+
+      <!-- Status Breakdown -->
+      <div class="client-card__status">
+        <div class="status-chip status-chip--warning" *ngIf="client.pendingCount > 0">
+          <span class="status-chip__dot"></span>
+          {{ client.pendingCount }} en attente
+        </div>
+        <div class="status-chip status-chip--success">
+          <span class="status-chip__dot"></span>
+          {{ client.validatedCount }} validées
+        </div>
+        <div class="status-chip status-chip--danger" *ngIf="client.rejectedCount > 0">
+          <span class="status-chip__dot"></span>
+          {{ client.rejectedCount }} rejetées
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Empty State -->
+    <div class="empty-state" *ngIf="filteredClients.length === 0">
+      <span nz-icon nzType="inbox" nzTheme="outline"></span>
+      <p>Aucun client trouvé pour "{{ searchTerm }}"</p>
+      <button class="add-btn" *ngIf="searchTerm" (click)="clearSearch()">Réinitialiser</button>
+    </div>
+  </div>
+
+  <ng-template #skelLoader>
+    <div class="history-grid">
+      <div class="skel-card" *ngFor="let i of [1,2,3,4,5,6]"></div>
+    </div>
+  </ng-template>
+</div>

@@ -1,0 +1,121 @@
+// ═══════════════════════════════════════════════════════
+//  Client History — Premium Timeline
+// ═══════════════════════════════════════════════════════
+@import 'styles/variables';
+@import 'styles/mixins';
+
+.history-wrap { max-width: 700px; }
+
+// ── Timeline ──────────────────────────────────────────
+.timeline { display: flex; flex-direction: column; }
+
+.timeline-item {
+  display: flex; gap: 0; animation: fadeInUp 0.4s ease both;
+}
+
+.timeline-indicator {
+  display: flex; flex-direction: column; align-items: center;
+  width: 52px; flex-shrink: 0; padding-top: 2px;
+}
+
+.timeline-dot {
+  width: 36px; height: 36px; border-radius: 50%;
+  @include flex-center; flex-shrink: 0; z-index: 1; border: 2px solid;
+  transition: $transition-fast;
+
+  span[nz-icon] { font-size: 14px; }
+
+  &--success { background: rgba(var(--success-rgb), 0.12); border-color: rgba(var(--success-rgb), 0.35); color: $success; }
+  &--danger  { background: rgba(var(--danger-rgb), 0.12);  border-color: rgba(var(--danger-rgb), 0.35);  color: $danger; }
+  &--warning {
+    background: rgba(var(--warning-rgb), 0.12); border-color: rgba(var(--warning-rgb), 0.35); color: $warning;
+    span[nz-icon] { animation: spin 2s linear infinite; }
+  }
+}
+
+.timeline-line {
+  flex: 1; width: 2px; background: $border-subtle;
+  margin: 4px 0; min-height: 30px;
+}
+
+.timeline-content {
+  flex: 1; padding: 0 0 24px 16px;
+
+  &__header {
+    display: flex; align-items: flex-start; justify-content: space-between;
+    gap: 12px; background: $bg-card; border: 1px solid $border-subtle;
+    border-radius: 12px; padding: 14px 16px; margin-bottom: 6px;
+    transition: $transition-fast;
+    &:hover { border-color: rgba(var(--primary-rgb), 0.2); }
+  }
+
+  &__info { flex: 1; min-width: 0; }
+
+  &__plan {
+    font-family: $font-display; font-size: 14px; font-weight: 700;
+    color: $text-primary; margin: 0 0 2px;
+  }
+
+  &__phone { font-size: 12px; color: $text-secondary; font-family: monospace; }
+
+  &__operator {
+    display: inline-flex; align-items: center; gap: 4px;
+    font-size: 12px; color: $primary; font-weight: 600; margin-bottom: 2px;
+    span[nz-icon] { font-size: 12px; }
+  }
+
+  &__meta {
+    display: flex; flex-direction: column; align-items: flex-end;
+    gap: 6px; flex-shrink: 0;
+  }
+}
+
+.timeline-amount {
+  font-family: $font-display; font-size: 15px; font-weight: 800;
+  background: $gradient-accent;
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
+
+.timeline-date { font-size: 11px; color: $text-muted; padding-left: 4px; }
+
+.status-badge {
+  display: inline-flex; align-items: center;
+  font-size: 10px; font-weight: 700; padding: 3px 8px;
+  border-radius: 20px; white-space: nowrap;
+
+  &--success { background: rgba(var(--success-rgb), 0.12); color: $success; border: 1px solid rgba(var(--success-rgb), 0.25); }
+  &--danger  { background: rgba(var(--danger-rgb), 0.12);  color: $danger;  border: 1px solid rgba(var(--danger-rgb), 0.25); }
+  &--warning { background: rgba(var(--warning-rgb), 0.12); color: $warning; border: 1px solid rgba(var(--warning-rgb), 0.25); }
+}
+
+// ── Empty ─────────────────────────────────────────────
+.history-empty {
+  @include flex-center; flex-direction: column; gap: 16px;
+  padding: 80px 20px;
+
+  &__icon {
+    width: 80px; height: 80px; border-radius: 50%;
+    background: rgba(var(--accent-rgb), 0.08); border: 1px solid rgba(var(--accent-rgb), 0.15);
+    @include flex-center; animation: float 3s ease infinite;
+    span[nz-icon] { font-size: 36px; color: rgba(var(--accent-rgb), 0.5); }
+  }
+
+  h3 { font-size: 18px; color: $text-secondary; margin: 0; }
+  p  { font-size: 13px; color: $text-muted; margin: 0; }
+}
+
+.start-btn {
+  display: flex; align-items: center; gap: 8px;
+  background: linear-gradient(135deg, $accent, $accent-dark); color: #fff;
+  font-size: 13px; font-weight: 700; padding: 11px 22px;
+  border-radius: $border-radius-pill; text-decoration: none;
+  transition: $transition-spring; box-shadow: 0 4px 16px rgba(var(--accent-rgb), 0.4);
+  &:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(var(--accent-rgb), 0.55); color: #fff; }
+  span[nz-icon] { font-size: 15px; }
+}
+
+@keyframes fadeInUp { from { opacity:0; transform: translateY(12px); } to { opacity:1; transform:translateY(0); } }
+@keyframes float    { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+@keyframes spin     { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+.fade-in-up { animation: fadeInUp 0.5s ease both; }

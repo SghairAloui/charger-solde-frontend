@@ -1,0 +1,90 @@
+<app-page-header title="Opérateurs" subtitle="Gérez les opérateurs téléphoniques de la plateforme">
+  <button header-actions class="add-btn" (click)="showCreateModal()">
+    <span nz-icon nzType="plus" nzTheme="outline"></span>
+    Ajouter un opérateur
+  </button>
+</app-page-header>
+
+<!-- Operator cards -->
+<div class="op-grid fade-in-up" *ngIf="!loading; else skelLoader">
+  <div class="op-card" *ngFor="let op of operators; let i = index"
+       [style.animation-delay]="(i * 0.1) + 's'">
+    <div class="op-card__banner" [style.background]="getOpColor(op.name)"></div>
+    <div class="op-card__body">
+      <div class="op-card__logo-wrap">
+        <img *ngIf="op.logoUrl" [src]="op.logoUrl" [alt]="op.name" class="op-logo" />
+        <div *ngIf="!op.logoUrl" class="op-logo-fallback" [style.background]="getOpColor(op.name)">
+          {{ op.name.charAt(0) }}
+        </div>
+      </div>
+      <h3 class="op-card__name">{{ op.name }}</h3>
+    </div>
+    <div class="op-card__actions">
+      <button class="op-action-btn op-action-btn--delete" nz-tooltip nzTooltipTitle="Supprimer" (click)="confirmDeleteOperator(op)">
+        <span nz-icon nzType="delete" nzTheme="outline"></span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<ng-template #skelLoader>
+  <div class="op-grid">
+    <div class="op-skel" *ngFor="let i of [1,2,3]"></div>
+  </div>
+</ng-template>
+
+<!-- Empty -->
+<div class="op-empty fade-in-up" *ngIf="!loading && operators.length === 0">
+  <span nz-icon nzType="build" nzTheme="outline"></span>
+  <h3>Aucun opérateur</h3>
+  <p>Ajoutez votre premier opérateur téléphonique</p>
+  <button class="add-btn" (click)="showCreateModal()">
+    <span nz-icon nzType="plus" nzTheme="outline"></span>
+    Ajouter un opérateur
+  </button>
+</div>
+
+<app-confirm-modal
+  [visible]="showConfirmDelete"
+  [itemName]="opToDelete?.name || ''"
+  [loading]="deleting"
+  [message]="'Voulez-vous vraiment supprimer l\'opérateur '"
+  (confirm)="deleteOperator()"
+  (cancel)="showConfirmDelete = false; opToDelete = null"
+></app-confirm-modal>
+
+<!-- Modal -->
+<div class="modal-overlay" *ngIf="isModalVisible" (click)="closeModal()">
+  <div class="modal-card" (click)="$event.stopPropagation()">
+    <div class="modal-card__header">
+      <div class="modal-card__icon"><span nz-icon nzType="build" nzTheme="outline"></span></div>
+      <div>
+        <h3 class="modal-card__title">Ajouter un opérateur</h3>
+        <p class="modal-card__sub">Renseignez les informations de l'opérateur</p>
+      </div>
+      <button class="modal-card__close" (click)="closeModal()"><span nz-icon nzType="close" nzTheme="outline"></span></button>
+    </div>
+    <div class="modal-card__body">
+      <div class="field-group">
+        <label class="field-label">Nom de l'opérateur <span class="required">*</span></label>
+        <input class="field-input" [(ngModel)]="newOperator.name" placeholder="Ex: Ooredoo" />
+      </div>
+      <div class="field-group">
+        <label class="field-label">Logo (Image)</label>
+        <div class="upload-area" (click)="fileInput.click()">
+          <span nz-icon nzType="upload" nzTheme="outline" *ngIf="!newOperator.logoUrl"></span>
+          <p *ngIf="!newOperator.logoUrl">Cliquez pour uploader un logo</p>
+          <img *ngIf="newOperator.logoUrl" [src]="newOperator.logoUrl" alt="Logo preview" class="logo-preview" />
+          <input #fileInput type="file" accept="image/*" (change)="onFileSelected($event)" style="display: none;" />
+        </div>
+      </div>
+    </div>
+    <div class="modal-card__footer">
+      <button class="modal-btn modal-btn--cancel" (click)="closeModal()">Annuler</button>
+      <button class="modal-btn modal-btn--submit" (click)="createOperator()" [disabled]="submitting">
+        <span nz-icon nzType="plus" nzTheme="outline"></span>
+        Créer
+      </button>
+    </div>
+  </div>
+</div>

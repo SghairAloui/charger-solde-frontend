@@ -1,0 +1,136 @@
+﻿// ─── Stat Card — Premium Glassmorphism ─────────────────────────────────
+
+@import 'styles/variables';
+@import 'styles/mixins';
+
+:host { display: block; }
+
+.stat-card {
+  position: relative;
+  background: $bg-card;
+  border: 1px solid $border-subtle;
+  border-radius: 16px;
+  padding: 20px 22px 16px;
+  overflow: hidden;
+  transition: $transition-spring;
+  cursor: default;
+  height: 100%;
+
+  &:hover {
+    transform: translateY(-4px);
+    border-color: rgba(var(--accent-color-raw, 108, 92, 231), 0.3);
+    box-shadow: 0 12px 40px rgba(0,0,0,0.3), 0 0 0 1px rgba(var(--accent-color-raw, 108, 92, 231), 0.1);
+  }
+
+  // Ambient glow
+  &__glow {
+    position: absolute;
+    bottom: -20px; right: -20px;
+    width: 100px; height: 100px;
+    border-radius: 50%;
+    opacity: 0.08;
+    filter: blur(30px);
+    transition: $transition-slow;
+    pointer-events: none;
+  }
+
+  &:hover &__glow { opacity: 0.18; transform: scale(1.3); }
+
+  // Body
+  &__body {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+  }
+
+  // Icon wrapper
+  &__icon-wrap {
+    width: 52px; height: 52px;
+    border-radius: 14px;
+    @include flex-center;
+    flex-shrink: 0;
+    padding: 2px;
+    transition: $transition-spring;
+  }
+
+  &:hover &__icon-wrap { transform: scale(1.08) rotate(-3deg); }
+
+  &__icon-inner {
+    width: 100%; height: 100%;
+    border-radius: 12px;
+    @include flex-center;
+
+    span[nz-icon] {
+      font-size: 24px;
+      color: #fff;
+      filter: drop-shadow(0 2px 6px rgba(0,0,0,0.3));
+    }
+  }
+
+  // Info
+  &__info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+  }
+
+  &__label {
+    font-size: 11px;
+    font-weight: 600;
+    color: $text-secondary;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+  }
+
+  &__value {
+    font-family: $font-display;
+    font-size: 28px;
+    font-weight: 800;
+    color: $text-primary;
+    line-height: 1;
+    animation: counterUp 0.6s ease both;
+  }
+
+  &__trend {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 2px 7px;
+    border-radius: 10px;
+    width: fit-content;
+    margin-top: 2px;
+
+    span[nz-icon] { font-size: 10px; }
+
+    .up   { color: $success; }
+    .down { color: $danger; }
+  }
+
+  // Progress bar
+  &__progress {
+    height: 3px;
+    background: rgba(255,255,255,0.06);
+    border-radius: 2px;
+    margin-top: 16px;
+    overflow: hidden;
+  }
+
+  &__progress-bar {
+    height: 100%;
+    border-radius: 2px;
+    transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
+    animation: progressIn 1.2s cubic-bezier(0.4, 0, 0.2, 1) both;
+  }
+}
+
+@keyframes counterUp {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0);   }
+}
+
+@keyframes progressIn {
+  from { width: 0 !important; }
+}

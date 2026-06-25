@@ -1,0 +1,99 @@
+// ═══════════════════════════════════════════════════════
+//  Client Messaging — Support Chat
+// ═══════════════════════════════════════════════════════
+@import 'styles/variables';
+@import 'styles/mixins';
+
+.client-chat {
+  display: flex; flex-direction: column;
+  height: calc(100vh - 200px); min-height: 500px; max-width: 800px;
+  background: $bg-card; border: 1px solid $border-subtle;
+  border-radius: 20px; overflow: hidden;
+}
+
+.messages-wrap {
+  flex: 1; overflow-y: auto;
+  @include custom-scrollbar(4px, $accent);
+}
+
+.messages-inner { padding: 24px; display: flex; flex-direction: column; gap: 12px; }
+
+.chat-welcome {
+  background: rgba(var(--accent-rgb), 0.08); border: 1px solid rgba(var(--accent-rgb), 0.15);
+  border-radius: 12px; padding: 16px 20px; text-align: center;
+  display: flex; flex-direction: column; align-items: center; gap: 8px; margin-bottom: 8px;
+
+  &__icon { font-size: 28px; animation: float 3s ease infinite; }
+  p { font-size: 13px; color: $text-secondary; margin: 0; line-height: 1.6; }
+}
+
+.date-sep { text-align: center; margin: 4px 0;
+  span { font-size: 11px; color: $text-muted; background: $bg-card;
+         border: 1px solid $border-subtle; padding: 3px 12px; border-radius: 20px; } }
+
+.msg-row {
+  display: flex; align-items: flex-end; gap: 8px;
+  animation: fadeInUp 0.3s ease both;
+
+  &--sent {
+    flex-direction: row-reverse;
+    .msg-bubble { background: linear-gradient(135deg, $accent, $accent-dark); border-radius: 16px 4px 16px 16px;
+      .msg-bubble__text { color: #fff; } .msg-bubble__time { color: rgba(255,255,255,0.65); text-align: right; } }
+  }
+  &--received {
+    .msg-bubble { background: rgba(255,255,255,0.06); border: 1px solid $border-subtle; border-radius: 4px 16px 16px 16px; }
+  }
+}
+
+.msg-avatar { font-size: 24px; width: 34px; @include flex-center; flex-shrink: 0; }
+
+.msg-bubble {
+  max-width: 70%; padding: 12px 16px;
+  &__text { font-size: 14px; color: $text-primary; margin: 0 0 4px; line-height: 1.5; word-break: break-word; }
+  &__time { font-size: 10px; color: $text-muted; display: block; }
+}
+
+.typing-indicator {
+  display: flex; align-items: center; gap: 4px;
+  padding: 12px 16px; background: rgba(255,255,255,0.06);
+  border: 1px solid $border-subtle; border-radius: 4px 16px 16px 16px;
+  width: fit-content; margin-left: 42px;
+  span { width: 7px; height: 7px; border-radius: 50%; background: $text-muted;
+         animation: typing 1.2s ease infinite;
+         &:nth-child(2) { animation-delay: 0.2s; } &:nth-child(3) { animation-delay: 0.4s; } }
+}
+
+.chat-input-area {
+  display: flex; align-items: center; gap: 10px;
+  padding: 14px 20px; border-top: 1px solid $border-subtle;
+  background: rgba(var(--bg-surface-rgb), 0.3); flex-shrink: 0;
+}
+
+.chat-input-wrap {
+  flex: 1; background: $bg-input; border: 1px solid $border-default;
+  border-radius: $border-radius-pill; padding: 0 16px; height: 44px;
+  display: flex; align-items: center; transition: $transition-fast;
+  &:focus-within { border-color: rgba(var(--accent-rgb), 0.5); box-shadow: 0 0 0 3px rgba(var(--accent-rgb), 0.1); }
+}
+
+.chat-input {
+  width: 100%; background: none; border: none; outline: none;
+  color: $text-primary; font-size: 14px; font-family: $font-family;
+  &::placeholder { color: $text-muted; }
+}
+
+.send-btn {
+  width: 44px; height: 44px; background: linear-gradient(135deg, $accent, $accent-dark);
+  border: none; border-radius: 50%; color: #fff; @include flex-center;
+  cursor: pointer; transition: $transition-spring; flex-shrink: 0;
+  box-shadow: 0 4px 14px rgba(var(--accent-rgb), 0.4);
+  &:hover:not(:disabled) { transform: scale(1.08); box-shadow: 0 6px 20px rgba(var(--accent-rgb), 0.55); }
+  &:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+  span[nz-icon] { font-size: 16px; }
+}
+
+@keyframes fadeInUp { from { opacity:0; transform: translateY(12px); } to { opacity:1; transform:translateY(0); } }
+@keyframes float    { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+@keyframes typing   { 0%,60%,100% { transform: translateY(0); opacity: 0.4; } 30% { transform: translateY(-6px); opacity: 1; } }
+
+.fade-in-up { animation: fadeInUp 0.5s ease both; }

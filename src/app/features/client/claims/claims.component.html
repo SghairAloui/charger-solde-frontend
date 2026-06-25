@@ -1,0 +1,102 @@
+<app-page-header title="Mes réclamations" subtitle="Soumettez et suivez vos réclamations">
+  <button header-actions class="add-btn" (click)="showCreateModal()">
+    <span nz-icon nzType="plus" nzTheme="outline"></span>
+    Nouvelle réclamation
+  </button>
+</app-page-header>
+
+<!-- Loading skeleton -->
+<div class="claims-grid fade-in-up" *ngIf="loading">
+  <div class="skel-card" *ngFor="let i of [1,2,3]"></div>
+</div>
+
+<!-- Claims Grid -->
+<div class="claims-grid fade-in-up" *ngIf="!loading && claims.length > 0">
+  <div class="claim-card"
+       *ngFor="let claim of claims; let i = index"
+       [style.animation-delay]="(i * 0.07) + 's'">
+
+    <div class="claim-card__header">
+      <div class="claim-card__left">
+        <div class="claim-icon" [ngClass]="getStatusClass(claim.status)">
+          <span nz-icon
+                [nzType]="claim.status === 'RESOLVED' ? 'check-circle' : 'file-exclamation'"
+                nzTheme="outline"></span>
+        </div>
+        <div>
+          <span class="claim-subject">{{ claim.subject }}</span>
+          <span class="claim-date">{{ claim.createdAt | dateFormat }}</span>
+        </div>
+      </div>
+      <span class="claim-status-badge" [ngClass]="getStatusClass(claim.status)">
+        <span class="claim-status-dot"></span>
+        {{ getStatusLabel(claim.status) }}
+      </span>
+    </div>
+
+    <p class="claim-desc">{{ claim.description }}</p>
+
+    <div class="claim-footer">
+      <span class="claim-user" *ngIf="claim.updatedAt">
+        <span nz-icon nzType="clock-circle" nzTheme="outline"></span>
+        Mis à jour {{ claim.updatedAt | dateFormat }}
+      </span>
+    </div>
+  </div>
+</div>
+
+<!-- Empty state -->
+<ng-template #empty></ng-template>
+<div class="claims-empty fade-in-up" *ngIf="!loading && claims.length === 0">
+  <div class="claims-empty__icon">
+    <span nz-icon nzType="file-exclamation" nzTheme="outline"></span>
+  </div>
+  <h3>Aucune réclamation</h3>
+  <p>Vous n'avez soumis aucune réclamation pour le moment</p>
+  <button class="add-btn" (click)="showCreateModal()">
+    <span nz-icon nzType="plus" nzTheme="outline"></span>
+    Soumettre une réclamation
+  </button>
+</div>
+
+<!-- Modal -->
+<div class="modal-overlay" *ngIf="isModalVisible" (click)="closeModal()">
+  <div class="modal-card" (click)="$event.stopPropagation()">
+    <div class="modal-card__header">
+      <div class="modal-card__icon"><span nz-icon nzType="file-exclamation" nzTheme="outline"></span></div>
+      <div>
+        <h3 class="modal-card__title">Nouvelle réclamation</h3>
+        <p class="modal-card__sub">Décrivez votre problème et notre équipe vous répondra</p>
+      </div>
+      <button class="modal-card__close" (click)="closeModal()"><span nz-icon nzType="close" nzTheme="outline"></span></button>
+    </div>
+    <div class="modal-card__body">
+      <div class="field-group">
+        <label class="field-label">Concerne la commande (Optionnel)</label>
+        <select class="field-input" [(ngModel)]="newClaim.orderId">
+          <option [ngValue]="null">Général (Aucune commande spécifique)</option>
+          <option *ngFor="let order of orders" [ngValue]="order.id">
+            Commande #{{ order.id }} - {{ order.amount }} TND ({{ order.createdAt | dateFormat }})
+          </option>
+        </select>
+      </div>
+      <div class="field-group">
+        <label class="field-label">Sujet <span class="required">*</span></label>
+        <input class="field-input" [(ngModel)]="newClaim.subject"
+               placeholder="Ex: Recharge non reçue, Mauvais montant..." />
+      </div>
+      <div class="field-group">
+        <label class="field-label">Description <span class="required">*</span></label>
+        <textarea class="field-textarea" rows="4" [(ngModel)]="newClaim.description"
+                  placeholder="Décrivez votre problème en détail..."></textarea>
+      </div>
+    </div>
+    <div class="modal-card__footer">
+      <button class="modal-btn modal-btn--cancel" (click)="closeModal()">Annuler</button>
+      <button class="modal-btn modal-btn--submit" (click)="submitClaim()" [disabled]="submitting">
+        <span nz-icon [nzType]="submitting ? 'loading' : 'send'" nzTheme="outline"></span>
+        Soumettre
+      </button>
+    </div>
+  </div>
+</div>

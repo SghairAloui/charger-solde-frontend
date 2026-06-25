@@ -1,0 +1,218 @@
+<!-- ── Welcome Hero ── -->
+<div class="dash-welcome fade-in-up">
+  <div class="dash-welcome__left">
+    <div class="dash-welcome__greeting">
+      <span class="dash-welcome__emoji">{{ greeting.emoji }}</span>
+      <div>
+        <h2 class="dash-welcome__title">{{ greeting.text }}, <span class="gradient-text">Admin</span> !</h2>
+        <p class="dash-welcome__sub">Voici un aperçu de l'activité de votre plateforme</p>
+      </div>
+    </div>
+  </div>
+  <div class="dash-welcome__right">
+    <div class="dash-date">
+      <span nz-icon nzType="calendar" nzTheme="outline"></span>
+      {{ today | dateFormat:'dddd DD MMMM YYYY' }}
+    </div>
+    <button class="refresh-btn" (click)="refresh()" [class.spinning]="loading">
+      <span nz-icon nzType="reload" nzTheme="outline"></span>
+      Actualiser
+    </button>
+  </div>
+</div>
+
+<!-- ── KPI Cards ── -->
+<div class="kpi-grid fade-in-up" style="animation-delay: 0.1s">
+  <app-stat-card
+    label="Total clients"
+    [value]="stats?.totalClients ?? 0"
+    icon="team"
+    bgColor="#6C5CE7"
+    [trend]="12"
+    [progress]="75"
+  ></app-stat-card>
+
+  <app-stat-card
+    label="Total recharges"
+    [value]="stats?.totalRecharges ?? 0"
+    icon="thunderbolt"
+    bgColor="#00CEC9"
+    [trend]="8"
+    [progress]="60"
+  ></app-stat-card>
+
+  <app-stat-card
+    label="Aujourd'hui"
+    [value]="stats?.todayRecharges ?? 0"
+    icon="rise"
+    bgColor="#00b894"
+    [trend]="5"
+    [progress]="45"
+  ></app-stat-card>
+
+  <app-stat-card
+    label="Cette semaine"
+    [value]="stats?.weekRecharges ?? 0"
+    icon="calendar"
+    bgColor="#fdcb6e"
+    [trend]="-2"
+    [progress]="55"
+  ></app-stat-card>
+</div>
+
+<!-- ── Quick Actions ── -->
+<div class="quick-actions fade-in-up" style="animation-delay: 0.2s">
+  <a class="qa-btn qa-btn--primary" routerLink="/admin/clients">
+    <div class="qa-btn__icon"><span nz-icon nzType="user-add" nzTheme="outline"></span></div>
+    <span>Nouveau client</span>
+  </a>
+  <a class="qa-btn qa-btn--success" routerLink="/admin/orders">
+    <div class="qa-btn__icon"><span nz-icon nzType="check-circle" nzTheme="outline"></span></div>
+    <span>Valider commandes</span>
+  </a>
+  <a class="qa-btn qa-btn--info" routerLink="/admin/messaging">
+    <div class="qa-btn__icon"><span nz-icon nzType="message" nzTheme="outline"></span></div>
+    <span>Messagerie</span>
+  </a>
+  <a class="qa-btn qa-btn--warning" routerLink="/admin/claims">
+    <div class="qa-btn__icon"><span nz-icon nzType="file-exclamation" nzTheme="outline"></span></div>
+    <span>Réclamations</span>
+  </a>
+</div>
+
+<!-- ── Recent Recharges Table ── -->
+<div class="recent-section fade-in-up" style="animation-delay: 0.3s">
+  <div class="recent-section__header">
+    <div class="section-title">
+      <span class="section-title__dot"></span>
+      <h3>Dernières recharges</h3>
+      <span class="section-title__badge" *ngIf="pendingCount > 0">{{ pendingCount }} en attente</span>
+    </div>
+    <a routerLink="/admin/orders" class="see-all-btn">
+      Voir tout <span nz-icon nzType="arrow-right" nzTheme="outline"></span>
+    </a>
+  </div>
+
+  <div class="recent-table" *ngIf="!loading; else tableLoading">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Client</th>
+          <th>Opérateur</th>
+          <th>Téléphone</th>
+          <th>Montant</th>
+          <th>Statut</th>
+          <th>Date</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of recentRecharges; let i = index"
+            class="table-row"
+            [style.animation-delay]="(i * 0.04) + 's'">
+          <td>
+            <div class="client-cell">
+              <div class="client-cell__avatar" [style.background]="getAvatarColor(item.client.prenom)">
+                {{ item.client.prenom.charAt(0).toUpperCase() }}{{ item.client.nom.charAt(0).toUpperCase() }}
+              </div>
+              <span>{{ item.client.prenom }} {{ item.client.nom }}</span>
+            </div>
+          </td>
+          <td class="operator-cell">{{ item.plan.operator?.name || '—' }}</td>
+          <td class="phone-cell">{{ item.phoneNumber }}</td>
+          <td><span class="amount-badge">{{ item.amount }} TND</span></td>
+          <td>
+            <span class="status-badge"
+                  [class.status-badge--success]="item.status === 'VALIDATED'"
+                  [class.status-badge--danger]="item.status === 'REJECTED'"
+                  [class.status-badge--warning]="item.status === 'PENDING'">
+              <span class="status-badge__dot"></span>
+              {{ item.status | statusLabel }}
+            </span>
+          </td>
+          <td class="date-cell">{{ item.createdAt | dateFormat }}</td>
+          <td>
+            <div class="action-btns" *ngIf="item.status === 'PENDING'">
+              <button class="action-btn action-btn--approve" (click)="validate(item.id, true)"
+                      nz-tooltip nzTooltipTitle="Valider">
+                <span nz-icon nzType="check" nzTheme="outline"></span>
+              </button>
+              <button class="action-btn action-btn--reject" (click)="validate(item.id, false)"
+                      nz-tooltip nzTooltipTitle="Rejeter">
+                <span nz-icon nzType="close" nzTheme="outline"></span>
+              </button>
+            </div>
+            <span class="no-action" *ngIf="item.status !== 'PENDING'">—</span>
+          </td>
+        </tr>
+        <tr *ngIf="recentRecharges.length === 0">
+          <td colspan="6" class="empty-row">
+            <span nz-icon nzType="inbox" nzTheme="outline"></span>
+            Aucune recharge récente
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <ng-template #tableLoading>
+    <div class="table-skeleton">
+      <div class="skeleton-row" *ngFor="let i of [1,2,3,4,5]"></div>
+    </div>
+  </ng-template>
+</div>
+<br>
+<!-- ── Client Recharge History ── -->
+<div class="recent-section fade-in-up" style="animation-delay: 0.4s">
+  <div class="recent-section__header">
+    <div class="section-title">
+      <span class="section-title__dot"></span>
+      <h3>Historique des recharges par client</h3>
+    </div>
+    <a routerLink="/admin/client-history" class="see-all-btn">
+      Voir tout <span nz-icon nzType="arrow-right" nzTheme="outline"></span>
+    </a>
+  </div>
+
+  <div class="recent-table">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Client</th>
+          <th>Email</th>
+          <th>Total</th>
+          <th>Montant total</th>
+          <th>En attente</th>
+          <th>Validées</th>
+          <th>Rejetées</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let s of clientSummaries; let i = index"
+            class="table-row"
+            [style.animation-delay]="(i * 0.03) + 's'">
+          <td>
+            <div class="client-cell">
+              <div class="client-cell__avatar" [style.background]="getAvatarColor(s.prenom)">
+                {{ s.prenom.charAt(0).toUpperCase() }}{{ s.nom.charAt(0).toUpperCase() }}
+              </div>
+              <span>{{ s.prenom }} {{ s.nom }}</span>
+            </div>
+          </td>
+          <td>{{ s.email }}</td>
+          <td><span class="amount-badge">{{ s.totalRecharges }}</span></td>
+          <td><span class="amount-badge">{{ s.totalAmount }} TND</span></td>
+          <td><span class="status-badge status-badge--warning">{{ s.pendingCount }}</span></td>
+          <td><span class="status-badge status-badge--success">{{ s.validatedCount }}</span></td>
+          <td><span class="status-badge status-badge--danger">{{ s.rejectedCount }}</span></td>
+        </tr>
+        <tr *ngIf="clientSummaries.length === 0">
+          <td colspan="7" class="empty-row">
+            <span nz-icon nzType="inbox" nzTheme="outline"></span>
+            Aucune donnée client
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

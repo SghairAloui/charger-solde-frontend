@@ -1,0 +1,72 @@
+<app-page-header title="Centre de notifications" subtitle="Toutes vos alertes en temps réel">
+  <button header-actions class="mark-all-btn" (click)="markAllRead()" *ngIf="unreadCount > 0">
+    <span nz-icon nzType="check-circle" nzTheme="outline"></span>
+    Tout marquer comme lu
+  </button>
+</app-page-header>
+
+<!-- ── Filter Tabs ── -->
+<div class="notif-tabs fade-in-up">
+  <button class="notif-tab" [class.notif-tab--active]="activeFilter === 'ALL'" (click)="setFilter('ALL')">
+    Toutes
+    <span class="notif-tab__count">{{ notifications.length }}</span>
+  </button>
+  <button class="notif-tab" [class.notif-tab--active]="activeFilter === 'UNREAD'" (click)="setFilter('UNREAD')">
+    Non lues
+    <span class="notif-tab__count notif-tab__count--accent" *ngIf="unreadCount > 0">{{ unreadCount }}</span>
+  </button>
+  <button class="notif-tab" [class.notif-tab--active]="activeFilter === 'RECHARGE'" (click)="setFilter('RECHARGE')">
+    Recharges
+  </button>
+  <button class="notif-tab" [class.notif-tab--active]="activeFilter === 'MESSAGE'" (click)="setFilter('MESSAGE')">
+    Messages
+  </button>
+</div>
+
+<!-- ── Notifications Timeline ── -->
+<div class="notif-list fade-in-up" style="animation-delay:0.1s">
+
+  <div *ngIf="filteredNotifications.length > 0; else emptyNotif">
+    <div class="notif-card"
+         *ngFor="let n of filteredNotifications; let i = index"
+         [class.notif-card--unread]="!n.read"
+         [style.animation-delay]="(i * 0.04) + 's'"
+         (click)="markAsRead(n.id)">
+
+      <!-- Timeline dot -->
+      <div class="notif-card__timeline">
+        <div class="timeline-dot" [class.timeline-dot--active]="!n.read"></div>
+        <div class="timeline-line"></div>
+      </div>
+
+      <!-- Icon -->
+      <div class="notif-card__icon-wrap" [ngClass]="'notif-icon--' + n.type.toLowerCase()">
+        <span nz-icon [nzType]="getIcon(n.type)" nzTheme="outline"></span>
+      </div>
+
+      <!-- Content -->
+      <div class="notif-card__content">
+        <div class="notif-card__header-row">
+          <h4 class="notif-card__title">{{ n.title }}</h4>
+          <div class="notif-card__meta">
+            <span class="notif-badge-new" *ngIf="!n.read">Nouveau</span>
+            <span class="notif-card__time">{{ n.createdAt | dateFormat:'HH:mm' }}</span>
+          </div>
+        </div>
+        <p class="notif-card__msg">{{ n.message }}</p>
+        <span class="notif-card__date">{{ n.createdAt | dateFormat:'DD MMM YYYY' }}</span>
+      </div>
+
+    </div>
+  </div>
+
+  <ng-template #emptyNotif>
+    <div class="notif-empty">
+      <div class="notif-empty__icon">
+        <span nz-icon nzType="bell" nzTheme="outline"></span>
+      </div>
+      <h3>Aucune notification</h3>
+      <p>Vous n'avez aucune notification {{ activeFilter === 'UNREAD' ? 'non lue' : '' }} pour l'instant</p>
+    </div>
+  </ng-template>
+</div>

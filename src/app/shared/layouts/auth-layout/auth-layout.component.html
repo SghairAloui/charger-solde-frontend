@@ -1,0 +1,59 @@
+<div class="login-split">
+
+  <!-- ══ LEFT BRAND ══ -->
+  <div class="login-left">
+    <div class="brand-header">
+      <div class="brand-logo">
+        <img src="assets/outline/logo.png" alt="Charge Pay" class="brand-logo-img" />
+      </div>
+      <h2><span>Charge</span> Pay</h2>
+    </div>
+
+    <div class="brand-content">
+      <h1 class="brand-title">La plateforme de<br><span>recharge intelligente</span></h1>
+      <p class="brand-subtitle">Gérez vos recharges téléphoniques en toute simplicité. Rapidité, sécurité et suivi en temps réel.</p>
+
+      <div class="stats-grid">
+        <div class="stat-box">
+          <span class="stat-val">{{ stats.clients }}+</span>
+          <span class="stat-lbl">Clients Actifs</span>
+        </div>
+        <div class="stat-box">
+          <span class="stat-val">{{ stats.recharges }}+</span>
+          <span class="stat-lbl">Recharges Traitées</span>
+        </div>
+        <div class="stat-box">
+          <span class="stat-val">{{ stats.uptime }}%</span>
+          <span class="stat-lbl">Disponibilité</span>
+        </div>
+      </div>
+
+      <div class="features-list">
+        <div class="feature-item" *ngFor="let feat of features">
+          <div class="feature-icon" [style.background]="feat.color">
+            <span nz-icon [nzType]="feat.icon" nzTheme="outline"></span>
+          </div>
+          <div class="feature-text">
+            <h4>{{ feat.title }}</h4>
+            <p>{{ feat.desc }}</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="operators-bar">
+        <span class="op-label">Opérateurs supportés</span>
+        <div class="op-tags">
+          <span class="op-tag op-tag--ooredoo">Ooredoo</span>
+          <span class="op-tag op-tag--orange">Orange</span>
+          <span class="op-tag op-tag--tt">Tunisie Telecom</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ RIGHT COLUMN (Outlet) ══ -->
+  <div class="login-right">
+    <router-outlet></router-outlet>
+  </div>
+
+</div>

@@ -1,0 +1,176 @@
+@import 'styles/variables';
+@import 'styles/mixins';
+
+.dashboard-page {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* ── 1. Welcome Banner ── */
+.welcome-banner {
+  display: flex; align-items: center; justify-content: space-between; gap: 20px;
+  background: $bg-card; border: 1px solid $border-subtle; border-radius: 16px;
+  padding: 24px 32px; box-shadow: $shadow-sm;
+  
+  &__icon {
+    width: 56px; height: 56px; border-radius: 14px;
+    background: linear-gradient(135deg, $primary-light, $primary);
+    @include flex-center; color: #fff; flex-shrink: 0;
+    box-shadow: 0 8px 20px rgba(var(--primary-rgb), 0.3);
+    span[nz-icon] { font-size: 28px; }
+  }
+
+  &__text {
+    flex: 1; min-width: 0;
+    h2 { font-size: 20px; font-weight: 700; color: $text-primary; margin: 0 0 4px; font-family: $font-display; }
+    h2 span { color: $primary; }
+    p { font-size: 14px; color: $text-secondary; margin: 0; }
+  }
+
+  &__action {
+    button {
+      font-weight: 600; font-family: $font-family; padding: 0 24px; height: 44px; border-radius: 22px;
+      display: inline-flex; align-items: center; justify-content: center; color: #ffffff;
+      background: linear-gradient(135deg, $primary, $primary-dark);
+      border: none; box-shadow: 0 4px 12px rgba(var(--primary-rgb), 0.3);
+      transition: all 0.2s ease; cursor: pointer;
+      &:hover { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(var(--primary-rgb), 0.4); }
+    }
+  }
+
+  @media (max-width: 768px) {
+    flex-direction: column; align-items: flex-start; text-align: left;
+    &__action { width: 100%; button { width: 100%; } }
+  }
+}
+
+/* ── 2. KPI Cards ── */
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 24px;
+}
+
+.kpi-card {
+  display: flex; align-items: center; gap: 16px;
+  background: $bg-card; border: 1px solid $border-subtle; border-radius: 16px;
+  padding: 24px; box-shadow: $shadow-sm;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  
+  &:hover { transform: translateY(-4px); box-shadow: $shadow-md; }
+
+  &__icon {
+    width: 56px; height: 56px; border-radius: 16px;
+    @include flex-center; flex-shrink: 0;
+    span[nz-icon] { font-size: 24px; }
+  }
+
+  &__info {
+    display: flex; flex-direction: column; gap: 4px; flex: 1; min-width: 0;
+  }
+
+  &__label { font-size: 11px; font-weight: 700; color: $text-muted; text-transform: uppercase; letter-spacing: 0.5px; }
+  &__value { font-size: 28px; font-weight: 800; color: $text-primary; font-family: $font-display; line-height: 1; }
+  
+  &__val-row { display: flex; align-items: baseline; justify-content: space-between; }
+  
+  .trend {
+    font-size: 12px; font-weight: 600; display: flex; align-items: center; gap: 2px;
+    &--up { color: $success; }
+    &--down { color: $danger; }
+  }
+
+  &--balance .kpi-card__icon { background: rgba(var(--primary-rgb), 0.1); color: $primary; }
+  &--total   .kpi-card__icon { background: rgba(0, 206, 201, 0.1); color: #00CEC9; }
+  &--pending .kpi-card__icon { background: rgba(var(--warning-rgb), 0.1); color: $warning; }
+  &--success .kpi-card__icon { background: rgba(var(--success-rgb), 0.1); color: $success; }
+}
+
+/* ── 3. Quick Action Operators ── */
+.section-title {
+  font-size: 12px; font-weight: 700; color: $text-muted;
+  text-transform: uppercase; letter-spacing: 1px; margin-bottom: 16px;
+  display: flex; align-items: center; gap: 8px;
+  span[nz-icon] { color: $primary; font-size: 14px; }
+}
+
+.operator-pills {
+  display: flex; flex-wrap: wrap; gap: 16px;
+}
+
+.op-pill {
+  display: inline-flex; align-items: center; gap: 12px;
+  background: $bg-card; border: 1px solid $border-subtle;
+  padding: 10px 24px 10px 10px; border-radius: 40px; cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 14px; font-weight: 600; font-family: $font-family; color: $text-primary;
+
+  .op-icon {
+    width: 32px; height: 32px; border-radius: 50%; color: #fff; font-size: 14px; font-weight: 800;
+    @include flex-center;
+  }
+
+  &:hover { border-color: rgba(var(--primary-rgb), 0.4); background: rgba(var(--primary-rgb), 0.06); color: $primary; }
+}
+
+/* ── 4. Recent Orders ── */
+.recent-orders {
+  &__header {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 16px;
+    .section-title { margin-bottom: 0; }
+  }
+  .view-all-link {
+    font-size: 13px; font-weight: 600; color: $primary;
+    &:hover { text-decoration: underline; }
+  }
+}
+
+.orders-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+.order-card {
+  background: $bg-card; border: 1px solid $border-subtle; border-radius: 16px;
+  padding: 20px; box-shadow: $shadow-sm; transition: $transition-fast;
+  &:hover { border-color: rgba(var(--primary-rgb), 0.3); box-shadow: $shadow-md; }
+
+  &__header {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px dashed $border-subtle;
+  }
+  
+  .order-amount { font-size: 16px; font-weight: 800; color: $text-primary; font-family: $font-display; }
+
+  &__body { display: flex; flex-direction: column; gap: 12px; }
+
+  .order-detail {
+    &__phone { font-size: 16px; font-weight: 700; color: $text-primary; letter-spacing: 1px; font-family: monospace; }
+  }
+
+  .order-meta {
+    display: flex; align-items: center; gap: 12px;
+    &__badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 12px; font-weight: 600; color: $primary;
+      background: rgba(var(--primary-rgb), 0.1); padding: 4px 10px; border-radius: 20px;
+    }
+    &__date {
+      display: inline-flex; align-items: center; gap: 4px;
+      font-size: 12px; color: $text-muted; font-weight: 500;
+    }
+  }
+}
+
+.empty-orders {
+  grid-column: 1 / -1;
+  background: $bg-card; border: 1px dashed $border-subtle; border-radius: 16px;
+  padding: 40px; text-align: center; color: $text-muted;
+  span[nz-icon] { font-size: 32px; opacity: 0.5; margin-bottom: 12px; }
+  p { margin: 0; font-size: 14px; font-weight: 500; color: $text-secondary; }
+}

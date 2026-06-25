@@ -1,0 +1,171 @@
+﻿// ═══════════════════════════════════════════════════════
+//  Admin Notifications — Premium Timeline
+// ═══════════════════════════════════════════════════════
+@import 'styles/variables';
+@import 'styles/mixins';
+
+.mark-all-btn {
+  display: flex; align-items: center; gap: 8px;
+  background: rgba(var(--success-rgb), 0.1);
+  border: 1px solid rgba(var(--success-rgb), 0.25);
+  color: $success; font-size: 13px; font-weight: 600;
+  font-family: $font-family; padding: 9px 18px;
+  border-radius: $border-radius-pill; cursor: pointer;
+  transition: $transition-fast;
+  &:hover { background: rgba(var(--success-rgb), 0.18); }
+  span[nz-icon] { font-size: 14px; }
+}
+
+// Filter tabs
+.notif-tabs {
+  display: flex; gap: 4px;
+  background: $bg-card; border: 1px solid $border-subtle;
+  border-radius: $border-radius-pill; padding: 4px;
+  width: fit-content; margin-bottom: 20px;
+}
+
+.notif-tab {
+  display: flex; align-items: center; gap: 7px;
+  padding: 8px 18px; border-radius: $border-radius-pill;
+  border: none; background: none; color: $text-secondary;
+  font-size: 13px; font-weight: 500; font-family: $font-family;
+  cursor: pointer; transition: $transition-fast; white-space: nowrap;
+
+  &--active {
+    background: $gradient-brand; color: #fff;
+    box-shadow: 0 4px 12px rgba(var(--primary-rgb), 0.35);
+  }
+
+  &__count {
+    background: rgba(255,255,255,0.15);
+    font-size: 11px; font-weight: 700;
+    padding: 1px 7px; border-radius: 10px;
+
+    &--accent {
+      background: rgba(var(--danger-rgb), 0.2); color: $danger;
+      border: 1px solid rgba(var(--danger-rgb), 0.3);
+    }
+  }
+}
+
+// Notifications list
+.notif-list { display: flex; flex-direction: column; }
+
+.notif-card {
+  display: flex; align-items: flex-start; gap: 0;
+  padding: 0 0 0 0; margin-bottom: 0;
+  cursor: pointer; animation: fadeInUp 0.35s ease both;
+  position: relative;
+
+  &--unread { .notif-card__content { border-left: 2px solid rgba(var(--primary-rgb), 0.4); } }
+
+  &:hover .notif-card__content {
+    background: rgba(var(--primary-rgb), 0.05);
+    border-radius: 0 12px 12px 0;
+  }
+
+  &__timeline {
+    display: flex; flex-direction: column;
+    align-items: center; width: 40px; flex-shrink: 0; padding-top: 20px;
+  }
+
+  &__icon-wrap {
+    width: 44px; height: 44px; border-radius: 12px;
+    @include flex-center; flex-shrink: 0; margin: 14px 16px;
+    span[nz-icon] { font-size: 20px; }
+  }
+
+  &__content {
+    flex: 1; padding: 16px 20px 16px 16px;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    transition: $transition-fast; margin-right: 0;
+  }
+
+  &__header-row {
+    display: flex; justify-content: space-between;
+    align-items: flex-start; gap: 12px; margin-bottom: 6px;
+  }
+
+  &__title {
+    font-family: $font-display; font-size: 14px; font-weight: 700;
+    color: $text-primary; margin: 0;
+  }
+
+  &__meta { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+
+  &__msg { font-size: 13px; color: $text-secondary; margin: 0 0 6px; line-height: 1.5; }
+
+  &__date { font-size: 11px; color: $text-muted; }
+
+  &__time { font-size: 11px; color: $text-muted; }
+}
+
+.timeline-dot {
+  width: 10px; height: 10px; border-radius: 50%;
+  background: $border-default; flex-shrink: 0;
+  border: 2px solid $bg-dark;
+  transition: $transition-fast;
+
+  &--active {
+    background: $primary;
+    border-color: rgba(var(--primary-rgb), 0.3);
+    animation: pulseDot 2s infinite;
+  }
+}
+
+.timeline-line {
+  flex: 1; width: 2px;
+  background: $border-subtle; min-height: 40px;
+}
+
+.notif-badge-new {
+  background: rgba(var(--primary-rgb), 0.15); color: $primary-light;
+  font-size: 10px; font-weight: 700;
+  padding: 2px 8px; border-radius: 10px;
+  border: 1px solid rgba(var(--primary-rgb), 0.25);
+  text-transform: uppercase; letter-spacing: 0.3px;
+}
+
+// Icon colors
+.notif-icon--recharge {
+  background: rgba(var(--success-rgb), 0.12); color: $success;
+  span[nz-icon] { color: $success; }
+}
+.notif-icon--message {
+  background: rgba(var(--primary-rgb), 0.12); color: $primary-light;
+  span[nz-icon] { color: $primary-light; }
+}
+.notif-icon--claim {
+  background: rgba(var(--warning-rgb), 0.12); color: $warning;
+  span[nz-icon] { color: $warning; }
+}
+.notif-icon--system {
+  background: rgba(var(--info-rgb), 0.12); color: $info;
+  span[nz-icon] { color: $info; }
+}
+
+// Empty state
+.notif-empty {
+  @include flex-center; flex-direction: column;
+  padding: 80px 20px; gap: 16px;
+
+  &__icon {
+    width: 80px; height: 80px; border-radius: 50%;
+    background: rgba(var(--primary-rgb), 0.08); border: 1px solid rgba(var(--primary-rgb), 0.15);
+    @include flex-center;
+    span[nz-icon] { font-size: 36px; color: rgba(var(--primary-light-rgb), 0.4); }
+    animation: float 3s ease infinite;
+  }
+
+  h3 { font-size: 18px; color: $text-primary; margin: 0; }
+  p  { font-size: 13px; color: $text-muted; margin: 0; text-align: center; }
+}
+
+@keyframes float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+@keyframes fadeInUp { from { opacity:0; transform: translateY(12px); } to { opacity:1; transform:translateY(0); } }
+@keyframes pulseDot {
+  0%,100% { box-shadow: 0 0 0 0 rgba(108,92,231,0.6); }
+  50%      { box-shadow: 0 0 0 5px rgba(108,92,231,0); }
+}
+
+.fade-in-up { animation: fadeInUp 0.5s ease both; }

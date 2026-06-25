@@ -1,0 +1,134 @@
+<app-page-header title="Messagerie" subtitle="Conversations avec les clients en temps réel"></app-page-header>
+
+<div class="chat-shell fade-in-up">
+
+  <!-- ── Conversations List ── -->
+  <aside class="conv-panel">
+    <div class="conv-panel__search">
+      <span nz-icon nzType="search" nzTheme="outline"></span>
+      <input placeholder="Rechercher un client..." [(ngModel)]="convSearch" (input)="filterConversations()" />
+    </div>
+
+    <!-- Loading skeleton -->
+    <div class="conv-panel__list" *ngIf="loading">
+      <div class="conv-skel" *ngFor="let i of [1,2,3,4]"></div>
+    </div>
+
+    <div class="conv-panel__list" *ngIf="!loading">
+      <div class="conv-item"
+           *ngFor="let conv of filteredConversations"
+           [class.conv-item--active]="selectedConv?.userId === conv.userId"
+           (click)="selectConversation(conv)">
+        <div class="conv-item__avatar" [style.background]="getColor(conv.userName)">
+          {{ conv.userName.charAt(0).toUpperCase() }}
+        </div>
+        <div class="conv-item__info">
+          <div class="conv-item__header">
+            <span class="conv-item__name">{{ conv.userName }}</span>
+            <span class="conv-item__time">{{ conv.lastTime | dateFormat }}</span>
+          </div>
+          <span class="conv-item__preview">{{ conv.lastMessage }}</span>
+        </div>
+        <span class="conv-item__unread" *ngIf="conv.unread > 0">{{ conv.unread }}</span>
+      </div>
+
+      <div class="conv-empty" *ngIf="filteredConversations.length === 0">
+        <span nz-icon nzType="message" nzTheme="outline"></span>
+        <p>Aucune conversation</p>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ── Chat Area ── -->
+  <section class="chat-area" *ngIf="selectedConv; else noChatSelected">
+
+    <!-- Chat Header -->
+    <div class="chat-header">
+      <div class="chat-header__left">
+        <div class="chat-header__avatar" [style.background]="getColor(selectedConv.userName)">
+          {{ selectedConv.userName.charAt(0).toUpperCase() }}
+        </div>
+        <div>
+          <span class="chat-header__name">{{ selectedConv.userName }}</span>
+          <span class="chat-header__status">
+            <span class="online-dot"></span>
+            En ligne
+          </span>
+        </div>
+      </div>
+      <div class="chat-header__actions">
+        <button class="chat-action-btn" nz-tooltip nzTooltipTitle="Informations">
+          <span nz-icon nzType="info-circle" nzTheme="outline"></span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Messages -->
+    <div class="messages-wrap" #messagesWrap>
+      <div class="messages-inner">
+
+        <div class="date-sep">
+          <span>Aujourd'hui</span>
+        </div>
+
+        <div *ngFor="let msg of messages"
+             class="msg-row"
+             [class.msg-row--sent]="isSentByAdmin(msg)"
+             [class.msg-row--received]="!isSentByAdmin(msg)">
+
+          <!-- Avatar (received) -->
+          <div class="msg-avatar" *ngIf="!isSentByAdmin(msg)"
+               [style.background]="getColor(selectedConv.userName)">
+            {{ selectedConv.userName.charAt(0).toUpperCase() }}
+          </div>
+
+          <!-- Bubble -->
+          <div class="msg-bubble">
+            <p class="msg-bubble__text">{{ msg.content }}</p>
+            <span class="msg-bubble__time">{{ msg.createdAt | dateFormat }}</span>
+          </div>
+        </div>
+
+        <!-- Typing indicator -->
+        <div class="msg-row msg-row--received" *ngIf="isTyping">
+          <div class="msg-avatar" [style.background]="getColor(selectedConv.userName)">
+            {{ selectedConv.userName.charAt(0).toUpperCase() }}
+          </div>
+          <div class="msg-bubble msg-bubble--typing">
+            <div class="typing-dots"><span></span><span></span><span></span></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Input -->
+    <div class="chat-input-area">
+      <div class="chat-input-wrap">
+        <textarea
+          class="chat-input"
+          [(ngModel)]="newMessage"
+          placeholder="Écrivez votre message..."
+          rows="1"
+          (keydown)="onKeydown($event)">
+        </textarea>
+      </div>
+      <button class="send-btn" (click)="sendMessage()" [disabled]="!newMessage.trim() || sending">
+        <span nz-icon [nzType]="sending ? 'loading' : 'send'" nzTheme="outline"></span>
+      </button>
+    </div>
+
+  </section>
+
+  <!-- No conversation selected -->
+  <ng-template #noChatSelected>
+    <div class="no-chat">
+      <div class="no-chat__icon">
+        <span nz-icon nzType="message" nzTheme="outline"></span>
+      </div>
+      <h3>Sélectionnez une conversation</h3>
+      <p>Choisissez une conversation dans la liste pour commencer à chatter</p>
+    </div>
+  </ng-template>
+
+</div>

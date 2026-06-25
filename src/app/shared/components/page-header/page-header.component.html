@@ -1,0 +1,12 @@
+<div class="page-hdr">
+  <div class="page-hdr__left">
+    <div class="page-hdr__accent" aria-hidden="true"></div>
+    <div class="page-hdr__text">
+      <h1 class="page-hdr__title">{{ title }}</h1>
+      <p class="page-hdr__subtitle" *ngIf="subtitle">{{ subtitle }}</p>
+    </div>
+  </div>
+  <div class="page-hdr__actions">
+    <ng-content select="[header-actions]"></ng-content>
+  </div>
+</div>

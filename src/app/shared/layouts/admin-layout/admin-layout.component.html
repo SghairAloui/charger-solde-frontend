@@ -1,0 +1,300 @@
+<div class="admin-shell">
+
+  <!-- ══════════════════ SIDEBAR ══════════════════ -->
+  <aside class="sidebar" [class.sidebar--collapsed]="sidebarCollapsed">
+
+    <!-- Brand -->
+    <div class="sidebar__brand">
+      <div class="sidebar__logo-icon">
+        <img src="assets/outline/logo.png" alt="Charge Pay" class="sidebar-logo-img" />
+      </div>
+      <span class="sidebar__brand-name" *ngIf="!sidebarCollapsed">
+        <span>Charge</span> <em>Pay</em>
+      </span>
+      <span class="sidebar__badge" *ngIf="!sidebarCollapsed">Admin</span>
+    </div>
+
+    <!-- Divider -->
+    <div class="sidebar__divider"></div>
+
+    <!-- Navigation -->
+    <nav class="sidebar__nav">
+
+      <!-- Dashboard -->
+      <a class="nav-item" routerLink="/admin/dashboard" routerLinkActive="nav-item--active"
+         [title]="sidebarCollapsed ? 'Tableau de bord' : ''">
+        <div class="nav-item__icon">
+          <span nz-icon nzType="dashboard" nzTheme="outline"></span>
+        </div>
+        <span class="nav-item__label" *ngIf="!sidebarCollapsed">Tableau de bord</span>
+      </a>
+
+      <!-- Group: Gestion -->
+      <div class="nav-group" *ngIf="!sidebarCollapsed">
+        <span class="nav-group__label">Gestion</span>
+      </div>
+
+      <a class="nav-item" routerLink="/admin/clients" routerLinkActive="nav-item--active"
+         [title]="sidebarCollapsed ? 'Clients' : ''">
+        <div class="nav-item__icon">
+          <span nz-icon nzType="team" nzTheme="outline"></span>
+        </div>
+        <span class="nav-item__label" *ngIf="!sidebarCollapsed">Clients</span>
+      </a>
+
+      <a class="nav-item" routerLink="/admin/operators" routerLinkActive="nav-item--active"
+         [title]="sidebarCollapsed ? 'Opérateurs' : ''">
+        <div class="nav-item__icon">
+          <span nz-icon nzType="build" nzTheme="outline"></span>
+        </div>
+        <span class="nav-item__label" *ngIf="!sidebarCollapsed">Opérateurs</span>
+      </a>
+
+      <a class="nav-item" routerLink="/admin/offers" routerLinkActive="nav-item--active"
+         [title]="sidebarCollapsed ? 'Offres' : ''">
+        <div class="nav-item__icon">
+          <span nz-icon nzType="gift" nzTheme="outline"></span>
+        </div>
+        <span class="nav-item__label" *ngIf="!sidebarCollapsed">Offres</span>
+      </a>
+
+      <a class="nav-item" routerLink="/admin/orders" routerLinkActive="nav-item--active"
+         [title]="sidebarCollapsed ? 'Commandes' : ''">
+        <div class="nav-item__icon">
+          <span nz-icon nzType="ordered-list" nzTheme="outline"></span>
+        </div>
+        <span class="nav-item__label" *ngIf="!sidebarCollapsed">Commandes</span>
+      </a>
+
+      <a class="nav-item" routerLink="/admin/client-history" routerLinkActive="nav-item--active"
+         [title]="sidebarCollapsed ? 'Historique' : ''">
+        <div class="nav-item__icon">
+          <span nz-icon nzType="history" nzTheme="outline"></span>
+        </div>
+        <span class="nav-item__label" *ngIf="!sidebarCollapsed">Historique</span>
+      </a>
+
+      <!-- Group: Communication -->
+      <div class="nav-group" *ngIf="!sidebarCollapsed">
+        <span class="nav-group__label">Communication</span>
+      </div>
+
+      <a class="nav-item" routerLink="/admin/notifications" routerLinkActive="nav-item--active"
+         [title]="sidebarCollapsed ? 'Notifications' : ''">
+        <div class="nav-item__icon">
+          <span nz-icon nzType="bell" nzTheme="outline"></span>
+          <span class="nav-item__badge" *ngIf="unreadCount > 0">{{ unreadCount > 9 ? '9+' : unreadCount }}</span>
+        </div>
+        <span class="nav-item__label" *ngIf="!sidebarCollapsed">Notifications</span>
+        <span class="nav-item__count" *ngIf="!sidebarCollapsed && unreadCount > 0">{{ unreadCount > 9 ? '9+' : unreadCount }}</span>
+      </a>
+
+      <a class="nav-item" routerLink="/admin/messaging" routerLinkActive="nav-item--active"
+         [title]="sidebarCollapsed ? 'Messagerie' : ''">
+        <div class="nav-item__icon">
+          <span nz-icon nzType="message" nzTheme="outline"></span>
+        </div>
+        <span class="nav-item__label" *ngIf="!sidebarCollapsed">Messagerie</span>
+      </a>
+
+      <a class="nav-item" routerLink="/admin/claims" routerLinkActive="nav-item--active"
+         [title]="sidebarCollapsed ? 'Réclamations' : ''">
+        <div class="nav-item__icon">
+          <span nz-icon nzType="file-exclamation" nzTheme="outline"></span>
+        </div>
+        <span class="nav-item__label" *ngIf="!sidebarCollapsed">Réclamations</span>
+      </a>
+
+    </nav>
+
+    <!-- WS Status -->
+    <div class="ws-status" *ngIf="!sidebarCollapsed">
+      <span class="ws-dot" [class.ws-dot--connected]="wsConnected"></span>
+      <span>{{ wsConnected ? 'Connecté en temps réel' : 'Reconnexion...' }}</span>
+    </div>
+
+    <!-- Divider -->
+    <div class="sidebar__divider"></div>
+
+    <!-- User profile section -->
+    <div class="sidebar__user" nz-dropdown [nzDropdownMenu]="userMenu" nzTrigger="click"
+         nzPlacement="topLeft">
+      <div class="sidebar-role-icon sidebar-role-icon--admin" *ngIf="!user?.photoUrl">
+        <span nz-icon nzType="crown" nzTheme="outline"></span>
+      </div>
+      <img *ngIf="user?.photoUrl" [src]="user?.photoUrl" alt="Photo" class="sidebar-user-photo" />
+      <div class="sidebar__user-info" *ngIf="!sidebarCollapsed">
+        <span class="sidebar__user-name">{{ user?.prenom }} {{ user?.nom }}</span>
+        <span class="sidebar__user-role">Administrateur</span>
+      </div>
+      <span nz-icon nzType="more" nzTheme="outline" class="sidebar__user-more" *ngIf="!sidebarCollapsed"></span>
+    </div>
+
+    <nz-dropdown-menu #userMenu="nzDropdownMenu">
+      <ul nz-menu class="profile-menu">
+        <li nz-menu-item routerLink="/admin/profile" class="profile-menu__item">
+          <span nz-icon nzType="user" nzTheme="outline"></span>
+          Mon profil
+        </li>
+        <li nz-menu-divider></li>
+        <li nz-menu-item (click)="logout()" class="profile-menu__item profile-menu__item--danger">
+          <span nz-icon nzType="logout" nzTheme="outline"></span>
+          Déconnexion
+        </li>
+      </ul>
+    </nz-dropdown-menu>
+
+    <div class="sidebar__divider"></div>
+
+    <!-- Visible Logout Button -->
+    <button class="sidebar-logout-btn" (click)="logout()">
+      <span nz-icon nzType="logout" nzTheme="outline"></span>
+      <span class="sidebar-logout-label" *ngIf="!sidebarCollapsed">Déconnexion</span>
+    </button>
+
+  </aside>
+
+  <!-- ══════════════════ MAIN AREA ══════════════════ -->
+  <div class="main-area">
+
+    <!-- HEADER -->
+    <header class="app-header">
+      <div class="app-header__left">
+        <button class="header-toggle" (click)="toggleSidebar()">
+          <span nz-icon [nzType]="sidebarCollapsed ? 'menu-unfold' : 'menu-fold'" nzTheme="outline"></span>
+        </button>
+        <div class="header-breadcrumb">
+          <span class="greeting-text">Bonne journée, <span class="greeting-name">{{ user?.prenom }} !</span></span>
+        </div>
+      </div>
+
+      <!-- Right: search + notifications + profile -->
+      <div class="app-header__right">
+
+        <!-- Search -->
+        <div class="header-search" [class.header-search--open]="searchOpen">
+          <button class="header-search__toggle" (click)="toggleSearch()" *ngIf="!searchOpen">
+            <span nz-icon nzType="search" nzTheme="outline"></span>
+          </button>
+          <div class="header-search__input-wrap" *ngIf="searchOpen">
+            <span nz-icon nzType="search" nzTheme="outline" class="header-search__icon"></span>
+            <input #searchInput placeholder="Rechercher..." [(ngModel)]="searchQuery" (blur)="closeSearch()" />
+            <button class="header-search__close" (click)="closeSearch()">
+              <span nz-icon nzType="close" nzTheme="outline"></span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Theme Toggle -->
+        <button class="header-action-btn" (click)="themeService.toggleTheme()">
+          <span nz-icon [nzType]="(themeService.isDarkTheme$ | async) ? 'star' : 'fire'" nzTheme="outline"></span>
+        </button>
+
+        <!-- Notifications bell -->
+        <button class="header-notif-btn header-action-btn" (click)="toggleNotifPanel()" [class.header-notif-btn--active]="notifPanelOpen">
+          <div class="custom-badge-wrapper">
+            <span nz-icon nzType="bell" nzTheme="outline" class="bell-icon"></span>
+            <span class="custom-badge" *ngIf="unreadCount > 0">{{ unreadCount > 9 ? '9+' : unreadCount }}</span>
+          </div>
+        </button>
+
+        <!-- Messaging icon -->
+        <button class="header-notif-btn header-action-btn" (click)="goToMessaging()" title="Messagerie">
+          <div class="custom-badge-wrapper">
+            <span nz-icon nzType="message" nzTheme="outline"></span>
+            <span class="custom-badge custom-badge--msg" *ngIf="unreadMessages > 0">{{ unreadMessages > 9 ? '9+' : unreadMessages }}</span>
+          </div>
+        </button>
+
+        <!-- Profile Dropdown -->
+        <div class="header-profile" (click)="toggleHeaderMenu()">
+          <div class="header-profile__avatar-icon">
+            <img *ngIf="!user?.photoUrl; else userPhoto" src="assets/outline/logo.png" alt="Charge Pay" class="header-logo-img" />
+            <ng-template #userPhoto>
+              <img [src]="user?.photoUrl" alt="Photo" class="header-logo-img" />
+            </ng-template>
+          </div>
+          <span class="header-profile__name hide-mobile">{{ user?.prenom }}</span>
+          <span nz-icon nzType="down" nzTheme="outline" class="header-profile__arrow"></span>
+
+          <div class="header-dropdown" *ngIf="headerMenuOpen">
+            <div class="header-dropdown__header">
+              <span class="header-dropdown__name">{{ user?.prenom }} {{ user?.nom }}</span>
+              <span class="header-dropdown__role">Administrateur</span>
+            </div>
+            <div class="header-dropdown__body">
+              <a class="header-dropdown__item" routerLink="/admin/profile" (click)="closeHeaderMenu()">
+                <span nz-icon nzType="user" nzTheme="outline"></span>
+                Mon profil
+              </a>
+              <div class="header-dropdown__divider"></div>
+              <a class="header-dropdown__item header-dropdown__item--danger" (click)="logout(); closeHeaderMenu()">
+                <span nz-icon nzType="logout" nzTheme="outline"></span>
+                Déconnexion
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <div class="dropdown-backdrop" *ngIf="headerMenuOpen" (click)="closeHeaderMenu()"></div>
+
+      </div>
+    </header>
+
+    <!-- NOTIFICATION DRAWER -->
+    <div class="notif-panel" [class.notif-panel--open]="notifPanelOpen">
+      <div class="notif-panel__overlay" (click)="toggleNotifPanel()"></div>
+      <div class="notif-panel__drawer">
+        <div class="notif-panel__header">
+          <h3>Notifications</h3>
+          <div class="notif-panel__actions">
+            <button class="notif-action-btn" (click)="markAllRead()" *ngIf="unreadCount > 0">
+              Tout lire
+            </button>
+            <button class="notif-close-btn" (click)="toggleNotifPanel()">
+              <span nz-icon nzType="close" nzTheme="outline"></span>
+            </button>
+          </div>
+        </div>
+
+        <div class="notif-panel__body" *ngIf="notifications.length > 0; else noNotif">
+          <div class="notif-item" *ngFor="let n of notifications"
+               [class.notif-item--unread]="!n.read"
+               (click)="goToNotif(n)">
+            <div class="notif-item__icon" [ngClass]="'notif-icon--' + n.type.toLowerCase()">
+              <span nz-icon [nzType]="getNotifIcon(n.type)" nzTheme="outline"></span>
+            </div>
+            <div class="notif-item__content">
+              <p class="notif-item__title">{{ n.title }}</p>
+              <p class="notif-item__msg">{{ n.message }}</p>
+              <span class="notif-item__time">{{ n.createdAt | dateFormat }}</span>
+            </div>
+            <div class="notif-item__dot" *ngIf="!n.read"></div>
+          </div>
+        </div>
+
+        <ng-template #noNotif>
+          <div class="notif-panel__empty">
+            <span nz-icon nzType="bell" nzTheme="outline"></span>
+            <p>Aucune notification</p>
+          </div>
+        </ng-template>
+
+        <div class="notif-panel__footer">
+          <a routerLink="/admin/notifications" (click)="toggleNotifPanel()">
+            Voir toutes les notifications →
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- PAGE CONTENT -->
+    <main class="page-content">
+      <div class="page-content__inner">
+        <router-outlet></router-outlet>
+      </div>
+    </main>
+
+  </div>
+
+</div>

@@ -1,0 +1,177 @@
+// ═══════════════════════════════════════════════════════
+//  Admin Operators — Card Grid
+// ═══════════════════════════════════════════════════════
+@import 'styles/variables';
+@import 'styles/mixins';
+
+.add-btn {
+  display: flex; align-items: center; gap: 8px;
+  background: $gradient-brand; border: none; color: #fff;
+  font-size: 13px; font-weight: 600; font-family: $font-family;
+  padding: 10px 20px; border-radius: $border-radius-pill;
+  cursor: pointer; transition: $transition-spring;
+  box-shadow: 0 4px 16px rgba(var(--primary-rgb), 0.35);
+  &:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(var(--primary-rgb), 0.5); }
+  span[nz-icon] { font-size: 14px; }
+}
+
+.op-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 20px;
+}
+
+.op-card {
+  background: $bg-card; border: 1px solid $border-subtle;
+  border-radius: 16px; overflow: hidden; display: flex;
+  flex-direction: column; animation: fadeInUp 0.4s ease both;
+  transition: $transition-spring;
+
+  &:hover { transform: translateY(-4px); box-shadow: 0 16px 40px rgba(0,0,0,0.4); }
+
+  &__banner { height: 60px; opacity: 0.7; }
+
+  &__body { padding: 20px; text-align: center; flex: 1; }
+
+  &__logo-wrap { margin: -40px auto 12px; width: 64px; height: 64px; }
+
+  &__name {
+    font-family: $font-display; font-size: 16px; font-weight: 700;
+    color: $text-primary; margin: 0 0 4px;
+  }
+
+  &__id { font-size: 11px; color: $text-muted; margin: 0; }
+
+  &__actions {
+    display: flex; gap: 0; border-top: 1px solid $border-subtle;
+  }
+}
+
+.op-logo {
+  width: 64px; height: 64px; border-radius: 50%; object-fit: contain;
+  background: $bg-surface; border: 3px solid $bg-card;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.4);
+}
+
+.op-logo-fallback {
+  width: 64px; height: 64px; border-radius: 50%;
+  @include flex-center; font-size: 22px; font-weight: 800; color: #fff;
+  border: 3px solid $bg-card; box-shadow: 0 4px 16px rgba(0,0,0,0.4);
+}
+
+.op-action-btn {
+  flex: 1; height: 42px; @include flex-center; background: none;
+  border: none; cursor: pointer; transition: $transition-fast;
+  span[nz-icon] { font-size: 15px; }
+
+  &--edit { color: $text-secondary; &:hover { background: rgba(var(--primary-rgb), 0.08); color: $primary-light; } }
+  &--delete { color: $text-secondary; border-left: 1px solid $border-subtle; &:hover { background: rgba(var(--danger-rgb), 0.08); color: $danger; } }
+}
+
+.op-skel {
+  height: 200px; border-radius: 16px;
+  background: linear-gradient(90deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.07) 50%, rgba(255,255,255,0.03) 100%);
+  background-size: 200% 100%; animation: shimmer 1.5s ease infinite;
+}
+
+.op-empty {
+  @include flex-center; flex-direction: column; gap: 16px;
+  padding: 80px 20px; color: $text-muted;
+  span[nz-icon] { font-size: 48px; opacity: 0.25; }
+  h3 { font-size: 18px; color: $text-secondary; margin: 0; }
+  p  { font-size: 13px; margin: 0; }
+}
+
+// Modal (shared pattern)
+.modal-overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.7);
+  backdrop-filter: blur(6px); z-index: 1000; @include flex-center;
+}
+.modal-card {
+  width: 460px; max-width: 95vw; background: $bg-surface;
+  border: 1px solid rgba(var(--primary-rgb), 0.2); border-radius: 20px;
+  overflow: hidden; display: flex; flex-direction: column;
+  box-shadow: 0 24px 80px rgba(0,0,0,0.6);
+  animation: scaleIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  &__header {
+    display: flex; align-items: flex-start; gap: 14px;
+    padding: 24px 24px 20px; border-bottom: 1px solid $border-subtle; position: relative;
+  }
+  &__icon {
+    width: 44px; height: 44px; background: $gradient-brand; border-radius: 12px;
+    @include flex-center; span[nz-icon] { font-size: 20px; color: #fff; }
+  }
+  &__title { font-family: $font-display; font-size: 17px; font-weight: 700; color: $text-primary; margin: 0 0 3px; }
+  &__sub   { font-size: 12px; color: $text-secondary; margin: 0; }
+  &__close {
+    position: absolute; top: 16px; right: 16px; width: 32px; height: 32px;
+    background: rgba(255,255,255,0.06); border: 1px solid $border-subtle;
+    border-radius: 8px; color: $text-secondary; @include flex-center; cursor: pointer;
+    &:hover { color: $danger; }
+  }
+  &__body   { padding: 20px 24px; display: flex; flex-direction: column; gap: 14px; }
+  &__footer { padding: 16px 24px; border-top: 1px solid $border-subtle; display: flex; gap: 10px; justify-content: flex-end; }
+}
+
+.field-group { display: flex; flex-direction: column; gap: 6px; }
+.field-label { font-size: 12px; font-weight: 600; color: $text-secondary; text-transform: uppercase; letter-spacing: 0.5px; }
+.required    { color: $danger; }
+.field-input {
+  width: 100%; background: $bg-input; border: 1px solid $border-default;
+  border-radius: $border-radius-sm; color: $text-primary; font-size: 13px;
+  font-family: $font-family; padding: 11px 14px; outline: none; transition: $transition-fast;
+  &::placeholder { color: $text-muted; }
+  &:focus { background: rgba(var(--primary-rgb), 0.08); border-color: $primary; box-shadow: 0 0 0 3px rgba(var(--primary-rgb), 0.12); }
+}
+.modal-btn {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 13px; font-weight: 600; font-family: $font-family;
+  padding: 10px 20px; border-radius: $border-radius-pill; cursor: pointer; transition: $transition-spring;
+  &--cancel { background: rgba(255,255,255,0.06); border: 1px solid $border-default; color: $text-secondary; &:hover { background: rgba(255,255,255,0.1); } }
+  &--submit { background: $gradient-brand; border: none; color: #fff; box-shadow: 0 4px 16px rgba(var(--primary-rgb), 0.35); &:hover { transform: translateY(-1px); } &:disabled { opacity: 0.6; cursor: not-allowed; } }
+  span[nz-icon] { font-size: 14px; }
+}
+
+@keyframes fadeInUp { from { opacity:0; transform: translateY(12px); } to { opacity:1; transform:translateY(0); } }
+@keyframes shimmer  { 0% { background-position: -200% center; } 100% { background-position: 200% center; } }
+@keyframes scaleIn  { from { opacity: 0; transform: scale(0.9) translateY(20px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+
+.fade-in-up { animation: fadeInUp 0.5s ease both; }
+
+.upload-area {
+  border: 1px dashed $border-default;
+  border-radius: $border-radius-sm;
+  background: $bg-input;
+  padding: 20px;
+  text-align: center;
+  cursor: pointer;
+  transition: $transition-fast;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  color: $text-secondary;
+
+  &:hover {
+    border-color: $primary;
+    background: rgba(var(--primary-rgb), 0.05);
+  }
+
+  span[nz-icon] {
+    font-size: 24px;
+    color: $primary-light;
+  }
+
+  p {
+    margin: 0;
+    font-size: 13px;
+  }
+}
+
+.logo-preview {
+  max-width: 100px;
+  max-height: 60px;
+  object-fit: contain;
+  border-radius: 4px;
+}
