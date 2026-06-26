@@ -10,4 +10,6 @@ export interface User {
   role: Role;
   active: boolean;
   createdAt: Date;
+
+  
 }

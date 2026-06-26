@@ -41,7 +41,8 @@ export const API = {
     LOGIN: '/auth/login',
     FORGOT_PASSWORD: '/auth/forgot-password',
     RESET_PASSWORD: '/auth/reset-password',
-    VALIDATE_RESET_CODE: '/auth/validate-reset-code'
+    VALIDATE_RESET_CODE: '/auth/validate-reset-code',
+    SIGNUP: '/auth/signup',
   },
   ADMIN: {
     CLIENTS: '/admin/clients',

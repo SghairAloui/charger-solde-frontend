@@ -6,6 +6,8 @@
   </div>
 
   <div class="login-card">
+
+    <!-- BRAND -->
     <div class="login-card__brand">
       <div class="login-card__icon">
         <img src="assets/outline/logo.png" alt="Charge Pay" class="login-logo-img" />
@@ -13,51 +15,176 @@
       <span class="login-card__brand-name"><span>Charge</span> <em>Pay</em></span>
     </div>
 
-    <h1 class="login-card__title">Content de vous revoir</h1>
-    <p class="login-card__sub">Connectez-vous pour accéder à votre espace</p>
+    <!-- ================= LOGIN ================= -->
+    <div *ngIf="mode === 'login'">
 
-    <nz-alert *ngIf="loginError" nzType="error" [nzMessage]="loginError" nzShowIcon class="login-alert"></nz-alert>
+      <h1 class="login-card__title">Content de vous revoir</h1>
+      <p class="login-card__sub">Connectez-vous pour accéder à votre espace</p>
 
-    <form nz-form [formGroup]="loginForm" (ngSubmit)="onSubmit()" nzLayout="vertical" class="login-form">
+      <nz-alert *ngIf="loginError" nzType="error" [nzMessage]="loginError" nzShowIcon class="login-alert"></nz-alert>
 
-      <nz-form-item>
-        <nz-form-label nzRequired>Email</nz-form-label>
-        <nz-form-control nzErrorTip="Veuillez saisir un email valide">
-          <nz-input-group [nzPrefix]="prefixEmail">
-            <input nz-input formControlName="email" placeholder="exemple@email.com" type="email" autocomplete="email" />
-          </nz-input-group>
-        </nz-form-control>
-      </nz-form-item>
+      <form nz-form [formGroup]="loginForm" (ngSubmit)="onSubmit()" nzLayout="vertical" class="login-form">
 
-      <nz-form-item>
-        <nz-form-label nzRequired>Mot de passe</nz-form-label>
-        <nz-form-control nzErrorTip="Le mot de passe est requis">
-          <nz-input-group [nzPrefix]="prefixLock" [nzSuffix]="suffixPassword">
-            <input nz-input formControlName="password" [type]="showPassword ? 'text' : 'password'" placeholder="Entrez votre mot de passe" autocomplete="current-password" />
-          </nz-input-group>
-        </nz-form-control>
-      </nz-form-item>
+        <nz-form-item>
+          <nz-form-label nzRequired>Email</nz-form-label>
+          <nz-form-control nzErrorTip="Veuillez saisir un email valide">
+            <nz-input-group [nzPrefix]="prefixEmail">
+              <input nz-input formControlName="email" type="email" placeholder="exemple@email.com" />
+            </nz-input-group>
+          </nz-form-control>
+        </nz-form-item>
 
-      <div class="form-row">
-        <label nz-checkbox formControlName="remember">Rester connecté</label>
-        <a routerLink="/auth/forgot-password" class="forgot-link">Mot de passe oublié ?</a>
+        <nz-form-item>
+          <nz-form-label nzRequired>Mot de passe</nz-form-label>
+          <nz-form-control nzErrorTip="Le mot de passe est requis">
+            <nz-input-group [nzPrefix]="prefixLock" [nzSuffix]="suffixPassword">
+              <input nz-input formControlName="password" [type]="showPassword ? 'text' : 'password'"
+                placeholder="Entrez votre mot de passe" />
+            </nz-input-group>
+          </nz-form-control>
+        </nz-form-item>
+
+        <div class="form-row">
+          <label > </label>
+          <a routerLink="/auth/forgot-password" class="forgot-link">Mot de passe oublié ?</a>
+        </div>
+
+        <button nz-button nzType="primary" nzBlock nzSize="large" [nzLoading]="loading" class="submit-btn"
+          type="submit">
+          Se connecter
+        </button>
+
+      </form>
+
+      <div class="signup-toggle">
+        <span>Vous n'avez pas de compte ?</span>
+        <a (click)="mode = 'signup'">S'inscrire</a>
       </div>
 
-      <button nz-button nzType="primary" nzBlock nzSize="large" [nzLoading]="loading" class="submit-btn" type="submit">
-        <span *ngIf="!loading">Se connecter</span>
-      </button>
+    </div>
 
-    </form>
+    <!-- ================= SIGNUP ================= -->
+    <div *ngIf="mode === 'signup'" class="signup-wrapper">
 
-    <div class="login-card__secure">
+      <a class="signup-back" (click)="mode = 'login'">
+        <span nz-icon nzType="arrow-left" nzTheme="outline"></span>
+        J'ai déjà un compte
+      </a>
+
+      <div class="signup-header">
+        <h1>Créer un compte</h1>
+        <p>Rejoignez Charge Pay en quelques secondes</p>
+      </div>
+
+      <div class="signup-banner">
+        <span nz-icon nzType="info-circle" nzTheme="outline"></span>
+        Votre compte sera activé après validation par un administrateur
+      </div>
+
+      <form nz-form [formGroup]="signupForm" (ngSubmit)="onSignup()" nzLayout="vertical" class="signup-form">
+
+        <div class="signup-section-label">Identité</div>
+
+          <nz-form-item>
+            <nz-form-label nzRequired>Nom</nz-form-label>
+            <nz-form-control nzErrorTip="Le nom est requis">
+              <nz-input-group [nzPrefix]="iconUser">
+                <input nz-input formControlName="nom" placeholder="NOM" />
+              </nz-input-group>
+            </nz-form-control>
+          </nz-form-item>
+
+          <nz-form-item>
+            <nz-form-label nzRequired>Prénom</nz-form-label>
+            <nz-form-control nzErrorTip="Le prénom est requis">
+              <nz-input-group [nzPrefix]="iconUser">
+                <input nz-input formControlName="prenom" placeholder="PRENOM" />
+              </nz-input-group>
+            </nz-form-control>
+          </nz-form-item>
+
+
+        <div class="signup-section-label">Contact</div>
+
+        <nz-form-item>
+          <nz-form-label nzRequired>Email</nz-form-label>
+          <nz-form-control nzErrorTip="Veuillez saisir un email valide">
+            <nz-input-group [nzPrefix]="iconMail">
+              <input nz-input formControlName="email" type="email" placeholder="jean.dupont@email.com" />
+            </nz-input-group>
+          </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+          <nz-form-label>Téléphone</nz-form-label>
+          <nz-form-control>
+            <nz-input-group [nzPrefix]="iconPhone">
+              <input nz-input formControlName="numTel" placeholder="+216 XX XXX XXX" />
+            </nz-input-group>
+          </nz-form-control>
+        </nz-form-item>
+
+        <div class="signup-section-label">Sécurité</div>
+
+        <nz-form-item>
+          <nz-form-label nzRequired>Mot de passe</nz-form-label>
+          <nz-form-control nzErrorTip="Minimum 8 caractères requis">
+            <nz-input-group [nzPrefix]="iconLock" [nzSuffix]="iconEye">
+              <input nz-input formControlName="password" [type]="showPassword ? 'text' : 'password'"
+                placeholder="Minimum 8 caractères" (input)="onPasswordInput($event)" />
+            </nz-input-group>
+          </nz-form-control>
+          <div class="signup-strength">
+            <span *ngFor="let bar of [0,1,2,3]" class="signup-strength__bar" [class.active]="bar < passwordStrength"
+              [attr.data-level]="passwordStrength">
+            </span>
+          </div>
+          <p class="signup-strength__label" *ngIf="passwordStrength > 0">{{ strengthLabel }}</p>
+        </nz-form-item>
+
+        <button nz-button nzType="primary" nzBlock nzSize="large" [nzLoading]="loading" class="signup-submit-btn"
+          type="submit">
+          <span nz-icon nzType="user-add" nzTheme="outline"></span>
+          Créer mon compte
+        </button>
+
+      </form>
+
+    </div>
+
+    <!-- SECURITY (login only) -->
+    <div class="login-card__secure" *ngIf="mode === 'login'">
       <span nz-icon nzType="lock" nzTheme="outline"></span>
       Connexion sécurisée
     </div>
+
   </div>
 </div>
 
-<ng-template #prefixEmail><span nz-icon nzType="mail" nzTheme="outline" class="input-icon"></span></ng-template>
-<ng-template #prefixLock><span nz-icon nzType="lock" nzTheme="outline" class="input-icon"></span></ng-template>
+<!-- ── Icon templates ── -->
+<ng-template #prefixEmail>
+  <span nz-icon nzType="mail" nzTheme="outline" class="input-icon"></span>
+</ng-template>
+<ng-template #prefixLock>
+  <span nz-icon nzType="lock" nzTheme="outline" class="input-icon"></span>
+</ng-template>
 <ng-template #suffixPassword>
-  <span nz-icon [nzType]="showPassword ? 'eye-invisible' : 'eye'" nzTheme="outline" (click)="togglePassword()" class="password-toggle"></span>
+  <span nz-icon [nzType]="showPassword ? 'eye-invisible' : 'eye'" nzTheme="outline" (click)="togglePassword()"
+    class="password-toggle"></span>
+</ng-template>
+<ng-template #iconUser>
+  <span nz-icon nzType="user" nzTheme="outline" class="signup-input-icon"></span>
+</ng-template>
+<ng-template #iconMail>
+  <span nz-icon nzType="mail" nzTheme="outline" class="signup-input-icon"></span>
+</ng-template>
+<ng-template #iconPhone>
+  <span nz-icon nzType="phone" nzTheme="outline" class="signup-input-icon"></span>
+</ng-template>
+<ng-template #iconLock>
+  <span nz-icon nzType="lock" nzTheme="outline" class="signup-input-icon"></span>
+</ng-template>
+<ng-template #iconEye>
+  <span nz-icon [nzType]="showPassword ? 'eye-invisible' : 'eye'" nzTheme="outline" class="password-toggle"
+    (click)="togglePassword()"></span>
 </ng-template>

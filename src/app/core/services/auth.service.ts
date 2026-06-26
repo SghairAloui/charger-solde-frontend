@@ -10,6 +10,7 @@ import {ForgotPasswordRequest} from '../models/forgot-password-request.model';
 import {ResetPasswordRequest} from '../models/reset-password-request.model';
 import {TokenService} from './token.service';
 import {User} from '../models/user.model';
+import { SignupRequest } from '../models/SignupRequest';
 
 @Injectable({providedIn: 'root'})
 export class AuthService {
@@ -66,4 +67,11 @@ export class AuthService {
   getCurrentUser(): User | null {
     return this.tokenService.getUser();
   }
+
+  signup(request: SignupRequest): Observable<ApiResponse<void>> {
+  return this.http.post<ApiResponse<void>>(
+    `${this.apiUrl}${API.AUTH.SIGNUP}`,
+    request
+  );
+}
 }

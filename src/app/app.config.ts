@@ -25,6 +25,7 @@ import {errorInterceptor} from './core/interceptors/error.interceptor';
 import {NZ_I18N, fr_FR} from 'ng-zorro-antd/i18n';
 import {registerLocaleData} from '@angular/common';
 import localeFr from '@angular/common/locales/fr';
+import { NZ_CONFIG, NzConfig } from 'ng-zorro-antd/core/config';
 
 registerLocaleData(localeFr);
 
@@ -44,12 +45,22 @@ const icons = [
   UserAddOutline, StopOutline, RiseOutline, FallOutline
 ];
 
+
+const ngZorroConfig: NzConfig = {
+  notification: {
+    nzPlacement: 'topRight',  // ✅ topRight | topLeft | bottomRight | bottomLeft | top | bottom
+    nzDuration: 3000,
+    nzMaxStack: 3,
+  }
+};
 export const appConfig: ApplicationConfig = {
   providers: [
     provideRouter(routes, withComponentInputBinding()),
     provideHttpClient(withFetch(), withInterceptors([authInterceptor, errorInterceptor])),
     provideAnimations(),
     {provide: NZ_ICONS, useValue: icons},
-    {provide: NZ_I18N, useValue: fr_FR}
+    {provide: NZ_I18N, useValue: fr_FR},
+        { provide: NZ_CONFIG, useValue: ngZorroConfig },  // ✅ ajoute ça
+
   ]
 };

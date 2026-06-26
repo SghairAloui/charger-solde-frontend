@@ -91,4 +91,25 @@ export class AdminService {
   getClientRechargeSummary(): Observable<ClientRechargeSummary[]> {
     return this.http.get<ClientRechargeSummary[]>(`${this.apiUrl}${API.ADMIN.CLIENT_RECHARGE_SUMMARY}`);
   }
+
+
+  getPendingClients(): Observable<User[]> {
+  return this.http
+    .get<ApiResponse<User[]>>(`${this.apiUrl}${API.ADMIN.CLIENTS}/pending`)
+    .pipe(map(res => res.data));
+}
+
+approveClient(id: number): Observable<any> {
+  return this.http.put(
+    `${this.apiUrl}${API.ADMIN.CLIENTS}/${id}/approve`,
+    {}
+  );
+}
+
+rejectClient(id: number): Observable<any> {
+  return this.http.put(
+    `${this.apiUrl}${API.ADMIN.CLIENTS}/${id}/reject`,
+    {}
+  );
+}
 }
