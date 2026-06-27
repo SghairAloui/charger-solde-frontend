@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, HostListener, OnDestroy, OnInit} from '@angular/core';
 import {RouterLink, RouterLinkActive, RouterOutlet, Router, NavigationEnd} from '@angular/router';
 import {CommonModule} from '@angular/common';
 import {FormsModule} from '@angular/forms';
@@ -34,7 +34,9 @@ export class AdminLayoutComponent implements OnInit, OnDestroy {
   unreadCount    = 0;
   unreadMessages = 0;
   notifications: AppNotification[] = [];
+  sidebarOpen      = false;
   sidebarCollapsed = false;
+  isMobileView     = false;
   notifPanelOpen   = false;
   searchOpen       = false;
   searchQuery      = '';
@@ -68,6 +70,7 @@ export class AdminLayoutComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
+    this.updateViewportState();
     this.user = this.authService.getCurrentUser();
 
     // Track notifications
@@ -96,6 +99,9 @@ export class AdminLayoutComponent implements OnInit, OnDestroy {
     ).subscribe((e) => {
       const url = (e as NavigationEnd).urlAfterRedirects;
       this.currentRoute = this.routeLabels[url] || 'Admin';
+      if (this.isMobileView) {
+        this.sidebarOpen = false;
+      }
     });
 
     // Set initial route label
@@ -110,7 +116,34 @@ export class AdminLayoutComponent implements OnInit, OnDestroy {
   }
 
   toggleSidebar(): void {
+    if (this.isMobileView) {
+      this.sidebarOpen = !this.sidebarOpen;
+      return;
+    }
     this.sidebarCollapsed = !this.sidebarCollapsed;
+  }
+
+  closeSidebar(): void {
+    if (this.isMobileView) {
+      this.sidebarOpen = false;
+    }
+  }
+
+  @HostListener('window:resize')
+  onWindowResize(): void {
+    this.updateViewportState();
+  }
+
+  private updateViewportState(): void {
+    this.isMobileView = window.innerWidth <= 768;
+
+    if (this.isMobileView) {
+      this.sidebarCollapsed = false;
+      this.sidebarOpen = false;
+      return;
+    }
+
+    this.sidebarOpen = false;
   }
 
   toggleNotifPanel(): void {

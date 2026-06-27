@@ -9,10 +9,11 @@ export const authRoutes: Routes = [
     path: '',
     component: AuthLayoutComponent,
     children: [
-      {path: 'login', component: LoginComponent, title: 'Connexion - Charge Pay'},
-      {path: 'forgot-password', component: ForgotPasswordComponent, title: 'Mot de passe oublié - Charge Pay'},
-      {path: 'reset-password', component: ResetPasswordComponent, title: 'Réinitialiser le mot de passe - Charge Pay'},
+      {path: 'login', component: LoginComponent, title: 'Connexion - Rassidi'},
+      {path: 'forgot-password', component: ForgotPasswordComponent, title: 'Mot de passe oublié - Rassidi'},
+      {path: 'reset-password', component: ResetPasswordComponent, title: 'Réinitialiser le mot de passe - Rassidi'},
       {path: '', redirectTo: 'login', pathMatch: 'full'}
     ]
   }
 ];
+

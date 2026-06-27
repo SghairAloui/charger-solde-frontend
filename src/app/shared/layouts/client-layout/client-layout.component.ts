@@ -1,11 +1,11 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import {RouterLink, RouterLinkActive, RouterOutlet, Router} from '@angular/router';
+import {Component, HostListener, OnDestroy, OnInit} from '@angular/core';
+import {NavigationEnd, RouterLink, RouterLinkActive, RouterOutlet, Router} from '@angular/router';
 import {CommonModule} from '@angular/common';
 import {NzIconModule} from 'ng-zorro-antd/icon';
 import {NzAvatarModule} from 'ng-zorro-antd/avatar';
 import {NzDropDownModule} from 'ng-zorro-antd/dropdown';
 import {NzBadgeModule} from 'ng-zorro-antd/badge';
-import {Subject, takeUntil} from 'rxjs';
+import {Subject, filter, takeUntil} from 'rxjs';
 import {AuthService} from '../../../core/services/auth.service';
 import {NotificationService, AppNotification} from '../../../core/services/notification.service';
 import {WebSocketService} from '../../../core/services/websocket.service';
@@ -13,6 +13,7 @@ import {User} from '../../../core/models/user.model';
 import {ROUTES} from '../../../core/constants/app.constants';
 import {ThemeService} from '../../../core/services/theme.service';
 import {DateFormatPipe} from '../../pipes/date-format.pipe';
+import {ClientService} from '../../../core/services/client.service';
 
 @Component({
   selector: 'app-client-layout',
@@ -29,10 +30,13 @@ export class ClientLayoutComponent implements OnInit, OnDestroy {
   unreadCount      = 0;
   unreadMessages   = 0;
   notifications: AppNotification[] = [];
+  sidebarOpen      = false;
   sidebarCollapsed = false;
+  isMobileView     = false;
   notifPanelOpen   = false;
   headerMenuOpen   = false;
   greeting         = 'Bonjour';
+  totalSpent       = 0;
 
   private readonly destroy$ = new Subject<void>();
 
@@ -41,12 +45,24 @@ export class ClientLayoutComponent implements OnInit, OnDestroy {
     private readonly notificationService: NotificationService,
     private readonly webSocketService: WebSocketService,
     private readonly router: Router,
-    public readonly themeService: ThemeService
+    public readonly themeService: ThemeService,
+    private readonly clientService: ClientService
   ) {}
 
   ngOnInit(): void {
+    this.updateViewportState();
     this.user = this.authService.getCurrentUser();
     this.setGreeting();
+    this.loadTotalSpent();
+
+    this.router.events.pipe(
+      filter(event => event instanceof NavigationEnd),
+      takeUntil(this.destroy$)
+    ).subscribe(() => {
+      if (this.isMobileView) {
+        this.sidebarOpen = false;
+      }
+    });
 
     this.notificationService.notifications$
       .pipe(takeUntil(this.destroy$))
@@ -72,7 +88,52 @@ export class ClientLayoutComponent implements OnInit, OnDestroy {
     else             this.greeting = '🌙 Bonsoir';
   }
 
-  toggleSidebar(): void    { this.sidebarCollapsed = !this.sidebarCollapsed; }
+  private loadTotalSpent(): void {
+    this.clientService.getMyRecharges()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (orders) => {
+          this.totalSpent = orders
+            .filter(order => order.status === 'VALIDATED')
+            .reduce((sum, order) => sum + (order.amount || 0), 0);
+        },
+        error: () => {
+          this.totalSpent = 0;
+        }
+      });
+  }
+
+  toggleSidebar(): void {
+    if (this.isMobileView) {
+      this.sidebarOpen = !this.sidebarOpen;
+      return;
+    }
+    this.sidebarCollapsed = !this.sidebarCollapsed;
+  }
+
+  closeSidebar(): void {
+    if (this.isMobileView) {
+      this.sidebarOpen = false;
+    }
+  }
+
+  @HostListener('window:resize')
+  onWindowResize(): void {
+    this.updateViewportState();
+  }
+
+  private updateViewportState(): void {
+    this.isMobileView = window.innerWidth <= 768;
+
+    if (this.isMobileView) {
+      this.sidebarCollapsed = false;
+      this.sidebarOpen = false;
+      return;
+    }
+
+    this.sidebarOpen = false;
+  }
+
   toggleNotifPanel(): void {
     this.notifPanelOpen = !this.notifPanelOpen;
     if (this.notifPanelOpen) { this.notificationService.markAllAsRead(); }

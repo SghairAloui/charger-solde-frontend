@@ -18,6 +18,7 @@
 //  SIDEBAR
 // ══════════════════════════════════════════════════════════════
 .sidebar {
+  position: relative;
   width: $sidebar-width;
   height: 100vh;
   display: flex;
@@ -26,16 +27,50 @@
   border-right: 1px solid $border-subtle;
   transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   flex-shrink: 0;
-  position: relative;
   z-index: 100;
   overflow: hidden;
+  transform: none;
+  box-shadow: none;
+
+  &--open {
+    transform: translateX(0);
+  }
 
   &--collapsed {
     width: $sidebar-collapsed;
 
+    .sidebar__brand {
+      justify-content: center;
+      padding-left: 12px;
+      padding-right: 12px;
+    }
+
+    .sidebar__brand-name,
+    .sidebar__badge,
+    .nav-group,
+    .nav-item__label,
+    .nav-item__count,
+    .ws-status,
+    .sidebar-logout-label {
+      display: none;
+    }
+
+    .sidebar__user .sidebar__user-info,
+    .sidebar__user .sidebar__user-more {
+      display: none;
+    }
+
     .nav-item {
       justify-content: center;
       padding: 12px;
+    }
+
+    .sidebar__user {
+      justify-content: center;
+    }
+
+    .sidebar-logout-btn {
+      justify-content: center;
     }
   }
 
@@ -331,6 +366,7 @@
 // ══════════════════════════════════════════════════════════════
 .main-area {
   flex: 1;
+  margin-left: 0;
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -481,6 +517,14 @@
 // Dropdown backdrop
 .dropdown-backdrop {
   position: fixed; inset: 0; z-index: 99; background: transparent;
+}
+
+.sidebar-backdrop {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 250;
+  background: rgba(0, 0, 0, 0.45);
 }
 
 // Custom header dropdown
@@ -776,8 +820,6 @@
 
 // ── Mobile responsive ─────────────────────────────────────────
 @media (max-width: 768px) {
-  .sidebar { position: fixed; z-index: 300; transform: translateX(-100%); }
-  .sidebar--collapsed { transform: translateX(0); width: 80px; }
   .hide-mobile { display: none; }
   .app-header { padding: 0 16px; }
   .page-content__inner { padding: 16px; }
@@ -830,15 +872,33 @@
 @media (max-width: 768px) {
   .sidebar {
     position: fixed;
-    left: 0;
-    top: 0;
-    height: 100vh;
+    inset: 0 auto 0 0;
+    width: min(88vw, 320px);
     z-index: 900;
     transform: translateX(-100%);
-    transition: transform 0.3s ease;
+    box-shadow: 0 24px 48px rgba(0, 0, 0, 0.24);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+    &--open {
+      transform: translateX(0);
+    }
+
+    &--collapsed {
+      width: min(88vw, 320px);
+    }
   }
 
-  .sidebar:not(.sidebar--collapsed) {
-    transform: translateX(0);
+  .sidebar-backdrop { display: block; }
+
+  .app-header {
+    padding: 0 16px;
+  }
+
+  .page-content__inner {
+    padding: 16px;
+  }
+
+  .notif-panel__drawer {
+    width: min(100vw, 360px);
   }
 }

@@ -18,6 +18,14 @@
 
   <!-- ── 2. KPI Cards ── -->
   <div class="kpi-grid">
+    <div class="kpi-card kpi-card--balance">
+      <div class="kpi-card__icon"><span nz-icon nzType="wallet" nzTheme="outline"></span></div>
+      <div class="kpi-card__info">
+        <span class="kpi-card__label">MONTANT TOTAL</span>
+        <span class="kpi-card__value">{{ totalSpent | number:'1.2-2' }} TND</span>
+      </div>
+    </div>
+
     <div class="kpi-card kpi-card--total">
       <div class="kpi-card__icon"><span nz-icon nzType="ordered-list" nzTheme="outline"></span></div>
       <div class="kpi-card__info">
@@ -43,14 +51,6 @@
         <div class="kpi-card__val-row">
           <span class="kpi-card__value">{{ validatedOrders }}</span>
         </div>
-      </div>
-    </div>
-
-    <div class="kpi-card kpi-card--balance">
-      <div class="kpi-card__icon"><span nz-icon nzType="wallet" nzTheme="outline"></span></div>
-      <div class="kpi-card__info">
-        <span class="kpi-card__label">MONTANT TOTAL</span>
-        <span class="kpi-card__value">{{ totalSpent | number:'1.2-2' }} TND</span>
       </div>
     </div>
   </div>

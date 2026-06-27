@@ -18,16 +18,16 @@ export const adminRoutes: Routes = [
     component: AdminLayoutComponent,
     canActivate: [AdminGuard],
     children: [
-      {path: 'dashboard', component: DashboardComponent, title: 'Tableau de bord - Admin - Charge Pay'},
-      {path: 'profile', component: ProfileComponent, title: 'Mon profil - Admin - Charge Pay'},
-      {path: 'clients', component: ClientsComponent, title: 'Clients - Admin - Charge Pay'},
-      {path: 'operators', component: OperatorsComponent, title: 'Opérateurs - Admin - Charge Pay'},
-      {path: 'offers', component: OffersComponent, title: 'Offres - Admin - Charge Pay'},
-      {path: 'orders', component: OrdersComponent, title: 'Commandes - Admin - Charge Pay'},
-      {path: 'notifications', component: NotificationsComponent, title: 'Notifications - Admin - Charge Pay'},
-      {path: 'messaging', component: MessagingComponent, title: 'Messagerie - Admin - Charge Pay'},
-      {path: 'claims', component: ClaimsComponent, title: 'Réclamations - Admin - Charge Pay'},
-      {path: 'client-history', component: ClientHistoryComponent, title: 'Historique recharges - Admin - Charge Pay'},
+      {path: 'dashboard', component: DashboardComponent, title: 'Tableau de bord - Admin - Rassidi'},
+      {path: 'profile', component: ProfileComponent, title: 'Mon profil - Admin - Rassidi'},
+      {path: 'clients', component: ClientsComponent, title: 'Clients - Admin - Rassidi'},
+      {path: 'operators', component: OperatorsComponent, title: 'Opérateurs - Admin - Rassidi'},
+      {path: 'offers', component: OffersComponent, title: 'Offres - Admin - Rassidi'},
+      {path: 'orders', component: OrdersComponent, title: 'Commandes - Admin - Rassidi'},
+      {path: 'notifications', component: NotificationsComponent, title: 'Notifications - Admin - Rassidi'},
+      {path: 'messaging', component: MessagingComponent, title: 'Messagerie - Admin - Rassidi'},
+      {path: 'claims', component: ClaimsComponent, title: 'Réclamations - Admin - Rassidi'},
+      {path: 'client-history', component: ClientHistoryComponent, title: 'Historique recharges - Admin - Rassidi'},
       {path: '', redirectTo: 'dashboard', pathMatch: 'full'}
     ]
   }

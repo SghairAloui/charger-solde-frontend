@@ -14,6 +14,7 @@
 
 // ── Sidebar ───────────────────────────────────────────
 .client-sidebar {
+  position: relative;
   width: $sidebar-width;
   height: 100vh;
   display: flex;
@@ -22,13 +23,44 @@
   border-right: 1px solid $border-subtle;
   transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   flex-shrink: 0;
-  position: relative;
   z-index: 100;
   overflow: hidden;
+  transform: none;
+  box-shadow: none;
+
+  &--open {
+    transform: translateX(0);
+  }
 
   &--collapsed {
     width: $sidebar-collapsed;
+
+    .client-sidebar__brand {
+      justify-content: center;
+      padding-left: 12px;
+      padding-right: 12px;
+    }
+
+    .sidebar-brand-name,
+    .nav-item__label,
+    .sidebar-logout-label {
+      display: none;
+    }
+
+    .client-sidebar__user .sidebar-user-info,
+    .client-sidebar__user .sidebar-user-more {
+      display: none;
+    }
+
     .nav-item { justify-content: center; padding: 12px; }
+
+    .client-sidebar__user {
+      justify-content: center;
+    }
+
+    .sidebar-logout-btn {
+      justify-content: center;
+    }
   }
 
   &__brand {
@@ -173,6 +205,15 @@
 
 // ── Main Area ─────────────────────────────────────────
 .client-main { flex: 1; display: flex; flex-direction: column; overflow-x: hidden; min-width: 0; }
+ 
+// Overlay shown while the drawer is open
+.sidebar-backdrop {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 250;
+  background: rgba(0, 0, 0, 0.45);
+}
 
 // Header
 .client-header {
@@ -198,6 +239,32 @@
   font-size: 15px; color: $text-secondary; font-weight: 400; letter-spacing: 0.3px;
   .greeting-text { display: flex; align-items: center; gap: 4px; }
   .greeting-name { color: $text-primary; font-weight: 700; font-family: $font-display; }
+}
+
+.header-total {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 8px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: rgba(var(--primary-rgb), 0.08);
+  border: 1px solid rgba(var(--primary-rgb), 0.16);
+
+  &__label {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    color: $text-muted;
+  }
+
+  &__value {
+    font-size: 14px;
+    font-weight: 800;
+    color: $primary;
+    font-family: $font-display;
+    line-height: 1;
+  }
 }
 
 // Header Action Buttons
@@ -386,6 +453,117 @@
 }
 
 .sidebar-logout-label { white-space: nowrap; }
+
+@media (max-width: 768px) {
+  .header-toggle {
+    display: inline-flex;
+    width: 34px;
+    height: 34px;
+    flex-shrink: 0;
+  }
+
+  .client-header {
+    padding: 0 10px;
+    min-height: $header-height;
+    height: $header-height;
+  }
+
+  .client-header__left {
+    gap: 6px;
+    flex: 1;
+    min-width: 0;
+  }
+
+  .client-header__right {
+    gap: 4px;
+    flex-shrink: 0;
+  }
+
+  .header-total {
+    display: inline-flex;
+    align-items: center;
+    padding: 3px 6px;
+    gap: 4px;
+    flex-shrink: 0;
+
+    &__label {
+      display: none;
+    }
+
+    &__value {
+      font-size: 11px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+  }
+
+  .header-greeting {
+    min-width: 0;
+    max-width: 34vw;
+    overflow: hidden;
+
+    .greeting-text {
+      display: block;
+      font-size: 12px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  }
+
+  .header-action-btn {
+    width: 32px;
+    height: 32px;
+
+    span[nz-icon] {
+      font-size: 18px;
+    }
+  }
+
+  .header-profile {
+    gap: 6px;
+    padding: 2px 6px 2px 2px;
+
+    &__arrow {
+      display: none;
+    }
+  }
+
+  .header-profile__avatar-icon {
+    width: 28px;
+    height: 28px;
+  }
+
+  .client-content__inner {
+    padding: 16px;
+  }
+
+  .notif-panel__drawer {
+    width: min(100vw, 340px);
+  }
+
+  .client-sidebar {
+    position: fixed;
+    inset: 0 auto 0 0;
+    width: min(88vw, 320px);
+    z-index: 900;
+    transform: translateX(-100%);
+    box-shadow: 0 24px 48px rgba(0, 0, 0, 0.24);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+    &--open {
+      transform: translateX(0);
+    }
+
+    &--collapsed {
+      width: min(88vw, 320px);
+    }
+  }
+
+  .sidebar-backdrop {
+    display: block;
+  }
+}
 
 // Dropdown backdrop
 .dropdown-backdrop {

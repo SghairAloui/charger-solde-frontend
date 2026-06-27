@@ -2,7 +2,7 @@ export const environment = {
   production: true,
   apiUrl: '/api',
   wsUrl: 'wss://' + window.location.host + '/ws',
-  appName: 'Charge Pay',
+  appName: 'Rassidi',
   appVersion: '1.0.0',
   tokenKey: 'tunitopup_token',
   refreshTokenKey: 'tunitopup_refresh',

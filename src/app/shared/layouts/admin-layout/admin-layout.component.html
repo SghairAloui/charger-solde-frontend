@@ -1,17 +1,17 @@
 <div class="admin-shell">
 
   <!-- ══════════════════ SIDEBAR ══════════════════ -->
-  <aside class="sidebar" [class.sidebar--collapsed]="sidebarCollapsed">
+  <aside class="sidebar" [class.sidebar--open]="sidebarOpen" [class.sidebar--collapsed]="sidebarCollapsed">
 
     <!-- Brand -->
     <div class="sidebar__brand">
       <div class="sidebar__logo-icon">
-        <img src="assets/outline/logo.png" alt="Charge Pay" class="sidebar-logo-img" />
+        <img src="assets/outline/logo.png" alt="Rassidi" class="sidebar-logo-img" />
       </div>
-      <span class="sidebar__brand-name" *ngIf="!sidebarCollapsed">
-        <span>Charge</span> <em>Pay</em>
+      <span class="sidebar__brand-name">
+        <span>Rassidi</span>
       </span>
-      <span class="sidebar__badge" *ngIf="!sidebarCollapsed">Admin</span>
+      <span class="sidebar__badge">Admin</span>
     </div>
 
     <!-- Divider -->
@@ -22,93 +22,93 @@
 
       <!-- Dashboard -->
       <a class="nav-item" routerLink="/admin/dashboard" routerLinkActive="nav-item--active"
-         [title]="sidebarCollapsed ? 'Tableau de bord' : ''">
+         title="Tableau de bord">
         <div class="nav-item__icon">
           <span nz-icon nzType="dashboard" nzTheme="outline"></span>
         </div>
-        <span class="nav-item__label" *ngIf="!sidebarCollapsed">Tableau de bord</span>
+        <span class="nav-item__label">Tableau de bord</span>
       </a>
 
       <!-- Group: Gestion -->
-      <div class="nav-group" *ngIf="!sidebarCollapsed">
+      <div class="nav-group">
         <span class="nav-group__label">Gestion</span>
       </div>
 
       <a class="nav-item" routerLink="/admin/clients" routerLinkActive="nav-item--active"
-         [title]="sidebarCollapsed ? 'Clients' : ''">
+         title="Clients">
         <div class="nav-item__icon">
           <span nz-icon nzType="team" nzTheme="outline"></span>
         </div>
-        <span class="nav-item__label" *ngIf="!sidebarCollapsed">Clients</span>
+        <span class="nav-item__label">Clients</span>
       </a>
 
       <a class="nav-item" routerLink="/admin/operators" routerLinkActive="nav-item--active"
-         [title]="sidebarCollapsed ? 'Opérateurs' : ''">
+         title="Opérateurs">
         <div class="nav-item__icon">
           <span nz-icon nzType="build" nzTheme="outline"></span>
         </div>
-        <span class="nav-item__label" *ngIf="!sidebarCollapsed">Opérateurs</span>
+        <span class="nav-item__label">Opérateurs</span>
       </a>
 
       <a class="nav-item" routerLink="/admin/offers" routerLinkActive="nav-item--active"
-         [title]="sidebarCollapsed ? 'Offres' : ''">
+         title="Offres">
         <div class="nav-item__icon">
           <span nz-icon nzType="gift" nzTheme="outline"></span>
         </div>
-        <span class="nav-item__label" *ngIf="!sidebarCollapsed">Offres</span>
+        <span class="nav-item__label">Offres</span>
       </a>
 
       <a class="nav-item" routerLink="/admin/orders" routerLinkActive="nav-item--active"
-         [title]="sidebarCollapsed ? 'Commandes' : ''">
+         title="Commandes">
         <div class="nav-item__icon">
           <span nz-icon nzType="ordered-list" nzTheme="outline"></span>
         </div>
-        <span class="nav-item__label" *ngIf="!sidebarCollapsed">Commandes</span>
+        <span class="nav-item__label">Commandes</span>
       </a>
 
       <a class="nav-item" routerLink="/admin/client-history" routerLinkActive="nav-item--active"
-         [title]="sidebarCollapsed ? 'Historique' : ''">
+         title="Historique">
         <div class="nav-item__icon">
           <span nz-icon nzType="history" nzTheme="outline"></span>
         </div>
-        <span class="nav-item__label" *ngIf="!sidebarCollapsed">Historique</span>
+        <span class="nav-item__label">Historique</span>
       </a>
 
       <!-- Group: Communication -->
-      <div class="nav-group" *ngIf="!sidebarCollapsed">
+      <div class="nav-group">
         <span class="nav-group__label">Communication</span>
       </div>
 
       <a class="nav-item" routerLink="/admin/notifications" routerLinkActive="nav-item--active"
-         [title]="sidebarCollapsed ? 'Notifications' : ''">
+         title="Notifications">
         <div class="nav-item__icon">
           <span nz-icon nzType="bell" nzTheme="outline"></span>
           <span class="nav-item__badge" *ngIf="unreadCount > 0">{{ unreadCount > 9 ? '9+' : unreadCount }}</span>
         </div>
-        <span class="nav-item__label" *ngIf="!sidebarCollapsed">Notifications</span>
-        <span class="nav-item__count" *ngIf="!sidebarCollapsed && unreadCount > 0">{{ unreadCount > 9 ? '9+' : unreadCount }}</span>
+        <span class="nav-item__label">Notifications</span>
+        <span class="nav-item__count" *ngIf="unreadCount > 0">{{ unreadCount > 9 ? '9+' : unreadCount }}</span>
       </a>
 
       <a class="nav-item" routerLink="/admin/messaging" routerLinkActive="nav-item--active"
-         [title]="sidebarCollapsed ? 'Messagerie' : ''">
+         title="Messagerie">
         <div class="nav-item__icon">
           <span nz-icon nzType="message" nzTheme="outline"></span>
         </div>
-        <span class="nav-item__label" *ngIf="!sidebarCollapsed">Messagerie</span>
+        <span class="nav-item__label">Messagerie</span>
       </a>
 
       <a class="nav-item" routerLink="/admin/claims" routerLinkActive="nav-item--active"
-         [title]="sidebarCollapsed ? 'Réclamations' : ''">
+         title="Réclamations">
         <div class="nav-item__icon">
           <span nz-icon nzType="file-exclamation" nzTheme="outline"></span>
         </div>
-        <span class="nav-item__label" *ngIf="!sidebarCollapsed">Réclamations</span>
+        <span class="nav-item__label">Réclamations</span>
       </a>
 
     </nav>
 
     <!-- WS Status -->
-    <div class="ws-status" *ngIf="!sidebarCollapsed">
+    <div class="ws-status">
       <span class="ws-dot" [class.ws-dot--connected]="wsConnected"></span>
       <span>{{ wsConnected ? 'Connecté en temps réel' : 'Reconnexion...' }}</span>
     </div>
@@ -123,11 +123,11 @@
         <span nz-icon nzType="crown" nzTheme="outline"></span>
       </div>
       <img *ngIf="user?.photoUrl" [src]="user?.photoUrl" alt="Photo" class="sidebar-user-photo" />
-      <div class="sidebar__user-info" *ngIf="!sidebarCollapsed">
+      <div class="sidebar__user-info">
         <span class="sidebar__user-name">{{ user?.prenom }} {{ user?.nom }}</span>
         <span class="sidebar__user-role">Administrateur</span>
       </div>
-      <span nz-icon nzType="more" nzTheme="outline" class="sidebar__user-more" *ngIf="!sidebarCollapsed"></span>
+      <span nz-icon nzType="more" nzTheme="outline" class="sidebar__user-more"></span>
     </div>
 
     <nz-dropdown-menu #userMenu="nzDropdownMenu">
@@ -149,10 +149,12 @@
     <!-- Visible Logout Button -->
     <button class="sidebar-logout-btn" (click)="logout()">
       <span nz-icon nzType="logout" nzTheme="outline"></span>
-      <span class="sidebar-logout-label" *ngIf="!sidebarCollapsed">Déconnexion</span>
+      <span class="sidebar-logout-label">Déconnexion</span>
     </button>
 
   </aside>
+
+  <div class="sidebar-backdrop" *ngIf="isMobileView && sidebarOpen" (click)="closeSidebar()"></div>
 
   <!-- ══════════════════ MAIN AREA ══════════════════ -->
   <div class="main-area">
@@ -160,8 +162,8 @@
     <!-- HEADER -->
     <header class="app-header">
       <div class="app-header__left">
-        <button class="header-toggle" (click)="toggleSidebar()">
-          <span nz-icon [nzType]="sidebarCollapsed ? 'menu-unfold' : 'menu-fold'" nzTheme="outline"></span>
+        <button class="header-toggle" (click)="toggleSidebar()" [attr.aria-expanded]="isMobileView ? sidebarOpen : !sidebarCollapsed" aria-label="Basculer le menu">
+          <span nz-icon [nzType]="isMobileView ? (sidebarOpen ? 'menu-fold' : 'menu-unfold') : (sidebarCollapsed ? 'menu-unfold' : 'menu-fold')" nzTheme="outline"></span>
         </button>
         <div class="header-breadcrumb">
           <span class="greeting-text">Bonne journée, <span class="greeting-name">{{ user?.prenom }} !</span></span>
@@ -209,7 +211,7 @@
         <!-- Profile Dropdown -->
         <div class="header-profile" (click)="toggleHeaderMenu()">
           <div class="header-profile__avatar-icon">
-            <img *ngIf="!user?.photoUrl; else userPhoto" src="assets/outline/logo.png" alt="Charge Pay" class="header-logo-img" />
+            <img *ngIf="!user?.photoUrl; else userPhoto" src="assets/outline/logo.png" alt="Rassidi" class="header-logo-img" />
             <ng-template #userPhoto>
               <img [src]="user?.photoUrl" alt="Photo" class="header-logo-img" />
             </ng-template>

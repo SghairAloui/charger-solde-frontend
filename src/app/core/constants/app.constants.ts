@@ -1,8 +1,8 @@
 export const APP = {
-  NAME: 'Charge Pay',
-  SHORT_NAME: 'Charge Pay',
+  NAME: 'Rassidi',
+  SHORT_NAME: 'Rassidi',
   VERSION: '1.0.0',
-  COMPANY: 'Charge Pay Solutions',
+  COMPANY: 'Rassidi Solutions',
   SUPPORT_EMAIL: 'support@tunitopup.tn',
   SUPPORT_PHONE: '+216 XX XXX XXX'
 };
@@ -110,3 +110,4 @@ export const MESSAGES = {
     REJECTED: 'Recharge rejetée'
   }
 };
+

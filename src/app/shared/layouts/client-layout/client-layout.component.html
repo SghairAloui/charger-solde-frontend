@@ -1,15 +1,15 @@
 <div class="client-shell">
 
   <!-- ══════════════════ SIDEBAR ══════════════════ -->
-  <aside class="client-sidebar" [class.client-sidebar--collapsed]="sidebarCollapsed">
+  <aside class="client-sidebar" [class.client-sidebar--open]="sidebarOpen" [class.client-sidebar--collapsed]="sidebarCollapsed">
 
     <!-- Brand -->
     <div class="client-sidebar__brand">
       <div class="sidebar-logo-icon">
-        <img src="assets/outline/logo.png" alt="Charge Pay" class="sidebar-logo-img" />
+        <img src="assets/outline/logo.png" alt="Rassidi" class="sidebar-logo-img" />
       </div>
-      <span class="sidebar-brand-name" *ngIf="!sidebarCollapsed">
-        <span>Charge</span> <em>Pay</em>
+      <span class="sidebar-brand-name">
+        <span>Rassidi</span>
       </span>
     </div>
 
@@ -19,31 +19,31 @@
     <nav class="client-sidebar__nav">
       <a class="nav-item" routerLink="/client/dashboard" routerLinkActive="nav-item--active">
         <div class="nav-item__icon"><span nz-icon nzType="dashboard" nzTheme="outline"></span></div>
-        <span class="nav-item__label" *ngIf="!sidebarCollapsed">Tableau de bord</span>
+        <span class="nav-item__label">Tableau de bord</span>
       </a>
       <a class="nav-item" routerLink="/client/store" routerLinkActive="nav-item--active">
         <div class="nav-item__icon"><span nz-icon nzType="shop" nzTheme="outline"></span></div>
-        <span class="nav-item__label" *ngIf="!sidebarCollapsed">Boutique</span>
+        <span class="nav-item__label">Boutique</span>
       </a>
       <a class="nav-item" routerLink="/client/orders" routerLinkActive="nav-item--active">
         <div class="nav-item__icon"><span nz-icon nzType="ordered-list" nzTheme="outline"></span></div>
-        <span class="nav-item__label" *ngIf="!sidebarCollapsed">Mes commandes</span>
+        <span class="nav-item__label">Mes commandes</span>
       </a>
       <a class="nav-item" routerLink="/client/history" routerLinkActive="nav-item--active">
         <div class="nav-item__icon"><span nz-icon nzType="history" nzTheme="outline"></span></div>
-        <span class="nav-item__label" *ngIf="!sidebarCollapsed">Historique</span>
+        <span class="nav-item__label">Historique</span>
       </a>
       <a class="nav-item" routerLink="/client/messaging" routerLinkActive="nav-item--active">
         <div class="nav-item__icon"><span nz-icon nzType="message" nzTheme="outline"></span></div>
-        <span class="nav-item__label" *ngIf="!sidebarCollapsed">Messages</span>
+        <span class="nav-item__label">Messages</span>
       </a>
       <a class="nav-item" routerLink="/client/claims" routerLinkActive="nav-item--active">
         <div class="nav-item__icon"><span nz-icon nzType="file-exclamation" nzTheme="outline"></span></div>
-        <span class="nav-item__label" *ngIf="!sidebarCollapsed">Réclamations</span>
+        <span class="nav-item__label">Réclamations</span>
       </a>
       <a class="nav-item" routerLink="/client/profile" routerLinkActive="nav-item--active">
         <div class="nav-item__icon"><span nz-icon nzType="user" nzTheme="outline"></span></div>
-        <span class="nav-item__label" *ngIf="!sidebarCollapsed">Mon profil</span>
+        <span class="nav-item__label">Mon profil</span>
       </a>
     </nav>
 
@@ -55,11 +55,11 @@
         <span nz-icon nzType="user" nzTheme="outline"></span>
       </div>
       <img *ngIf="user?.photoUrl" [src]="user?.photoUrl" alt="Photo" class="sidebar-user-photo" />
-      <div class="sidebar-user-info" *ngIf="!sidebarCollapsed">
+      <div class="sidebar-user-info">
         <span class="sidebar-user-name">{{ user?.prenom }} {{ user?.nom }}</span>
         <span class="sidebar-user-role">Client</span>
       </div>
-      <span nz-icon nzType="more" nzTheme="outline" class="sidebar-user-more" *ngIf="!sidebarCollapsed"></span>
+      <span nz-icon nzType="more" nzTheme="outline" class="sidebar-user-more"></span>
     </div>
 
     <nz-dropdown-menu #clientMenu="nzDropdownMenu">
@@ -81,10 +81,12 @@
     <!-- Logout Button visible -->
     <button class="sidebar-logout-btn" (click)="logout()">
       <span nz-icon nzType="logout" nzTheme="outline"></span>
-      <span class="sidebar-logout-label" *ngIf="!sidebarCollapsed">Déconnexion</span>
+      <span class="sidebar-logout-label">Déconnexion</span>
     </button>
 
   </aside>
+
+  <div class="sidebar-backdrop" *ngIf="isMobileView && sidebarOpen" (click)="closeSidebar()"></div>
 
   <!-- ══════════════════ MAIN ══════════════════ -->
   <div class="client-main">
@@ -92,11 +94,15 @@
     <!-- Header -->
     <header class="client-header">
       <div class="client-header__left">
-        <button class="header-toggle" (click)="toggleSidebar()">
-          <span nz-icon [nzType]="sidebarCollapsed ? 'menu-unfold' : 'menu-fold'" nzTheme="outline"></span>
+        <button class="header-toggle" (click)="toggleSidebar()" [attr.aria-expanded]="isMobileView ? sidebarOpen : !sidebarCollapsed" aria-label="Basculer le menu">
+          <span nz-icon [nzType]="isMobileView ? (sidebarOpen ? 'menu-fold' : 'menu-unfold') : (sidebarCollapsed ? 'menu-unfold' : 'menu-fold')" nzTheme="outline"></span>
         </button>
         <div class="header-greeting">
           <span class="greeting-text">{{ greeting }}, <span class="greeting-name">{{ user?.prenom }} !</span></span>
+        </div>
+        <div class="header-total" title="Montant total validé">
+          <span class="header-total__label">Montant total</span>
+          <span class="header-total__value">{{ totalSpent | number:'1.2-2' }} TND</span>
         </div>
       </div>
 
@@ -125,7 +131,7 @@
         <!-- Avatar dropdown -->
         <div class="header-profile" (click)="toggleHeaderMenu()">
           <div class="header-profile__avatar-icon">
-            <img *ngIf="!user?.photoUrl; else userPhoto" src="assets/outline/logo.png" alt="Charge Pay" class="header-logo-img" />
+            <img *ngIf="!user?.photoUrl; else userPhoto" src="assets/outline/logo.png" alt="Rassidi" class="header-logo-img" />
             <ng-template #userPhoto>
               <img [src]="user?.photoUrl" alt="Photo" class="header-logo-img" />
             </ng-template>

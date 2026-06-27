@@ -15,13 +15,13 @@ export const clientRoutes: Routes = [
     component: ClientLayoutComponent,
     canActivate: [ClientGuard],
     children: [
-      {path: 'dashboard', component: DashboardComponent, title: 'Tableau de bord - Client - Charge Pay'},
-      {path: 'store', component: StoreComponent, title: 'Boutique - Charge Pay'},
-      {path: 'orders', component: OrdersComponent, title: 'Mes commandes - Charge Pay'},
-      {path: 'history', component: HistoryComponent, title: 'Historique - Charge Pay'},
-      {path: 'messaging', component: MessagingComponent, title: 'Messages - Charge Pay'},
-      {path: 'claims', component: ClaimsComponent, title: 'Réclamations - Charge Pay'},
-      {path: 'profile', component: ProfileComponent, title: 'Mon profil - Charge Pay'},
+      {path: 'dashboard', component: DashboardComponent, title: 'Tableau de bord - Client - Rassidi'},
+      {path: 'store', component: StoreComponent, title: 'Boutique - Rassidi'},
+      {path: 'orders', component: OrdersComponent, title: 'Mes commandes - Rassidi'},
+      {path: 'history', component: HistoryComponent, title: 'Historique - Rassidi'},
+      {path: 'messaging', component: MessagingComponent, title: 'Messages - Rassidi'},
+      {path: 'claims', component: ClaimsComponent, title: 'Réclamations - Rassidi'},
+      {path: 'profile', component: ProfileComponent, title: 'Mon profil - Rassidi'},
       {path: '', redirectTo: 'dashboard', pathMatch: 'full'}
     ]
   }
