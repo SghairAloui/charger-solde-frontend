@@ -110,14 +110,14 @@
     <!-- WS Status -->
     <div class="ws-status">
       <span class="ws-dot" [class.ws-dot--connected]="wsConnected"></span>
-      <span>{{ wsConnected ? 'Connecté en temps réel' : 'Reconnexion...' }}</span>
+      <span>{{ wsConnected ? 'Connecté ' : 'Reconnexion...' }}</span>
     </div>
 
     <!-- Divider -->
     <div class="sidebar__divider"></div>
 
     <!-- User profile section -->
-    <div class="sidebar__user" nz-dropdown [nzDropdownMenu]="userMenu" nzTrigger="click"
+  <!--  <div class="sidebar__user" nz-dropdown [nzDropdownMenu]="userMenu" nzTrigger="click"
          nzPlacement="topLeft">
       <div class="sidebar-role-icon sidebar-role-icon--admin" *ngIf="!user?.photoUrl">
         <span nz-icon nzType="crown" nzTheme="outline"></span>
@@ -142,7 +142,7 @@
           Déconnexion
         </li>
       </ul>
-    </nz-dropdown-menu>
+    </nz-dropdown-menu>-->
 
     <div class="sidebar__divider"></div>
 
@@ -165,9 +165,9 @@
         <button class="header-toggle" (click)="toggleSidebar()" [attr.aria-expanded]="isMobileView ? sidebarOpen : !sidebarCollapsed" aria-label="Basculer le menu">
           <span nz-icon [nzType]="isMobileView ? (sidebarOpen ? 'menu-fold' : 'menu-unfold') : (sidebarCollapsed ? 'menu-unfold' : 'menu-fold')" nzTheme="outline"></span>
         </button>
-        <div class="header-breadcrumb">
+        <!--<div class="header-breadcrumb">
           <span class="greeting-text">Bonne journée, <span class="greeting-name">{{ user?.prenom }} !</span></span>
-        </div>
+        </div>-->
       </div>
 
       <!-- Right: search + notifications + profile -->

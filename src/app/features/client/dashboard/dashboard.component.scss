@@ -174,3 +174,46 @@
   span[nz-icon] { font-size: 32px; opacity: 0.5; margin-bottom: 12px; }
   p { margin: 0; font-size: 14px; font-weight: 500; color: $text-secondary; }
 }
+
+
+/* ── BALANCE KPI (AMÉLIORÉ) ── */
+.kpi-card--balance {
+  border: 1px solid rgba(255, 77, 79, 0.25);
+  background: linear-gradient(135deg, #fff5f5, #ffffff);
+  box-shadow: 0 10px 25px rgba(255, 77, 79, 0.08);
+
+  position: relative;
+  overflow: hidden;
+
+  /* petit accent visuel */
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 6px;
+    height: 100%;
+    background: #ff4d4f;
+  }
+
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 14px 35px rgba(255, 77, 79, 0.18);
+  }
+
+  .kpi-card__icon {
+    background: rgba(255, 77, 79, 0.12);
+    color: #ff4d4f;
+  }
+
+  .kpi-card__value {
+    color: #ff4d4f !important; /* 🔴 montant en rouge */
+    font-size: 30px; /* plus visible */
+    font-weight: 900;
+  }
+
+  .kpi-card__label {
+    color: #a8071a; /* un rouge plus doux pour label */
+    font-weight: 700;
+  }
+}

@@ -93,10 +93,10 @@ export class AdminService {
   }
 
 
-  getPendingClients(): Observable<User[]> {
-  return this.http
-    .get<ApiResponse<User[]>>(`${this.apiUrl}${API.ADMIN.CLIENTS}/pending`)
-    .pipe(map(res => res.data));
+getAllClients(): Observable<User[]> {
+  return this.http.get<User[]>(
+    `${this.apiUrl}${API.ADMIN.CLIENTS}/all`
+  );
 }
 
 approveClient(id: number): Observable<any> {

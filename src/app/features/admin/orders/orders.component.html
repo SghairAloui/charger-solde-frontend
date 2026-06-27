@@ -1,21 +1,27 @@
 <app-page-header title="Gestion des commandes" subtitle="Validez ou rejetez les demandes de recharge">
+
+</app-page-header>
   <div header-actions class="toolbar-inline">
     <!-- Status filter -->
     <div class="filter-pills">
-      <button class="filter-pill" [class.filter-pill--active]="statusFilter === ''"       (click)="setFilter('')">Toutes</button>
-      <button class="filter-pill filter-pill--warning" [class.filter-pill--active]="statusFilter === STATUS_PENDING"   (click)="setFilter(STATUS_PENDING)">En attente <span class="pill-count" *ngIf="pendingCount > 0">{{ pendingCount }}</span></button>
-      <button class="filter-pill filter-pill--success" [class.filter-pill--active]="statusFilter === STATUS_VALIDATED" (click)="setFilter(STATUS_VALIDATED)">Validées</button>
-      <button class="filter-pill filter-pill--danger"  [class.filter-pill--active]="statusFilter === STATUS_REJECTED"  (click)="setFilter(STATUS_REJECTED)">Rejetées</button>
+      <button class="filter-pill" [class.filter-pill--active]="statusFilter === ''"
+        (click)="setFilter('')">Toutes</button>
+      <button class="filter-pill filter-pill--warning" [class.filter-pill--active]="statusFilter === STATUS_PENDING"
+        (click)="setFilter(STATUS_PENDING)">En attente <span class="pill-count" *ngIf="pendingCount > 0">{{ pendingCount
+          }}</span></button>
+      <button class="filter-pill filter-pill--success" [class.filter-pill--active]="statusFilter === STATUS_VALIDATED"
+        (click)="setFilter(STATUS_VALIDATED)">Validées</button>
+      <button class="filter-pill filter-pill--danger" [class.filter-pill--active]="statusFilter === STATUS_REJECTED"
+        (click)="setFilter(STATUS_REJECTED)">Rejetées</button>
     </div>
   </div>
-</app-page-header>
-
+  <br>
 <!-- Toolbar -->
 <div class="orders-toolbar fade-in-up">
   <div class="search-box">
     <span nz-icon nzType="search" nzTheme="outline"></span>
-    <input class="search-box__input" placeholder="Rechercher par client, téléphone..."
-           [(ngModel)]="searchTerm" (input)="onSearch()" />
+    <input class="search-box__input" placeholder="Rechercher par client, téléphone..." [(ngModel)]="searchTerm"
+      (input)="onSearch()" />
     <button class="search-box__clear" *ngIf="searchTerm" (click)="clearSearch()">
       <span nz-icon nzType="close-circle" nzTheme="fill"></span>
     </button>
@@ -27,8 +33,8 @@
 <div class="orders-container fade-in-up" style="animation-delay:0.1s">
   <div class="orders-grid" *ngIf="!loading; else skelLoader">
     <div class="order-card" *ngFor="let order of filteredOrders; let i = index"
-         [style.animation-delay]="(i * 0.05) + 's'">
-         
+      [style.animation-delay]="(i * 0.05) + 's'">
+
       <!-- Header -->
       <div class="order-card__header">
         <div class="client-info">
@@ -37,10 +43,9 @@
           </div>
           <span class="client-name">{{ order.client.prenom }} {{ order.client.nom }}</span>
         </div>
-        <span class="status-badge"
-              [class.status-badge--success]="order.status === 'VALIDATED'"
-              [class.status-badge--danger]="order.status === 'REJECTED'"
-              [class.status-badge--warning]="order.status === 'PENDING'">
+        <span class="status-badge" [class.status-badge--success]="order.status === 'VALIDATED'"
+          [class.status-badge--danger]="order.status === 'REJECTED'"
+          [class.status-badge--warning]="order.status === 'PENDING'">
           <span class="status-dot"></span>
           {{ order.status | statusLabel }}
         </span>
@@ -52,16 +57,32 @@
           <span class="amount-val">{{ order.amount }} TND</span>
           <span class="offer-val">{{ order.plan.label || 'Standard' }}</span>
         </div>
-        
+
         <div class="order-details">
           <div class="detail-item" nz-tooltip nzTooltipTitle="Opérateur" *ngIf="order.plan.operator?.name">
             <span nz-icon nzType="build" nzTheme="outline"></span>
             <span>{{ order.plan.operator?.name }}</span>
           </div>
           <div class="detail-item" nz-tooltip nzTooltipTitle="Numéro de téléphone">
-            <span nz-icon nzType="phone" nzTheme="outline"></span>
-            <span>{{ order.phoneNumber }}</span>
-          </div>
+  <span nz-icon nzType="phone" nzTheme="outline"></span>
+
+  <span>{{ order.phoneNumber }}</span>
+
+  <span
+    nz-icon
+    nzType="copy"
+    nzTheme="outline"
+    class="copy-icon"
+    nz-tooltip
+    nzTooltipTitle="Copier"
+    (click)="copyPhone(order.phoneNumber)">
+  </span>
+
+  <!-- message "Copié" -->
+  <span class="copied-text" *ngIf="copiedPhone">
+    Copié
+  </span>
+</div>
           <div class="detail-item" nz-tooltip nzTooltipTitle="Date de la demande">
             <span nz-icon nzType="calendar" nzTheme="outline"></span>
             <span>{{ order.createdAt | dateFormat }}</span>
@@ -72,13 +93,11 @@
       <!-- Footer / Actions -->
       <div class="order-card__footer">
         <div class="action-btns" *ngIf="order.status === 'PENDING'">
-          <button class="action-btn action-btn--approve"
-                  (click)="openModal(order, 'approve')">
+          <button class="action-btn action-btn--approve" (click)="openModal(order, 'approve')">
             <span nz-icon nzType="check" nzTheme="outline"></span>
             Valider
           </button>
-          <button class="action-btn action-btn--reject"
-                  (click)="openModal(order, 'reject')">
+          <button class="action-btn action-btn--reject" (click)="openModal(order, 'reject')">
             <span nz-icon nzType="close" nzTheme="outline"></span>
             Rejeter
           </button>
@@ -112,17 +131,17 @@
   <div class="modal-card" (click)="$event.stopPropagation()">
 
     <!-- Header -->
-    <div class="modal-card__header"
-         [class.modal-card__header--approve]="modalAction === 'approve'"
-         [class.modal-card__header--reject]="modalAction === 'reject'">
-      <div class="modal-card__icon"
-           [class.modal-card__icon--approve]="modalAction === 'approve'"
-           [class.modal-card__icon--reject]="modalAction === 'reject'">
+    <div class="modal-card__header" [class.modal-card__header--approve]="modalAction === 'approve'"
+      [class.modal-card__header--reject]="modalAction === 'reject'">
+      <div class="modal-card__icon" [class.modal-card__icon--approve]="modalAction === 'approve'"
+        [class.modal-card__icon--reject]="modalAction === 'reject'">
         <span nz-icon [nzType]="modalAction === 'approve' ? 'check-circle' : 'close-circle'" nzTheme="outline"></span>
       </div>
       <div>
-        <h3 class="modal-card__title">{{ modalAction === 'approve' ? 'Valider la recharge' : 'Rejeter la recharge' }}</h3>
-        <p class="modal-card__sub">{{ modalAction === 'approve' ? 'Confirmez la validation de cette demande' : 'Confirmez le rejet de cette demande' }}</p>
+        <h3 class="modal-card__title">{{ modalAction === 'approve' ? 'Valider la recharge' : 'Rejeter la recharge' }}
+        </h3>
+        <p class="modal-card__sub">{{ modalAction === 'approve' ? 'Confirmez la validation de cette demande' :
+          'Confirmez le rejet de cette demande' }}</p>
       </div>
       <button class="modal-card__close" (click)="closeModal()">
         <span nz-icon nzType="close" nzTheme="outline"></span>
@@ -163,12 +182,12 @@
     <!-- Footer -->
     <div class="modal-card__footer">
       <button class="modal-btn modal-btn--cancel" (click)="closeModal()">Annuler</button>
-      <button class="modal-btn"
-              [class.modal-btn--approve]="modalAction === 'approve'"
-              [class.modal-btn--reject]="modalAction === 'reject'"
-              (click)="confirmAction()" [disabled]="processing">
-        <span nz-icon [nzType]="processing ? 'loading' : (modalAction === 'approve' ? 'check' : 'close')" nzTheme="outline"></span>
-        {{ processing ? 'Traitement...' : (modalAction === 'approve' ? 'Confirmer la validation' : 'Confirmer le rejet') }}
+      <button class="modal-btn" [class.modal-btn--approve]="modalAction === 'approve'"
+        [class.modal-btn--reject]="modalAction === 'reject'" (click)="confirmAction()" [disabled]="processing">
+        <span nz-icon [nzType]="processing ? 'loading' : (modalAction === 'approve' ? 'check' : 'close')"
+          nzTheme="outline"></span>
+        {{ processing ? 'Traitement...' : (modalAction === 'approve' ? 'Confirmer la validation' : 'Confirmer le rejet')
+        }}
       </button>
     </div>
 

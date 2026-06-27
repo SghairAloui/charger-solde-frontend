@@ -11,5 +11,6 @@ export interface User {
   active: boolean;
   createdAt: Date;
 
-  
+    accountStatus?: 'PENDING' | 'APPROVED' | 'REJECTED'; // 🔥 AJOUT ICI
+
 }

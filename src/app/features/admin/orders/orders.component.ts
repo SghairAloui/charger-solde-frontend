@@ -29,6 +29,7 @@ export class OrdersComponent implements OnInit, OnDestroy {
   loading      = false;
   statusFilter: RechargeStatus | '' = '';
   searchTerm   = '';
+copiedPhone = false;
 
   // Modal state
   modalVisible = false;
@@ -134,4 +135,16 @@ export class OrdersComponent implements OnInit, OnDestroy {
     this.destroy$.next();
     this.destroy$.complete();
   }
+
+copyPhone(phone: string): void {
+  if (!phone) return;
+
+  navigator.clipboard.writeText(phone).then(() => {
+    this.copiedPhone = true;
+
+    setTimeout(() => {
+      this.copiedPhone = false;
+    }, 1500); // disparaît après 1.5s
+  });
+}
 }

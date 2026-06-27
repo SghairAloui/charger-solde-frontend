@@ -235,3 +235,306 @@
   }
   &__label { font-size: 12px; font-weight: 600; color: $text-secondary; width: 50px; text-align: right; }
 }
+
+// ═════════════════════════════════════════════
+// RESPONSIVE PROFILE MOBILE
+// ═════════════════════════════════════════════
+
+@media (max-width: 768px) {
+
+
+  .profile-page {
+
+    width: 100%;
+    max-width: 100%;
+    padding: 0 12px;
+    gap: 16px;
+
+  }
+
+
+
+  .profile-header {
+
+    padding: 18px;
+
+    h2 {
+      font-size: 20px;
+    }
+
+    p {
+      font-size: 12px;
+    }
+
+  }
+
+
+
+
+  .profile-content {
+
+    flex-direction: column;
+    gap: 16px;
+    width: 100%;
+
+  }
+
+
+
+  // LEFT CARD
+
+  .profile-sidebar {
+
+    width: 100% !important;
+    flex: none !important;
+
+  }
+
+
+
+  .identity-card {
+
+
+    width: 100%;
+
+
+    &__bg {
+      height: 80px;
+    }
+
+
+    &__avatar-wrap {
+
+      width: 80px;
+      height: 80px;
+      margin-top: -40px;
+
+    }
+
+
+    .identity-avatar {
+
+      width: 80px;
+      height: 80px;
+
+      font-size: 24px;
+
+    }
+
+
+
+    &__info {
+
+      padding: 0 16px 20px;
+
+    }
+
+
+
+    .identity-name {
+
+      font-size: 18px;
+
+    }
+
+
+
+    .identity-meta {
+
+      padding: 16px;
+
+
+      &__row {
+
+        font-size: 12px;
+        gap: 8px;
+
+        word-break: break-word;
+
+      }
+
+    }
+
+  }
+
+
+
+
+  // RIGHT CONTENT
+
+  .profile-main {
+
+    width: 100%;
+    border-radius: 14px;
+
+  }
+
+
+
+
+  // TABS
+
+  .custom-tabs {
+
+    padding: 12px;
+    gap: 6px;
+
+    overflow-x: auto;
+
+
+    .custom-tab-btn {
+
+      flex: 1;
+      justify-content: center;
+
+      padding: 10px 8px;
+
+      font-size: 12px;
+
+      white-space: nowrap;
+
+
+      span[nz-icon] {
+
+        font-size: 14px;
+
+      }
+
+    }
+
+  }
+
+
+
+
+  .tab-content {
+
+    padding: 18px 14px;
+
+  }
+
+
+
+
+  .tab-header {
+
+    margin-bottom: 20px;
+
+
+    h3 {
+
+      font-size: 16px;
+
+    }
+
+
+    p {
+
+      font-size: 12px;
+
+    }
+
+  }
+
+
+
+
+  // FORM
+
+  .modern-form {
+
+
+    .form-row-2 {
+
+      grid-template-columns: 1fr !important;
+      gap: 0;
+
+    }
+
+
+
+    ::ng-deep .ant-input,
+    ::ng-deep .ant-input-affix-wrapper,
+    ::ng-deep .ant-input-group {
+
+      width: 100%;
+      height: 46px;
+
+    }
+
+
+
+    ::ng-deep .ant-input {
+
+      font-size: 16px; // évite zoom iPhone
+
+    }
+
+  }
+
+
+
+
+
+  .form-footer {
+
+    margin-top: 20px;
+    text-align: center;
+
+
+    .submit-btn {
+
+      width: 100%;
+      padding: 0 10px;
+
+      font-size: 13px;
+
+    }
+
+  }
+
+
+
+}
+
+
+
+
+
+// petits téléphones 320-400px
+
+@media (max-width: 400px) {
+
+
+  .profile-page {
+
+    padding: 0 8px;
+
+  }
+
+
+
+  .custom-tabs {
+
+    flex-direction: column;
+
+
+    .custom-tab-btn {
+
+      width: 100%;
+
+    }
+
+  }
+
+
+
+  .identity-meta__row {
+
+    flex-direction: column;
+    align-items: flex-start !important;
+
+  }
+
+
+}
