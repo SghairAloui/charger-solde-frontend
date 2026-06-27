@@ -7,14 +7,18 @@
 
 <!-- Offers grid -->
 <div class="offers-grid fade-in-up" *ngIf="!loading; else skelLoader">
-  <div class="offer-card" *ngFor="let offer of offers; let i = index"
-       [style.animation-delay]="(i * 0.06) + 's'">
+  <div class="offer-card" *ngFor="let offer of offers; let i = index" [style.animation-delay]="(i * 0.06) + 's'">
 
     <div class="offer-card__top">
       <div class="offer-card__operator">
         <span class="op-dot" [style.background]="getOpColor(offer.operator?.name)"></span>
         {{ offer.operator?.name || 'Inconnu' }}
       </div>
+
+      <!-- NEW STATUS -->
+      <span class="status-badge" [class.active]="offer.active" [class.blocked]="!offer.active">
+        {{ offer.active ? 'Active' : 'Bloquée' }}
+      </span>
     </div>
 
     <div class="offer-card__body">
@@ -33,12 +37,21 @@
     </div>
 
     <div class="offer-card__actions">
-      <button class="offer-action-btn offer-action-btn--edit" nz-tooltip nzTooltipTitle="Modifier" (click)="showEditModal(offer)">
+      <button class="offer-action-btn offer-action-btn--edit" nz-tooltip nzTooltipTitle="Modifier"
+        (click)="showEditModal(offer)">
         <span nz-icon nzType="edit" nzTheme="outline"></span>
-        Modifier
+
       </button>
-      <button class="offer-action-btn offer-action-btn--delete" nz-tooltip nzTooltipTitle="Supprimer" (click)="confirmDeleteOffer(offer)">
+      <button class="offer-action-btn offer-action-btn--delete" nz-tooltip nzTooltipTitle="Supprimer"
+        (click)="confirmDeleteOffer(offer)">
         <span nz-icon nzType="delete" nzTheme="outline"></span>
+      </button>
+
+      <button class="offer-action-btn icon-only" [ngClass]="offer.active ? 'danger' : 'success'"
+        (click)="toggleOfferStatus(offer)" nz-tooltip [nzTooltipTitle]="offer.active ? 'Bloquer' : 'Débloquer'">
+
+        <span nz-icon [nzType]="offer.active ? 'stop' : 'play-circle'" nzTheme="outline"></span>
+
       </button>
     </div>
   </div>
@@ -56,14 +69,9 @@
   <p>Créez votre première offre de recharge</p>
 </div>
 
-<app-confirm-modal
-  [visible]="showConfirmDelete"
-  [itemName]="offerToDelete?.label || ''"
-  [loading]="deleting"
-  [message]="'Voulez-vous vraiment supprimer l\'offre '"
-  (confirm)="deleteOffer()"
-  (cancel)="showConfirmDelete = false; offerToDelete = null"
-></app-confirm-modal>
+<app-confirm-modal [visible]="showConfirmDelete" [itemName]="offerToDelete?.label || ''" [loading]="deleting"
+  [message]="'Voulez-vous vraiment supprimer l\'offre '" (confirm)="deleteOffer()"
+  (cancel)="showConfirmDelete = false; offerToDelete = null"></app-confirm-modal>
 
 <!-- Modal -->
 <div class="modal-overlay" *ngIf="isModalVisible" (click)="closeModal()">
@@ -72,9 +80,11 @@
       <div class="modal-card__icon"><span nz-icon nzType="gift" nzTheme="outline"></span></div>
       <div>
         <h3 class="modal-card__title">{{ isEditMode ? 'Modifier l\'offre' : 'Créer une nouvelle offre' }}</h3>
-        <p class="modal-card__sub">{{ isEditMode ? 'Modifiez les paramètres du forfait' : 'Définissez les paramètres du forfait' }}</p>
+        <p class="modal-card__sub">{{ isEditMode ? 'Modifiez les paramètres du forfait' : 'Définissez les paramètres du
+          forfait' }}</p>
       </div>
-      <button class="modal-card__close" (click)="closeModal()"><span nz-icon nzType="close" nzTheme="outline"></span></button>
+      <button class="modal-card__close" (click)="closeModal()"><span nz-icon nzType="close"
+          nzTheme="outline"></span></button>
     </div>
     <div class="modal-card__body">
       <div class="field-group">
@@ -91,7 +101,8 @@
       <div class="form-row">
         <div class="field-group">
           <label class="field-label">Prix (TND) <span class="required">*</span></label>
-          <input class="field-input" type="number" [(ngModel)]="offerForm.price" placeholder="0.000" min="0" step="0.5" />
+          <input class="field-input" type="number" [(ngModel)]="offerForm.price" placeholder="0.000" min="0"
+            step="0.5" />
         </div>
         <div class="field-group">
           <label class="field-label">Validité (jours)</label>

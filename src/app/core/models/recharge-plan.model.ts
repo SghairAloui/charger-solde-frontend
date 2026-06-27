@@ -6,4 +6,6 @@ export interface RechargePlan {
   price: number;
   validityDays: number;
   operator?: Operator;
+    active: boolean; // 👈 ADD THIS
+
 }

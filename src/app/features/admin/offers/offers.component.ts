@@ -162,4 +162,25 @@ export class OffersComponent implements OnInit, OnDestroy {
     this.destroy$.next();
     this.destroy$.complete();
   }
+
+  toggleOfferStatus(offer: RechargePlan): void {
+  const action = offer.active ? 'block' : 'unblock';
+
+  this.adminService.togglePlanStatus(offer.id, action)
+    .pipe(takeUntil(this.destroy$))
+    .subscribe({
+      next: () => {
+        offer.active = !offer.active;
+
+        this.message.success(
+          offer.active
+            ? 'Offre activée'
+            : 'Offre bloquée'
+        );
+      },
+      error: () => {
+        this.message.error('Erreur lors du changement de statut');
+      }
+    });
+}
 }

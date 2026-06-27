@@ -403,3 +403,36 @@
 html, body {
   overflow-x: hidden;
 }
+
+.plan-card--inactive {
+
+  opacity: 0.45;
+  filter: grayscale(1);
+  cursor: not-allowed;
+
+  &:hover {
+    transform: none;
+    box-shadow: none;
+    border-color: $border-subtle;
+  }
+}
+
+
+.plan-card__blocked {
+
+  position: absolute;
+
+  top: 10px;
+  right: 10px;
+
+  background: rgba(255,0,0,.15);
+  color: $danger;
+
+  padding: 4px 10px;
+  border-radius: 20px;
+
+  font-size: 10px;
+  font-weight: 800;
+
+  text-transform: uppercase;
+}

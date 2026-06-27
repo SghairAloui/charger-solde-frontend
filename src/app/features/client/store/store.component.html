@@ -37,34 +37,113 @@
 </div>
 
 <!-- ══════════ STEP 1: Offre ══════════ -->
+<!-- ══════════ STEP 1: Offre ══════════ -->
 <div class="store-step fade-in-up" style="animation-delay:0.1s" *ngIf="currentStep === 1">
+
   <div class="step-header">
+
     <button class="back-btn" (click)="currentStep = 0">
-      <span nz-icon nzType="arrow-left" nzTheme="outline"></span> Retour
+      <span nz-icon nzType="arrow-left" nzTheme="outline"></span>
+      Retour
     </button>
-    <h3 class="step-title">Choisissez votre forfait — <span class="gradient-text">{{ selectedOperator?.name }}</span></h3>
+
+    <h3 class="step-title">
+      Choisissez votre forfait —
+      <span class="gradient-text">
+        {{ selectedOperator?.name }}
+      </span>
+    </h3>
+
   </div>
 
+
   <div class="plan-grid">
-    <div class="plan-card"
-         *ngFor="let plan of plans"
-         [class.plan-card--selected]="selectedPlan?.id === plan.id"
-         (click)="selectPlan(plan)">
-      <div class="plan-card__badge" *ngIf="plan.validityDays >= 30">Populaire</div>
+
+    <div
+      class="plan-card"
+      *ngFor="let plan of plans"
+
+      [class.plan-card--selected]="selectedPlan?.id === plan.id"
+
+      [class.plan-card--inactive]="!plan.active"
+
+      (click)="plan.active && selectPlan(plan)"
+    >
+
+
+      <!-- Badge populaire -->
+      <div
+        class="plan-card__badge"
+        *ngIf="plan.active && plan.validityDays >= 30">
+        Populaire
+      </div>
+
+
+      <!-- Badge bloqué -->
+      <div
+        class="plan-card__blocked"
+        *ngIf="!plan.active">
+        Indisponible
+      </div>
+
+
+
+      <!-- Prix -->
       <div class="plan-card__price">
-        <span class="plan-amount">{{ plan.price }}</span>
-        <span class="plan-unit">TND</span>
+
+        <span class="plan-amount">
+          {{ plan.price }}
+        </span>
+
+        <span class="plan-unit">
+          TND
+        </span>
+
       </div>
-      <h4 class="plan-card__name">{{ plan.label }}</h4>
+
+
+
+      <!-- Nom -->
+      <h4 class="plan-card__name">
+        {{ plan.label }}
+      </h4>
+
+
+
+      <!-- Validité -->
       <div class="plan-card__meta">
-        <span nz-icon nzType="calendar" nzTheme="outline"></span>
+
+        <span
+          nz-icon
+          nzType="calendar"
+          nzTheme="outline">
+        </span>
+
         {{ plan.validityDays }} jours de validité
+
       </div>
-      <div class="plan-card__select-icon" *ngIf="selectedPlan?.id === plan.id">
-        <span nz-icon nzType="check-circle" nzTheme="fill"></span>
+
+
+
+      <!-- Check sélection -->
+      <div
+        class="plan-card__select-icon"
+        *ngIf="selectedPlan?.id === plan.id && plan.active">
+
+        <span
+          nz-icon
+          nzType="check-circle"
+          nzTheme="fill">
+        </span>
+
       </div>
+
+
+
     </div>
+
   </div>
+
 </div>
 
 <!-- ══════════ STEP 2: Téléphone ══════════ -->

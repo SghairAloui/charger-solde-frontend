@@ -112,4 +112,11 @@ rejectClient(id: number): Observable<any> {
     {}
   );
 }
+
+togglePlanStatus(id: number, action: 'block' | 'unblock'): Observable<RechargePlan> {
+  return this.http.patch<RechargePlan>(
+    `${this.apiUrl}${API.ADMIN.PLANS}/${id}/${action}`,
+    {}
+  );
+}
 }
