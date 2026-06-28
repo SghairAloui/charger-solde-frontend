@@ -45,8 +45,13 @@ export class DashboardComponent implements OnInit, OnDestroy {
       .filter(o => o.status === 'VALIDATED')
       .reduce((sum, o) => sum + (o.amount || 0), 0);
   }
-  get recentOrders():    RechargeRequest[] { return this.orders.slice(0, 5); }
-
+get recentOrders(): RechargeRequest[] {
+  return [...this.orders]
+    .sort((a: RechargeRequest, b: RechargeRequest) => {
+      return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+    })
+    .slice(0, 5);
+}
   constructor(
     private readonly clientService: ClientService,
     private readonly operatorService: OperatorService,

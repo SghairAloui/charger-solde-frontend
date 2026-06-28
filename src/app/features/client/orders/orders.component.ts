@@ -25,18 +25,26 @@ export class OrdersComponent implements OnInit, OnDestroy {
 
   private readonly destroy$ = new Subject<void>();
 
-  get pendingOrders():   RechargeRequest[] { return this.orders.filter(o => o.status === 'PENDING'); }
-  get validatedOrders(): RechargeRequest[] { return this.orders.filter(o => o.status === 'VALIDATED'); }
-  get rejectedOrders():  RechargeRequest[] { return this.orders.filter(o => o.status === 'REJECTED'); }
+ get pendingOrders(): RechargeRequest[] {
+  return this.sortedOrders.filter(o => o.status === 'PENDING');
+}
 
-  get displayedOrders(): RechargeRequest[] {
-    switch (this.activeTab) {
-      case 'pending':   return this.pendingOrders;
-      case 'validated': return this.validatedOrders;
-      case 'rejected':  return this.rejectedOrders;
-      default:          return this.orders;
-    }
+get validatedOrders(): RechargeRequest[] {
+  return this.sortedOrders.filter(o => o.status === 'VALIDATED');
+}
+
+get rejectedOrders(): RechargeRequest[] {
+  return this.sortedOrders.filter(o => o.status === 'REJECTED');
+}
+
+get displayedOrders(): RechargeRequest[] {
+  switch (this.activeTab) {
+    case 'pending':   return this.pendingOrders;
+    case 'validated': return this.validatedOrders;
+    case 'rejected':  return this.rejectedOrders;
+    default:          return this.sortedOrders;
   }
+}
 
   setTab(tab: Tab): void { this.activeTab = tab; }
 
@@ -60,4 +68,10 @@ export class OrdersComponent implements OnInit, OnDestroy {
     this.destroy$.next();
     this.destroy$.complete();
   }
+
+  get sortedOrders(): RechargeRequest[] {
+  return [...this.orders].sort((a: RechargeRequest, b: RechargeRequest) => {
+    return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+  });
+}
 }

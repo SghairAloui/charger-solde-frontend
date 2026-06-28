@@ -97,9 +97,11 @@
         <button class="header-toggle" (click)="toggleSidebar()" [attr.aria-expanded]="isMobileView ? sidebarOpen : !sidebarCollapsed" aria-label="Basculer le menu">
           <span nz-icon [nzType]="isMobileView ? (sidebarOpen ? 'menu-fold' : 'menu-unfold') : (sidebarCollapsed ? 'menu-unfold' : 'menu-fold')" nzTheme="outline"></span>
         </button>
+        &nbsp;&nbsp;&nbsp;
         <div class="header-greeting">
-          <span class="greeting-text">{{ greeting }}, <span class="greeting-name">{{ user?.prenom }} !</span></span>
+          <span class="greeting-name">{{ user?.prenom }} !</span>
         </div>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         <div class="header-total" title="Montant total validé">
           <span class="header-total__label">Montant total</span>
           <span class="header-total__value">{{ totalSpent | number:'1.2-2' }} TND</span>

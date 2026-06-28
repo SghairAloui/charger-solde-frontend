@@ -1,21 +1,21 @@
 <app-page-header title="Gestion des commandes" subtitle="Validez ou rejetez les demandes de recharge">
 
 </app-page-header>
-  <div header-actions class="toolbar-inline">
-    <!-- Status filter -->
-    <div class="filter-pills">
-      <button class="filter-pill" [class.filter-pill--active]="statusFilter === ''"
-        (click)="setFilter('')">Toutes</button>
-      <button class="filter-pill filter-pill--warning" [class.filter-pill--active]="statusFilter === STATUS_PENDING"
-        (click)="setFilter(STATUS_PENDING)">En attente <span class="pill-count" *ngIf="pendingCount > 0">{{ pendingCount
-          }}</span></button>
-      <button class="filter-pill filter-pill--success" [class.filter-pill--active]="statusFilter === STATUS_VALIDATED"
-        (click)="setFilter(STATUS_VALIDATED)">Validées</button>
-      <button class="filter-pill filter-pill--danger" [class.filter-pill--active]="statusFilter === STATUS_REJECTED"
-        (click)="setFilter(STATUS_REJECTED)">Rejetées</button>
-    </div>
+<div header-actions class="toolbar-inline">
+  <!-- Status filter -->
+  <div class="filter-pills">
+    <button class="filter-pill" [class.filter-pill--active]="statusFilter === ''"
+      (click)="setFilter('')">Toutes</button>
+    <button class="filter-pill filter-pill--warning" [class.filter-pill--active]="statusFilter === STATUS_PENDING"
+      (click)="setFilter(STATUS_PENDING)">En attente <span class="pill-count" *ngIf="pendingCount > 0">{{ pendingCount
+        }}</span></button>
+    <button class="filter-pill filter-pill--success" [class.filter-pill--active]="statusFilter === STATUS_VALIDATED"
+      (click)="setFilter(STATUS_VALIDATED)">Validées</button>
+    <button class="filter-pill filter-pill--danger" [class.filter-pill--active]="statusFilter === STATUS_REJECTED"
+      (click)="setFilter(STATUS_REJECTED)">Rejetées</button>
   </div>
-  <br>
+</div>
+<br>
 <!-- Toolbar -->
 <div class="orders-toolbar fade-in-up">
   <div class="search-box">
@@ -31,21 +31,33 @@
 
 <!-- Grid -->
 <div class="orders-container fade-in-up" style="animation-delay:0.1s">
+
   <div class="orders-grid" *ngIf="!loading; else skelLoader">
-    <div class="order-card" *ngFor="let order of filteredOrders; let i = index"
-      [style.animation-delay]="(i * 0.05) + 's'">
+
+    <!-- CARD -->
+    <div class="order-card"
+         *ngFor="let order of filteredOrders; let i = index"
+         [style.animation-delay]="(i * 0.05) + 's'">
 
       <!-- Header -->
       <div class="order-card__header">
         <div class="client-info">
-          <div class="client-avatar" [style.background]="getColor(order.client.prenom)">
-            {{ order.client.prenom.charAt(0).toUpperCase() }}{{ order.client.nom.charAt(0).toUpperCase() }}
+          <div class="client-avatar"
+               [style.background]="getColor(order.client.prenom)">
+            {{ order.client.prenom.charAt(0).toUpperCase() }}
+            {{ order.client.nom.charAt(0).toUpperCase() }}
           </div>
-          <span class="client-name">{{ order.client.prenom }} {{ order.client.nom }}</span>
+
+          <span class="client-name">
+            {{ order.client.prenom }} {{ order.client.nom }}
+          </span>
         </div>
-        <span class="status-badge" [class.status-badge--success]="order.status === 'VALIDATED'"
-          [class.status-badge--danger]="order.status === 'REJECTED'"
-          [class.status-badge--warning]="order.status === 'PENDING'">
+
+        <span class="status-badge"
+              [class.status-badge--success]="order.status === 'VALIDATED'"
+              [class.status-badge--danger]="order.status === 'REJECTED'"
+              [class.status-badge--warning]="order.status === 'PENDING'">
+
           <span class="status-dot"></span>
           {{ order.status | statusLabel }}
         </span>
@@ -53,84 +65,122 @@
 
       <!-- Body -->
       <div class="order-card__body">
+
         <div class="amount-wrap">
           <span class="amount-val">{{ order.amount }} TND</span>
           <span class="offer-val">{{ order.plan.label || 'Standard' }}</span>
         </div>
 
         <div class="order-details">
-          <div class="detail-item" nz-tooltip nzTooltipTitle="Opérateur" *ngIf="order.plan.operator?.name">
-            <span nz-icon nzType="build" nzTheme="outline"></span>
+
+          <div class="detail-item" *ngIf="order.plan.operator?.name">
+            <span nz-icon nzType="build"></span>
             <span>{{ order.plan.operator?.name }}</span>
           </div>
-          <div class="detail-item" nz-tooltip nzTooltipTitle="Numéro de téléphone">
-  <span nz-icon nzType="phone" nzTheme="outline"></span>
 
-  <span>{{ order.phoneNumber }}</span>
+          <div class="detail-item">
+            <span nz-icon nzType="phone"></span>
 
-  <span
-    nz-icon
-    nzType="copy"
-    nzTheme="outline"
-    class="copy-icon"
-    nz-tooltip
-    nzTooltipTitle="Copier"
-    (click)="copyPhone(order.phoneNumber)">
-  </span>
+            <span>{{ order.phoneNumber }}</span>
 
-  <!-- message "Copié" -->
-  <span class="copied-text" *ngIf="copiedPhone">
-    Copié
-  </span>
-</div>
-          <div class="detail-item" nz-tooltip nzTooltipTitle="Date de la demande">
-            <span nz-icon nzType="calendar" nzTheme="outline"></span>
+            <span nz-icon nzType="copy"
+                  class="copy-icon"
+                  nz-tooltip
+                  nzTooltipTitle="Copier"
+                  (click)="copyPhone(order.phoneNumber)">
+            </span>
+
+            <span class="copied-text" *ngIf="copiedPhone">
+              Copié
+            </span>
+          </div>
+
+          <div class="detail-item">
+            <span nz-icon nzType="calendar"></span>
             <span>{{ order.createdAt | dateFormat }}</span>
           </div>
+
         </div>
       </div>
 
-      <!-- Footer / Actions -->
+      <!-- Footer -->
       <div class="order-card__footer">
+
         <div class="action-btns" *ngIf="order.status === 'PENDING'">
-          <button class="action-btn action-btn--approve" (click)="openModal(order, 'approve')">
-            <span nz-icon nzType="check" nzTheme="outline"></span>
-            Valider
-          </button>
-          <button class="action-btn action-btn--reject" (click)="openModal(order, 'reject')">
-            <span nz-icon nzType="close" nzTheme="outline"></span>
-            Rejeter
-          </button>
+          <button class="action-btn action-btn--approve"
+        (click)="confirmAction(order, true)">
+  <span nz-icon nzType="check"></span>
+  Valider
+</button>
+
+<button class="action-btn action-btn--reject"
+        (click)="confirmAction(order, false)">
+  <span nz-icon nzType="close"></span>
+  Rejeter
+</button>
         </div>
+
         <span class="no-action" *ngIf="order.status !== 'PENDING'">
           Traitée le {{ order.createdAt | dateFormat }}
         </span>
+
       </div>
 
     </div>
 
-    <!-- Empty State -->
+    <!-- EMPTY STATE -->
     <div class="empty-state" *ngIf="filteredOrders.length === 0">
-      <span nz-icon nzType="inbox" nzTheme="outline"></span>
+      <span nz-icon nzType="inbox"></span>
       <p>Aucune commande trouvée pour "{{ searchTerm }}"</p>
-      <button class="add-btn" *ngIf="searchTerm" (click)="clearSearch()">Réinitialiser</button>
+      <button class="add-btn" *ngIf="searchTerm" (click)="clearSearch()">
+        Réinitialiser
+      </button>
     </div>
+
   </div>
 
+  <!-- LOADER -->
   <ng-template #skelLoader>
     <div class="orders-grid">
       <div class="skel-card" *ngFor="let i of [1,2,3,4,5,6]"></div>
     </div>
   </ng-template>
+
+  <!-- ✅ PAGINATION (AJOUT ICI) -->
+<div class="pagination fade-in-up" *ngIf="totalPages > 1">
+
+  <!-- Prev -->
+  <button class="page-btn nav"
+          (click)="prevPage()"
+          [disabled]="currentPage === 0">
+    ‹
+  </button>
+
+  <!-- Pages -->
+  <button class="page-btn"
+          *ngFor="let page of [].constructor(totalPages); let i = index"
+          (click)="goToPage(i)"
+          [class.active]="currentPage === i">
+    {{ i + 1 }}
+  </button>
+
+  <!-- Next -->
+  <button class="page-btn nav"
+          (click)="nextPage()"
+          [disabled]="currentPage === totalPages - 1">
+    ›
+  </button>
+
+</div>
+
 </div>
 
 <!-- ══════════════════════════════════════════════════════════════
      MODAL — Validation / Rejet de commande
 ══════════════════════════════════════════════════════════════ -->
-<div class="modal-overlay" *ngIf="modalVisible" (click)="closeModal()">
+<!--<div class="modal-overlay" *ngIf="modalVisible" (click)="closeModal()">
   <div class="modal-card" (click)="$event.stopPropagation()">
 
-    <!-- Header -->
     <div class="modal-card__header" [class.modal-card__header--approve]="modalAction === 'approve'"
       [class.modal-card__header--reject]="modalAction === 'reject'">
       <div class="modal-card__icon" [class.modal-card__icon--approve]="modalAction === 'approve'"
@@ -148,7 +198,6 @@
       </button>
     </div>
 
-    <!-- Body -->
     <div class="modal-card__body" *ngIf="selectedOrder">
       <div class="modal-order-summary">
         <div class="summary-row">
@@ -179,7 +228,6 @@
       </div>
     </div>
 
-    <!-- Footer -->
     <div class="modal-card__footer">
       <button class="modal-btn modal-btn--cancel" (click)="closeModal()">Annuler</button>
       <button class="modal-btn" [class.modal-btn--approve]="modalAction === 'approve'"
@@ -192,4 +240,4 @@
     </div>
 
   </div>
-</div>
+</div>-->

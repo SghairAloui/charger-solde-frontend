@@ -30,7 +30,7 @@ export class StoreComponent implements OnInit, OnDestroy {
   currentStep  = 0;
   submitting   = false;
 
-  readonly steps = ['Opérateur', 'Offre', 'Téléphone', 'Confirmation', 'Succès'];
+  readonly steps = ['Opérateur', 'Offre', 'Téléphone', 'Succès'];
 
   private readonly destroy$ = new Subject<void>();
   private readonly opColors: Record<string, string> = {
@@ -96,8 +96,10 @@ export class StoreComponent implements OnInit, OnDestroy {
     this.clientService.createRecharge(dto)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
-        next:     () => { this.currentStep = 4; this.message.success('✅ Demande de recharge créée avec succès'); },
-        error:    () => { this.message.error('Erreur lors de la création'); this.submitting = false; },
+next: () => { 
+  this.currentStep = 3; 
+  this.message.success('✅ Demande de recharge créée avec succès'); 
+},        error:    () => { this.message.error('Erreur lors de la création'); this.submitting = false; },
         complete: () => { this.submitting = false; }
       });
   }

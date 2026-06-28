@@ -30,11 +30,10 @@ export class OrdersComponent implements OnInit, OnDestroy {
   statusFilter: RechargeStatus | '' = '';
   searchTerm   = '';
 copiedPhone = false;
-
+currentPage = 0;
+totalPages = 0;
   // Modal state
-  modalVisible = false;
-  modalAction: 'approve' | 'reject' = 'approve';
-  selectedOrder: RechargeRequest | null = null;
+
   processing = false;
 
   // expose enum values for template binding
@@ -58,23 +57,60 @@ copiedPhone = false;
     this.statusFilter = status;
     this.loadOrders();
   }
+loadOrders(): void {
+  this.loading = true;
 
-  loadOrders(): void {
-    this.loading = true;
-    const obs = this.statusFilter
-      ? this.adminService.getRechargesByStatus(this.statusFilter as RechargeStatus)
-      : this.adminService.getRechargeRequests();
+  const obs = this.statusFilter
+    ? this.adminService.getRechargesByStatus(
+        this.statusFilter as RechargeStatus,
+        this.currentPage
+      )
+    : this.adminService.getRechargeRequests(this.currentPage);
 
-    obs.pipe(takeUntil(this.destroy$))
-      .subscribe({
-        next: (data) => {
-          this.orders         = data;
-          this.filteredOrders = data;
-        },
-        complete: () => { this.loading = false; },
-        error: () => { this.loading = false; this.message.error('Erreur lors du chargement des commandes'); }
-      });
+  obs.pipe(takeUntil(this.destroy$))
+    .subscribe({
+      next: (res) => {
+
+        const sortedOrders: RechargeRequest[] = res.content.sort(
+          (a: RechargeRequest, b: RechargeRequest) => {
+            return new Date(b.createdAt).getTime()
+                 - new Date(a.createdAt).getTime();
+          }
+        );
+
+        this.orders = sortedOrders;
+        this.filteredOrders = sortedOrders;
+
+        this.totalPages = res.totalPages;
+      },
+
+      complete: () => this.loading = false,
+
+      error: () => {
+        this.loading = false;
+        this.message.error('Erreur lors du chargement des commandes');
+      }
+    });
+}
+
+nextPage(): void {
+  if (this.currentPage < this.totalPages - 1) {
+    this.currentPage++;
+    this.loadOrders();
   }
+}
+
+prevPage(): void {
+  if (this.currentPage > 0) {
+    this.currentPage--;
+    this.loadOrders();
+  }
+}
+
+goToPage(page: number): void {
+  this.currentPage = page;
+  this.loadOrders();
+}
 
   onSearch(): void {
     const term = this.searchTerm.toLowerCase().trim();
@@ -91,40 +127,42 @@ copiedPhone = false;
     this.filteredOrders = [...this.orders];
   }
 
-  openModal(order: RechargeRequest, action: 'approve' | 'reject'): void {
-    this.selectedOrder = order;
-    this.modalAction = action;
-    this.modalVisible = true;
-  }
 
-  closeModal(): void {
-    if (!this.processing) {
-      this.modalVisible = false;
-      this.selectedOrder = null;
-    }
-  }
 
-  confirmAction(): void {
-    if (!this.selectedOrder) return;
-    this.processing = true;
-    const accept = this.modalAction === 'approve';
+confirmAction(order: RechargeRequest, accept: boolean): void {
 
-    this.adminService.validateRecharge(this.selectedOrder.id, accept)
-      .pipe(takeUntil(this.destroy$))
-      .subscribe({
-        next: () => {
-          this.message.success(accept ? 'Recharge validée avec succès' : 'Recharge rejetée');
-          this.modalVisible = false;
-          this.selectedOrder = null;
-          this.processing = false;
-          this.loadOrders();
-        },
-        error: () => {
-          this.processing = false;
-          this.message.error('Erreur lors du traitement');
-        }
-      });
-  }
+  this.processing = true;
+
+  this.adminService.validateRecharge(order.id, accept)
+    .pipe(takeUntil(this.destroy$))
+    .subscribe({
+
+      next: () => {
+
+        this.message.success(
+          accept
+            ? '✅ Recharge validée avec succès'
+            : '❌ Recharge rejetée'
+        );
+
+        this.processing = false;
+
+        this.loadOrders();
+      },
+
+
+      error: () => {
+
+        this.processing = false;
+
+        this.message.error(
+          'Erreur lors du traitement'
+        );
+
+      }
+
+    });
+}
 
   getColor(name: string): string {
     if (!name) return this.colors[0];
@@ -147,4 +185,5 @@ copyPhone(phone: string): void {
     }, 1500); // disparaît après 1.5s
   });
 }
+
 }

@@ -1,10 +1,10 @@
-<app-page-header title="Boutique de recharge" subtitle="Choisissez votre opérateur, votre offre et rechargez en quelques clics"></app-page-header>
+<app-page-header title="Boutique de recharge"
+  subtitle="Choisissez votre opérateur, votre offre et rechargez en quelques clics"></app-page-header>
 
 <!-- ── Stepper ── -->
 <div class="stepper fade-in-up">
-  <div class="stepper__step" *ngFor="let step of steps; let i = index"
-       [class.stepper__step--active]="currentStep === i"
-       [class.stepper__step--done]="currentStep > i">
+  <div class="stepper__step" *ngFor="let step of steps; let i = index" [class.stepper__step--active]="currentStep === i"
+    [class.stepper__step--done]="currentStep > i">
     <div class="stepper__circle">
       <span nz-icon nzType="check" nzTheme="outline" *ngIf="currentStep > i"></span>
       <span *ngIf="currentStep <= i">{{ i + 1 }}</span>
@@ -18,10 +18,8 @@
 <div class="store-step fade-in-up" style="animation-delay:0.1s" *ngIf="currentStep === 0">
   <h3 class="step-title">Sélectionnez votre opérateur</h3>
   <div class="operator-grid">
-    <div class="op-card"
-         *ngFor="let op of operators"
-         [class.op-card--selected]="selectedOperator?.id === op.id"
-         (click)="selectOperator(op)">
+    <div class="op-card" *ngFor="let op of operators" [class.op-card--selected]="selectedOperator?.id === op.id"
+      (click)="selectOperator(op)">
       <div class="op-card__logo-wrap">
         <img *ngIf="op.logoUrl" [src]="op.logoUrl" [alt]="op.name" />
         <div *ngIf="!op.logoUrl" class="op-card__fallback" [style.background]="getOpColor(op.name)">
@@ -59,30 +57,18 @@
 
   <div class="plan-grid">
 
-    <div
-      class="plan-card"
-      *ngFor="let plan of plans"
-
-      [class.plan-card--selected]="selectedPlan?.id === plan.id"
-
-      [class.plan-card--inactive]="!plan.active"
-
-      (click)="plan.active && selectPlan(plan)"
-    >
+    <div class="plan-card" *ngFor="let plan of plans" [class.plan-card--selected]="selectedPlan?.id === plan.id"
+      [class.plan-card--inactive]="!plan.active" (click)="plan.active && selectPlan(plan)">
 
 
       <!-- Badge populaire -->
-      <div
-        class="plan-card__badge"
-        *ngIf="plan.active && plan.validityDays >= 30">
+      <div class="plan-card__badge" *ngIf="plan.active && plan.validityDays >= 30">
         Populaire
       </div>
 
 
       <!-- Badge bloqué -->
-      <div
-        class="plan-card__blocked"
-        *ngIf="!plan.active">
+      <div class="plan-card__blocked" *ngIf="!plan.active">
         Indisponible
       </div>
 
@@ -113,10 +99,7 @@
       <!-- Validité -->
       <div class="plan-card__meta">
 
-        <span
-          nz-icon
-          nzType="calendar"
-          nzTheme="outline">
+        <span nz-icon nzType="calendar" nzTheme="outline">
         </span>
 
         {{ plan.validityDays }} jours de validité
@@ -126,14 +109,9 @@
 
 
       <!-- Check sélection -->
-      <div
-        class="plan-card__select-icon"
-        *ngIf="selectedPlan?.id === plan.id && plan.active">
+      <div class="plan-card__select-icon" *ngIf="selectedPlan?.id === plan.id && plan.active">
 
-        <span
-          nz-icon
-          nzType="check-circle"
-          nzTheme="fill">
+        <span nz-icon nzType="check-circle" nzTheme="fill">
         </span>
 
       </div>
@@ -163,24 +141,33 @@
       <p class="phone-card__hint">Entrez le numéro de téléphone à recharger</p>
       <div class="phone-input-wrap">
         <span class="phone-prefix">+216</span>
-        <input class="phone-input" [class.phone-input--error]="phoneError"
-               [ngModel]="phoneNumber"
-               (ngModelChange)="phoneNumber = $event"
-               (input)="onPhoneInput($event)"
-               placeholder="XXXXXXXX" maxlength="8"
-               inputmode="numeric" pattern="[0-9]*" />
+        <input class="phone-input" [class.phone-input--error]="phoneError" [ngModel]="phoneNumber"
+          (ngModelChange)="phoneNumber = $event" (input)="onPhoneInput($event)" placeholder="XXXXXXXX" maxlength="8"
+          inputmode="numeric" pattern="[0-9]*" />
       </div>
       <span class="phone-error" *ngIf="phoneError">{{ phoneError }}</span>
-      <button class="continue-btn" [disabled]="!phoneNumber || phoneNumber.length !== 8" (click)="currentStep = 3">
-        Continuer
-        <span nz-icon nzType="arrow-right" nzTheme="outline"></span>
-      </button>
+      <button class="continue-btn" [disabled]="!phoneNumber || phoneNumber.length !== 8 || submitting"
+        (click)="confirmOrder()">
+
+        <span nz-icon nzType="loading" nzTheme="outline" *ngIf="submitting"></span>
+
+        <span *ngIf="!submitting">
+          Confirmer la recharge
+          <span nz-icon nzType="arrow-right" nzTheme="outline"></span>
+        </span>
+
+        <span *ngIf="submitting">
+          Traitement...
+        </span>
+
+      </button> Continuer
+      <span nz-icon nzType="arrow-right" nzTheme="outline"></span>
     </div>
   </div>
 </div>
 
 <!-- ══════════ STEP 3: Confirmation ══════════ -->
-<div class="store-step fade-in-up" style="animation-delay:0.1s" *ngIf="currentStep === 3">
+<!--<div class="store-step fade-in-up" style="animation-delay:0.1s" *ngIf="currentStep === 3">
   <div class="step-header">
     <button class="back-btn" (click)="currentStep = 2">
       <span nz-icon nzType="arrow-left" nzTheme="outline"></span> Retour
@@ -215,16 +202,17 @@
       {{ submitting ? 'Traitement...' : 'Confirmer la recharge' }}
     </button>
   </div>
-</div>
+</div>-->
 
 <!-- ══════════ STEP 4: Succès ══════════ -->
-<div class="store-step store-step--success fade-in-up" style="animation-delay:0.1s" *ngIf="currentStep === 4">
+<div class="store-step store-step--success fade-in-up" style="animation-delay:0.1s" *ngIf="currentStep === 3">
   <div class="success-wrap">
     <div class="success-icon">
       <span nz-icon nzType="check-circle" nzTheme="fill"></span>
     </div>
     <h2>Commande confirmée !</h2>
-    <p>Votre demande de recharge a été soumise avec succès.<br>Vous recevrez une notification dès qu'elle sera traitée.</p>
+    <p>Votre demande de recharge a été soumise avec succès.<br>Vous recevrez une notification dès qu'elle sera traitée.
+    </p>
     <div class="success-actions">
       <button class="confirm-btn" (click)="resetStore()">
         <span nz-icon nzType="thunderbolt" nzTheme="fill"></span>

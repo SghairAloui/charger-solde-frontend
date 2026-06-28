@@ -3,10 +3,7 @@
   <div class="dash-welcome__left">
     <div class="dash-welcome__greeting">
       <span class="dash-welcome__emoji">{{ greeting.emoji }}</span>
-      <div>
-        <h2 class="dash-welcome__title">{{ greeting.text }}, <span class="gradient-text">Admin</span> !</h2>
-        <p class="dash-welcome__sub">Voici un aperçu de l'activité de votre plateforme</p>
-      </div>
+      
     </div>
   </div>
   <div class="dash-welcome__right">
@@ -23,41 +20,17 @@
 
 <!-- ── KPI Cards ── -->
 <div class="kpi-grid fade-in-up" style="animation-delay: 0.1s">
-  <app-stat-card
-    label="Total clients"
-    [value]="stats?.totalClients ?? 0"
-    icon="team"
-    bgColor="#6C5CE7"
-    [trend]="12"
-    [progress]="75"
-  ></app-stat-card>
+  <app-stat-card label="Total clients" [value]="stats?.totalClients ?? 0" icon="team" bgColor="#6C5CE7" [trend]="12"
+    [progress]="75"></app-stat-card>
 
-  <app-stat-card
-    label="Total recharges"
-    [value]="stats?.totalRecharges ?? 0"
-    icon="thunderbolt"
-    bgColor="#00CEC9"
-    [trend]="8"
-    [progress]="60"
-  ></app-stat-card>
+  <app-stat-card label="Total recharges" [value]="stats?.totalRecharges ?? 0" icon="thunderbolt" bgColor="#00CEC9"
+    [trend]="8" [progress]="60"></app-stat-card>
 
-  <app-stat-card
-    label="Aujourd'hui"
-    [value]="stats?.todayRecharges ?? 0"
-    icon="rise"
-    bgColor="#00b894"
-    [trend]="5"
-    [progress]="45"
-  ></app-stat-card>
+  <app-stat-card label="Aujourd'hui" [value]="stats?.todayRecharges ?? 0" icon="rise" bgColor="#00b894" [trend]="5"
+    [progress]="45"></app-stat-card>
 
-  <app-stat-card
-    label="Cette semaine"
-    [value]="stats?.weekRecharges ?? 0"
-    icon="calendar"
-    bgColor="#fdcb6e"
-    [trend]="-2"
-    [progress]="55"
-  ></app-stat-card>
+  <app-stat-card label="Cette semaine" [value]="stats?.weekRecharges ?? 0" icon="calendar" bgColor="#fdcb6e"
+    [trend]="-2" [progress]="55"></app-stat-card>
 </div>
 
 <!-- ── Quick Actions ── -->
@@ -104,12 +77,12 @@
           <th>Statut</th>
           <th>Date</th>
           <th>Actions</th>
+
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let item of recentRecharges; let i = index"
-            class="table-row"
-            [style.animation-delay]="(i * 0.04) + 's'">
+        <tr *ngFor="let item of recentRecharges; let i = index" class="table-row"
+          [style.animation-delay]="(i * 0.04) + 's'">
           <td>
             <div class="client-cell">
               <div class="client-cell__avatar" [style.background]="getAvatarColor(item.client.prenom)">
@@ -122,10 +95,9 @@
           <td class="phone-cell">{{ item.phoneNumber }}</td>
           <td><span class="amount-badge">{{ item.amount }} TND</span></td>
           <td>
-            <span class="status-badge"
-                  [class.status-badge--success]="item.status === 'VALIDATED'"
-                  [class.status-badge--danger]="item.status === 'REJECTED'"
-                  [class.status-badge--warning]="item.status === 'PENDING'">
+            <span class="status-badge" [class.status-badge--success]="item.status === 'VALIDATED'"
+              [class.status-badge--danger]="item.status === 'REJECTED'"
+              [class.status-badge--warning]="item.status === 'PENDING'">
               <span class="status-badge__dot"></span>
               {{ item.status | statusLabel }}
             </span>
@@ -133,12 +105,12 @@
           <td class="date-cell">{{ item.createdAt | dateFormat }}</td>
           <td>
             <div class="action-btns" *ngIf="item.status === 'PENDING'">
-              <button class="action-btn action-btn--approve" (click)="validate(item.id, true)"
-                      nz-tooltip nzTooltipTitle="Valider">
+              <button class="action-btn action-btn--approve" (click)="validate(item.id, true)" nz-tooltip
+                nzTooltipTitle="Valider">
                 <span nz-icon nzType="check" nzTheme="outline"></span>
               </button>
-              <button class="action-btn action-btn--reject" (click)="validate(item.id, false)"
-                      nz-tooltip nzTooltipTitle="Rejeter">
+              <button class="action-btn action-btn--reject" (click)="validate(item.id, false)" nz-tooltip
+                nzTooltipTitle="Rejeter">
                 <span nz-icon nzType="close" nzTheme="outline"></span>
               </button>
             </div>
@@ -154,6 +126,33 @@
       </tbody>
     </table>
   </div>
+<!-- ✅ PAGINATION MODERNE -->
+<div class="pagination" *ngIf="totalPages > 1">
+
+  <button class="page-btn"
+          (click)="prevPage()"
+          [disabled]="currentPage === 0">
+
+    <span nz-icon nzType="left" nzTheme="outline"></span>
+    Prev
+  </button>
+
+  <div class="page-info">
+    Page
+    <span class="page-current">{{ currentPage + 1 }}</span>
+    /
+    <span class="page-total">{{ totalPages }}</span>
+  </div>
+
+  <button class="page-btn"
+          (click)="nextPage()"
+          [disabled]="currentPage === totalPages - 1">
+
+    Next
+    <span nz-icon nzType="right" nzTheme="outline"></span>
+  </button>
+
+</div>
 
   <ng-template #tableLoading>
     <div class="table-skeleton">
@@ -188,9 +187,8 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let s of clientSummaries; let i = index"
-            class="table-row"
-            [style.animation-delay]="(i * 0.03) + 's'">
+        <tr *ngFor="let s of clientSummaries; let i = index" class="table-row"
+          [style.animation-delay]="(i * 0.03) + 's'">
           <td>
             <div class="client-cell">
               <div class="client-cell__avatar" [style.background]="getAvatarColor(s.prenom)">

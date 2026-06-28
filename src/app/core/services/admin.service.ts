@@ -61,15 +61,21 @@ export class AdminService {
     );
   }
 
-  getRechargeRequests(): Observable<RechargeRequest[]> {
-    return this.http.get<RechargeRequest[]>(`${this.apiUrl}${API.ADMIN.RECHARGE}`);
-  }
+getRechargeRequests(page: number = 0): Observable<any> {
+  return this.http.get<any>(
+    `${this.apiUrl}${API.ADMIN.RECHARGE}`,
+    { params: { page } }
+  );
+} 
 
-  getRechargesByStatus(status: RechargeStatus): Observable<RechargeRequest[]> {
-    return this.http.get<RechargeRequest[]>(`${this.apiUrl}${API.ADMIN.RECHARGE}`, {
-      params: {status}
-    });
-  }
+getRechargesByStatus(status: RechargeStatus, page: number = 0): Observable<any> {
+  return this.http.get<any>(
+    `${this.apiUrl}${API.ADMIN.RECHARGE}`,
+    {
+      params: { status, page }
+    }
+  );
+}
 
   deleteOperator(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}${API.ADMIN.OPERATORS}/${id}`);
