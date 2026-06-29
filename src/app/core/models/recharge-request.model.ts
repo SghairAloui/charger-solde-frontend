@@ -10,4 +10,6 @@ export interface RechargeRequest {
   plan: RechargePlan;
   client: User;
   createdAt: Date;
+  adminMessage?: string;   // 🔥 ADD THIS
+
 }

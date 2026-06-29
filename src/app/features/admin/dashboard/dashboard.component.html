@@ -96,7 +96,7 @@
           <td><span class="amount-badge">{{ item.amount }} TND</span></td>
           <td>
             <span class="status-badge" [class.status-badge--success]="item.status === 'VALIDATED'"
-              [class.status-badge--danger]="item.status === 'REJECTED'"
+              [class.status-badge--danger]="item.status === 'REJECTED' || item.status === 'ADMIN_CANCELLED'"
               [class.status-badge--warning]="item.status === 'PENDING'">
               <span class="status-badge__dot"></span>
               {{ item.status | statusLabel }}

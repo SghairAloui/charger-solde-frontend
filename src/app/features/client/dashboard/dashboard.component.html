@@ -1,5 +1,5 @@
 <div class="dashboard-page fade-in-up">
-  
+
   <!-- ── 1. Welcome Banner ── -->
   <div class="welcome-banner">
     <div class="welcome-banner__icon">
@@ -35,7 +35,7 @@
         </div>
       </div>
     </div>
-    
+
     <div class="kpi-card kpi-card--pending">
       <div class="kpi-card__icon"><span nz-icon nzType="clock-circle" nzTheme="outline"></span></div>
       <div class="kpi-card__info">
@@ -59,8 +59,7 @@
   <div class="quick-operators">
     <h3 class="section-title">RECHARGE RAPIDE PAR OPÉRATEUR</h3>
     <div class="operator-pills">
-      <button class="op-pill" *ngFor="let op of operators"
-              routerLink="/client/store" [queryParams]="{op: op.name}">
+      <button class="op-pill" *ngFor="let op of operators" routerLink="/client/store" [queryParams]="{op: op.name}">
         <div class="op-icon" [style.background]="getOpColor(op.name)">
           {{ getOpInitial(op.name) }}
         </div>
@@ -80,8 +79,11 @@
       <div class="order-card" *ngFor="let order of recentOrders">
         <div class="order-card__header">
           <span class="order-amount">{{ order.amount }} TND</span>
-          <nz-tag [nzColor]="order.status === 'VALIDATED' ? 'success' : order.status === 'REJECTED' ? 'error' : 'warning'" [nzBordered]="false">
-            <span nz-icon [nzType]="order.status === 'VALIDATED' ? 'check-circle' : order.status === 'REJECTED' ? 'close-circle' : 'clock-circle'"></span>
+          <nz-tag
+            [nzColor]="order.status === 'VALIDATED' ? 'success' : order.status === 'REJECTED' ? 'error' : 'warning'"
+            [nzBordered]="false">
+            <span nz-icon
+              [nzType]="order.status === 'VALIDATED' ? 'check-circle' : order.status === 'REJECTED' ? 'close-circle' : 'clock-circle'"></span>
             {{ order.status | statusLabel }}
           </nz-tag>
         </div>
@@ -101,9 +103,15 @@
               <span nz-icon nzType="calendar" nzTheme="outline"></span> {{ order.createdAt | dateFormat }}
             </span>
           </div>
+          <div class="order-detail" *ngIf="order.status === 'ADMIN_CANCELLED' && order.adminMessage">
+          <span nz-icon nzType="stop" nzTheme="outline"></span> Raison:
+          <span class="cancel-message">
+            {{ order.adminMessage }}
+          </span>
+        </div>
         </div>
       </div>
-      
+
       <div class="empty-orders" *ngIf="recentOrders.length === 0 && !loading">
         <span nz-icon nzType="inbox" nzTheme="outline"></span>
         <p>Aucune commande récente trouvée.</p>

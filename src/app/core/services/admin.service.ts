@@ -125,4 +125,12 @@ togglePlanStatus(id: number, action: 'block' | 'unblock'): Observable<RechargePl
     {}
   );
 }
+
+cancelRecharge(id: number, message: string): Observable<RechargeRequest> {
+  return this.http.patch<RechargeRequest>(
+    `${this.apiUrl}${API.ADMIN.RECHARGE}/${id}/cancel`,
+    {},
+    { params: { message } }
+  );
+}
 }

@@ -474,3 +474,14 @@
     justify-content: flex-start;
   }
 }
+
+.status-badge--cancelled {
+  background: #2d3436;
+  color: #fff;
+}
+
+.cancel-message {
+  color: #e74c3c;
+  font-weight: 500;
+  font-size: 13px;
+}

@@ -11,8 +11,11 @@
         }}</span></button>
     <button class="filter-pill filter-pill--success" [class.filter-pill--active]="statusFilter === STATUS_VALIDATED"
       (click)="setFilter(STATUS_VALIDATED)">Validées</button>
-    <button class="filter-pill filter-pill--danger" [class.filter-pill--active]="statusFilter === STATUS_REJECTED"
-      (click)="setFilter(STATUS_REJECTED)">Rejetées</button>
+    <button class="filter-pill filter-pill--danger" [class.filter-pill--active]="statusFilter === 'REJECTED_GROUP'"
+      (click)="setFilter('REJECTED_GROUP')">
+
+      Rejetées
+    </button>
   </div>
 </div>
 <br>
@@ -35,15 +38,13 @@
   <div class="orders-grid" *ngIf="!loading; else skelLoader">
 
     <!-- CARD -->
-    <div class="order-card"
-         *ngFor="let order of filteredOrders; let i = index"
-         [style.animation-delay]="(i * 0.05) + 's'">
+    <div class="order-card" *ngFor="let order of filteredOrders; let i = index"
+      [style.animation-delay]="(i * 0.05) + 's'">
 
       <!-- Header -->
       <div class="order-card__header">
         <div class="client-info">
-          <div class="client-avatar"
-               [style.background]="getColor(order.client.prenom)">
+          <div class="client-avatar" [style.background]="getColor(order.client.prenom)">
             {{ order.client.prenom.charAt(0).toUpperCase() }}
             {{ order.client.nom.charAt(0).toUpperCase() }}
           </div>
@@ -53,10 +54,9 @@
           </span>
         </div>
 
-        <span class="status-badge"
-              [class.status-badge--success]="order.status === 'VALIDATED'"
-              [class.status-badge--danger]="order.status === 'REJECTED'"
-              [class.status-badge--warning]="order.status === 'PENDING'">
+        <span class="status-badge" [class.status-badge--success]="order.status === 'VALIDATED'"
+          [class.status-badge--danger]="order.status === 'REJECTED'|| order.status === 'ADMIN_CANCELLED'"
+          [class.status-badge--warning]="order.status === 'PENDING'">
 
           <span class="status-dot"></span>
           {{ order.status | statusLabel }}
@@ -83,11 +83,8 @@
 
             <span>{{ order.phoneNumber }}</span>
 
-            <span nz-icon nzType="copy"
-                  class="copy-icon"
-                  nz-tooltip
-                  nzTooltipTitle="Copier"
-                  (click)="copyPhone(order.phoneNumber)">
+            <span nz-icon nzType="copy" class="copy-icon" nz-tooltip nzTooltipTitle="Copier"
+              (click)="copyPhone(order.phoneNumber)">
             </span>
 
             <span class="copied-text" *ngIf="copiedPhone">
@@ -99,30 +96,37 @@
             <span nz-icon nzType="calendar"></span>
             <span>{{ order.createdAt | dateFormat }}</span>
           </div>
-
+          <div class="detail-item" *ngIf="order.status === 'ADMIN_CANCELLED' && order.adminMessage">
+            <span nz-icon nzType="info-circle"></span>Raison :
+            <span class="cancel-reason">
+              {{ order.adminMessage }} </span>
+          </div>
         </div>
       </div>
 
       <!-- Footer -->
-      <div class="order-card__footer">
+      <div class="action-btns">
 
-        <div class="action-btns" *ngIf="order.status === 'PENDING'">
-          <button class="action-btn action-btn--approve"
-        (click)="confirmAction(order, true)">
-  <span nz-icon nzType="check"></span>
-  Valider
-</button>
+        <!-- PENDING -->
+        <ng-container *ngIf="order.status === 'PENDING'">
+          <button class="action-btn action-btn--approve" (click)="confirmAction(order, true)">
+            <span nz-icon nzType="check"></span>
+            Valider
+          </button>
 
-<button class="action-btn action-btn--reject"
-        (click)="confirmAction(order, false)">
-  <span nz-icon nzType="close"></span>
-  Rejeter
-</button>
-        </div>
+          <button class="action-btn action-btn--reject" (click)="confirmAction(order, false)">
+            <span nz-icon nzType="close"></span>
+            Rejeter
+          </button>
+        </ng-container>
 
-        <span class="no-action" *ngIf="order.status !== 'PENDING'">
-          Traitée le {{ order.createdAt | dateFormat }}
-        </span>
+        <!-- VALIDATED -->
+        <ng-container *ngIf="order.status === 'VALIDATED'">
+          <button class="action-btn action-btn--reject" (click)="openCancelModal(order)">
+            <span nz-icon nzType="stop"></span>
+            Annuler
+          </button>
+        </ng-container>
 
       </div>
 
@@ -147,31 +151,25 @@
   </ng-template>
 
   <!-- ✅ PAGINATION (AJOUT ICI) -->
-<div class="pagination fade-in-up" *ngIf="totalPages > 1">
+  <div class="pagination fade-in-up" *ngIf="totalPages > 1">
 
-  <!-- Prev -->
-  <button class="page-btn nav"
-          (click)="prevPage()"
-          [disabled]="currentPage === 0">
-    ‹
-  </button>
+    <!-- Prev -->
+    <button class="page-btn nav" (click)="prevPage()" [disabled]="currentPage === 0">
+      ‹
+    </button>
 
-  <!-- Pages -->
-  <button class="page-btn"
-          *ngFor="let page of [].constructor(totalPages); let i = index"
-          (click)="goToPage(i)"
-          [class.active]="currentPage === i">
-    {{ i + 1 }}
-  </button>
+    <!-- Pages -->
+    <button class="page-btn" *ngFor="let page of [].constructor(totalPages); let i = index" (click)="goToPage(i)"
+      [class.active]="currentPage === i">
+      {{ i + 1 }}
+    </button>
 
-  <!-- Next -->
-  <button class="page-btn nav"
-          (click)="nextPage()"
-          [disabled]="currentPage === totalPages - 1">
-    ›
-  </button>
+    <!-- Next -->
+    <button class="page-btn nav" (click)="nextPage()" [disabled]="currentPage === totalPages - 1">
+      ›
+    </button>
 
-</div>
+  </div>
 
 </div>
 
@@ -179,6 +177,7 @@
      MODAL — Validation / Rejet de commande
 ══════════════════════════════════════════════════════════════ -->
 <!--<div class="modal-overlay" *ngIf="modalVisible" (click)="closeModal()">
+
   <div class="modal-card" (click)="$event.stopPropagation()">
 
     <div class="modal-card__header" [class.modal-card__header--approve]="modalAction === 'approve'"
@@ -241,3 +240,28 @@
 
   </div>
 </div>-->
+
+<div class="modal-overlay" *ngIf="cancelModalVisible">
+  <div class="modal-card">
+
+    <div class="modal-header">
+      <h3>Annuler la recharge</h3>
+      <p>Ajoute une raison pour informer le client</p>
+    </div>
+
+    <textarea class="modal-textarea" [(ngModel)]="cancelMessage"
+      placeholder="Ex: erreur de numéro / demande client / autre..." rows="4">
+    </textarea>
+
+    <div class="modal-footer">
+      <button class="btn-cancel" (click)="cancelModalVisible = false">
+        Annuler
+      </button>
+
+      <button class="btn-confirm" (click)="confirmCancel()" [disabled]="!cancelMessage.trim()">
+        Confirmer
+      </button>
+    </div>
+
+  </div>
+</div>

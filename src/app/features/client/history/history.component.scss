@@ -119,3 +119,14 @@
 @keyframes spin     { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 
 .fade-in-up { animation: fadeInUp 0.5s ease both; }
+
+.status-badge--cancelled {
+  background: #2d3436;
+  color: #fff;
+}
+
+.cancel-message {
+  color: #e74c3c;
+  font-weight: 500;
+  font-size: 13px;
+}

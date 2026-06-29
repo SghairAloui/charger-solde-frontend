@@ -34,7 +34,10 @@ get validatedOrders(): RechargeRequest[] {
 }
 
 get rejectedOrders(): RechargeRequest[] {
-  return this.sortedOrders.filter(o => o.status === 'REJECTED');
+  return this.sortedOrders.filter(o =>
+    o.status === 'REJECTED' ||
+    o.status === 'ADMIN_CANCELLED'
+  );
 }
 
 get displayedOrders(): RechargeRequest[] {

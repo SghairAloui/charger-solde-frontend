@@ -31,6 +31,13 @@
             </span>
             <br>
             <span class="timeline-content__phone">{{ order.phoneNumber }}</span>
+
+            <div class="order-detail" *ngIf="order.status === 'ADMIN_CANCELLED' && order.adminMessage">
+          <span nz-icon nzType="stop" nzTheme="outline"></span> Raison:
+          <span class="cancel-message">
+            {{ order.adminMessage }}
+          </span>
+        </div>
           </div>
           <div class="timeline-content__meta">
             <span class="timeline-amount">{{ order.amount }} TND</span>

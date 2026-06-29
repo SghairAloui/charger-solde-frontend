@@ -10,7 +10,9 @@ export class StatusLabelPipe implements PipeTransform {
     const labels: Record<string, string> = {
       [RechargeStatus.PENDING]: 'En attente',
       [RechargeStatus.VALIDATED]: 'Validée',
-      [RechargeStatus.REJECTED]: 'Rejetée'
+      [RechargeStatus.REJECTED]: 'Rejetée',
+      [RechargeStatus.ADMIN_CANCELLED]: 'Rejetée',
+
     };
     return labels[status] || status;
   }

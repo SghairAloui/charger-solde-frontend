@@ -2,16 +2,19 @@
 
 <!-- Filter tabs -->
 <div class="orders-tabs fade-in-up">
-  <button class="orders-tab" [class.orders-tab--active]="activeTab === 'all'"       (click)="setTab('all')">
+  <button class="orders-tab" [class.orders-tab--active]="activeTab === 'all'" (click)="setTab('all')">
     Toutes <span class="tab-count">{{ orders.length }}</span>
   </button>
-  <button class="orders-tab orders-tab--warning" [class.orders-tab--active]="activeTab === 'pending'"   (click)="setTab('pending')">
+  <button class="orders-tab orders-tab--warning" [class.orders-tab--active]="activeTab === 'pending'"
+    (click)="setTab('pending')">
     En attente <span class="tab-count">{{ pendingOrders.length }}</span>
   </button>
-  <button class="orders-tab orders-tab--success" [class.orders-tab--active]="activeTab === 'validated'" (click)="setTab('validated')">
+  <button class="orders-tab orders-tab--success" [class.orders-tab--active]="activeTab === 'validated'"
+    (click)="setTab('validated')">
     Validées <span class="tab-count">{{ validatedOrders.length }}</span>
   </button>
-  <button class="orders-tab orders-tab--danger"  [class.orders-tab--active]="activeTab === 'rejected'"  (click)="setTab('rejected')">
+  <button class="orders-tab orders-tab--danger" [class.orders-tab--active]="activeTab === 'rejected'"
+    (click)="setTab('rejected')">
     Rejetées <span class="tab-count">{{ rejectedOrders.length }}</span>
   </button>
 </div>
@@ -20,14 +23,13 @@
 <div class="orders-grid-wrap fade-in-up" style="animation-delay:0.1s">
   <div class="orders-grid" *ngIf="!loading; else skelLoader">
     <div class="order-card" *ngFor="let order of displayedOrders; let i = index"
-         [style.animation-delay]="(i * 0.04) + 's'">
-         
+      [style.animation-delay]="(i * 0.04) + 's'">
+
       <div class="order-card__header">
         <span class="order-plan">{{ order.plan.label || 'Offre inconnue' }}</span>
-        <span class="status-badge"
-              [class.status-badge--success]="order.status === 'VALIDATED'"
-              [class.status-badge--danger]="order.status === 'REJECTED'"
-              [class.status-badge--warning]="order.status === 'PENDING'">
+        <span class="status-badge" [class.status-badge--success]="order.status === 'VALIDATED'"
+          [class.status-badge--danger]="order.status === 'REJECTED' || order.status === 'ADMIN_CANCELLED'"
+          [class.status-badge--warning]="order.status === 'PENDING'">
           <span class="status-dot"></span>
           {{ order.status | statusLabel }}
         </span>
@@ -49,6 +51,12 @@
         <div class="order-detail">
           <span nz-icon nzType="calendar" nzTheme="outline"></span>
           <span class="date-text">{{ order.createdAt | dateFormat }}</span>
+        </div>
+        <div class="order-detail" *ngIf="order.status === 'ADMIN_CANCELLED' && order.adminMessage">
+          <span nz-icon nzType="stop" nzTheme="outline"></span> Raison:
+          <span class="cancel-message">
+            {{ order.adminMessage }}
+          </span>
         </div>
       </div>
     </div>

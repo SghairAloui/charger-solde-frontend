@@ -134,3 +134,15 @@
 @keyframes pulseDot { 0%,100% { box-shadow: 0 0 0 0 rgba(0,184,148,0.6); } 50% { box-shadow: 0 0 0 4px rgba(0,184,148,0); } }
 
 .fade-in-up { animation: fadeInUp 0.5s ease both; }
+
+
+.status-badge--cancelled {
+  background: #2d3436;
+  color: #fff;
+}
+
+.cancel-message {
+  color: #e74c3c;
+  font-weight: 500;
+  font-size: 13px;
+}
