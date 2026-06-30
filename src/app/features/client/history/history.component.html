@@ -68,3 +68,30 @@
     </div>
   </ng-template>
 </div>
+
+<!-- ✅ PAGINATION -->
+<div class="pagination fade-in-up" *ngIf="totalPages > 1">
+
+  <!-- Prev -->
+  <button class="page-btn nav"
+          (click)="prevPage()"
+          [disabled]="page === 0">
+    ‹
+  </button>
+
+  <!-- Pages -->
+  <button class="page-btn"
+          *ngFor="let _ of [].constructor(totalPages); let i = index"
+          (click)="goToPage(i)"
+          [class.active]="page === i">
+    {{ i + 1 }}
+  </button>
+
+  <!-- Next -->
+  <button class="page-btn nav"
+          (click)="nextPage()"
+          [disabled]="page >= totalPages - 1">
+    ›
+  </button>
+
+</div>

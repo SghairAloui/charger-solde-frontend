@@ -202,7 +202,11 @@
           </td>
           <td><span class="status-badge status-badge--warning">{{ s.pendingCount }}</span></td>
           <td><span class="status-badge status-badge--success">{{ s.validatedCount }}</span></td>
-          <td><span class="status-badge status-badge--danger">{{ s.rejectedCount }}</span></td>
+          <td>
+  <span class="status-badge status-badge--danger">
+    {{ s.rejectedCount }}
+  </span>
+</td>
         </tr>
         <tr *ngIf="clientSummaries.length === 0">
           <td colspan="7" class="empty-row">

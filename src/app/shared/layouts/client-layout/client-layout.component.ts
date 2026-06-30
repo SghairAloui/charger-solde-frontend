@@ -37,7 +37,9 @@ export class ClientLayoutComponent implements OnInit, OnDestroy {
   headerMenuOpen   = false;
   greeting         = 'Bonjour';
   totalSpent       = 0;
-
+  page = 0;
+  size = 10;
+  total = 0;
   private readonly destroy$ = new Subject<void>();
 
   constructor(
@@ -88,20 +90,20 @@ export class ClientLayoutComponent implements OnInit, OnDestroy {
     else             this.greeting = '🌙 Bonsoir';
   }
 
-  private loadTotalSpent(): void {
-    this.clientService.getMyRecharges()
-      .pipe(takeUntil(this.destroy$))
-      .subscribe({
-        next: (orders) => {
-          this.totalSpent = orders
-            .filter(order => order.status === 'VALIDATED')
-            .reduce((sum, order) => sum + (order.amount || 0), 0);
-        },
-        error: () => {
-          this.totalSpent = 0;
-        }
-      });
-  }
+private loadTotalSpent(): void {
+  this.clientService.getAllMyRecharges()
+    .pipe(takeUntil(this.destroy$))
+    .subscribe({
+      next: (orders) => {
+        this.totalSpent = orders
+          .filter(o => o.status === 'VALIDATED')
+          .reduce((sum, o) => sum + (o.amount || 0), 0);
+      },
+      error: () => {
+        this.totalSpent = 0;
+      }
+    });
+}
 
   toggleSidebar(): void {
     if (this.isMobileView) {

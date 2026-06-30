@@ -27,6 +27,10 @@ export class DashboardComponent implements OnInit, OnDestroy {
   orders: RechargeRequest[] = [];
   operators: Operator[] = [];
   loading = false;
+
+    page = 0;
+  size = 10;
+  total = 0;
   private readonly destroy$ = new Subject<void>();
 
   private readonly opColors: Record<string, string> = {
@@ -58,23 +62,26 @@ get recentOrders(): RechargeRequest[] {
     private readonly message: NzMessageService
   ) {}
 
-  ngOnInit(): void {
-    this.loading = true;
-    this.clientService.getMyRecharges()
-      .pipe(takeUntil(this.destroy$))
-      .subscribe({
-        next: (data) => {
-          this.orders  = data;
-          this.loading = false;
-        },
-        error: () => { this.loading = false; this.message.error('Erreur lors du chargement du tableau de bord'); }
-      });
+ngOnInit(): void {
+  this.loading = true;
 
-    this.operatorService.getAll()
-      .pipe(takeUntil(this.destroy$))
-      .subscribe(data => this.operators = data);
-  }
+  this.clientService.getAllMyRecharges()
+    .pipe(takeUntil(this.destroy$))
+    .subscribe({
+      next: (data) => {
+        this.orders = data;   // ✅ FULL DATA
+        this.loading = false;
+      },
+      error: () => {
+        this.loading = false;
+        this.message.error('Erreur dashboard');
+      }
+    });
 
+  this.operatorService.getAll()
+    .pipe(takeUntil(this.destroy$))
+    .subscribe(data => this.operators = data);
+}
   getOpColor(name?: string): string {
     if (!name) return '#6C5CE7';
     return this.opColors[name.toLowerCase()] || '#6C5CE7';

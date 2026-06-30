@@ -24,6 +24,8 @@ export interface ClientRechargeSummary {
   pendingCount: number;
   validatedCount: number;
   rejectedCount: number;
+    cancelledCount?: number;
+
   balance: number; // ✅ ajouter
 
 }

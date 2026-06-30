@@ -19,37 +19,17 @@ type Tab = 'all' | 'pending' | 'validated' | 'rejected';
   styleUrl: './orders.component.scss'
 })
 export class OrdersComponent implements OnInit, OnDestroy {
-  orders:  RechargeRequest[] = [];
-  loading  = false;
+
+  orders: RechargeRequest[] = [];
+  loading = false;
+
   activeTab: Tab = 'all';
 
+  page = 0;
+  size = 10;
+  total = 0;
+
   private readonly destroy$ = new Subject<void>();
-
- get pendingOrders(): RechargeRequest[] {
-  return this.sortedOrders.filter(o => o.status === 'PENDING');
-}
-
-get validatedOrders(): RechargeRequest[] {
-  return this.sortedOrders.filter(o => o.status === 'VALIDATED');
-}
-
-get rejectedOrders(): RechargeRequest[] {
-  return this.sortedOrders.filter(o =>
-    o.status === 'REJECTED' ||
-    o.status === 'ADMIN_CANCELLED'
-  );
-}
-
-get displayedOrders(): RechargeRequest[] {
-  switch (this.activeTab) {
-    case 'pending':   return this.pendingOrders;
-    case 'validated': return this.validatedOrders;
-    case 'rejected':  return this.rejectedOrders;
-    default:          return this.sortedOrders;
-  }
-}
-
-  setTab(tab: Tab): void { this.activeTab = tab; }
 
   constructor(
     private readonly clientService: ClientService,
@@ -57,24 +37,94 @@ get displayedOrders(): RechargeRequest[] {
   ) {}
 
   ngOnInit(): void {
+    this.loadOrders();
+  }
+
+  // =========================
+  // LOAD ORDERS (PAGINATION)
+  // =========================
+  loadOrders(): void {
     this.loading = true;
-    this.clientService.getMyRecharges()
+
+    this.clientService.getMyRecharges(this.page, this.size)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
-        next:     (data) => { this.orders = data; },
-        complete: ()     => { this.loading = false; },
-        error:    ()     => { this.loading = false; this.message.error('Erreur lors du chargement des commandes'); }
+        next: (res) => {
+          this.orders = res.content || [];
+          this.total = res.totalElements || 0;
+          this.loading = false;
+        },
+        error: () => {
+          this.loading = false;
+          this.message.error('Erreur lors du chargement des commandes');
+        }
       });
+  }
+
+  // =========================
+  // PAGINATION ACTIONS
+  // =========================
+  goToPage(i: number): void {
+    this.page = i;
+    this.loadOrders();
+  }
+
+  nextPage(): void {
+    if (this.page < this.totalPages - 1) {
+      this.page++;
+      this.loadOrders();
+    }
+  }
+
+  prevPage(): void {
+    if (this.page > 0) {
+      this.page--;
+      this.loadOrders();
+    }
+  }
+
+  get totalPages(): number {
+    return Math.ceil(this.total / this.size);
+  }
+
+  // =========================
+  // FILTERS
+  // =========================
+  setTab(tab: Tab): void {
+    this.activeTab = tab;
+  }
+
+  get sortedOrders(): RechargeRequest[] {
+    return [...this.orders].sort((a, b) =>
+      new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+    );
+  }
+
+  get pendingOrders(): RechargeRequest[] {
+    return this.sortedOrders.filter(o => o.status === 'PENDING');
+  }
+
+  get validatedOrders(): RechargeRequest[] {
+    return this.sortedOrders.filter(o => o.status === 'VALIDATED');
+  }
+
+  get rejectedOrders(): RechargeRequest[] {
+    return this.sortedOrders.filter(o =>
+      o.status === 'REJECTED' || o.status === 'ADMIN_CANCELLED'
+    );
+  }
+
+  get displayedOrders(): RechargeRequest[] {
+    switch (this.activeTab) {
+      case 'pending': return this.pendingOrders;
+      case 'validated': return this.validatedOrders;
+      case 'rejected': return this.rejectedOrders;
+      default: return this.sortedOrders;
+    }
   }
 
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
   }
-
-  get sortedOrders(): RechargeRequest[] {
-  return [...this.orders].sort((a: RechargeRequest, b: RechargeRequest) => {
-    return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
-  });
-}
 }

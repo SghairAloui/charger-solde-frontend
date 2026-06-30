@@ -1,10 +1,11 @@
 import {Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
-import {Observable} from 'rxjs';
+import {HttpClient, HttpParams} from '@angular/common/http';
+import {map, Observable} from 'rxjs';
 import {environment} from '../../../environments/environment';
 import {API} from '../constants/app.constants';
 import {CreateRechargeRequestDTO} from '../models/create-recharge-request.model';
 import {RechargeRequest} from '../models/recharge-request.model';
+import { PageResponse } from '../models/PageResponse';
 
 @Injectable({providedIn: 'root'})
 export class ClientService {
@@ -16,7 +17,22 @@ export class ClientService {
     return this.http.post<RechargeRequest>(`${this.apiUrl}${API.CLIENT.RECHARGE}`, dto);
   }
 
-  getMyRecharges(): Observable<RechargeRequest[]> {
-    return this.http.get<RechargeRequest[]>(`${this.apiUrl}${API.CLIENT.RECHARGES}`);
-  }
+getMyRecharges(page: number, size: number): Observable<PageResponse<RechargeRequest>> {
+  const params = new HttpParams()
+    .set('page', page)
+    .set('size', size);
+
+  return this.http.get<PageResponse<RechargeRequest>>(
+    `${this.apiUrl}${API.CLIENT.RECHARGES}`,
+    { params }
+  );
+}
+
+getAllMyRecharges(): Observable<RechargeRequest[]> {
+  return this.http.get<any>(
+    `${this.apiUrl}${API.CLIENT.RECHARGES}/all`
+  ).pipe(
+    map(r => r.data ?? r)   // ✅ FIX IMPORTANT
+  );
+}
 }
