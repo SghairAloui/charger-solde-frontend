@@ -8,11 +8,12 @@ import {DateFormatPipe} from '../../../shared/pipes/date-format.pipe';
 import {ClaimService, ClaimDTO, ClaimStatus} from '../../../core/services/claim.service';
 import {ClientService} from '../../../core/services/client.service';
 import {RechargeRequest} from '../../../core/models/recharge-request.model';
-
+import { NzPaginationModule } from 'ng-zorro-antd/pagination';
 @Component({
   selector: 'app-client-claims',
   standalone: true,
-  imports: [CommonModule, FormsModule, NzIconModule, PageHeaderComponent, DateFormatPipe],
+  imports: [CommonModule, FormsModule, NzIconModule, PageHeaderComponent, DateFormatPipe,NzPaginationModule
+],
   templateUrl: './claims.component.html',
   styleUrl:    './claims.component.scss'
 })
@@ -26,6 +27,9 @@ newClaim = {
   phoneNumber: '',
   subject: ''
 };
+page = 0;
+size = 10;
+total = 0;
   constructor(
     private readonly claimService: ClaimService,
     private readonly clientService: ClientService,
@@ -37,13 +41,47 @@ newClaim = {
     this.loadOrders();
   }
 
-  loadClaims(): void {
-    this.loading = true;
-    this.claimService.getMyClaims().subscribe({
-      next:  claims => { this.claims = claims; this.loading = false; },
-      error: ()     => { this.loading = false; this.message.error('Erreur lors du chargement des réclamations'); }
-    });
+loadClaims(): void {
+  this.loading = true;
+
+  this.claimService.getMyClaims(this.page, this.size).subscribe({
+    next: res => {
+      this.claims = res.content;
+      this.total = res.totalElements;
+      this.loading = false;
+    },
+    error: () => {
+      this.loading = false;
+      this.message.error('Erreur lors du chargement des réclamations');
+    }
+  });
+}
+onPageChange(pageIndex: number): void {
+  this.page = pageIndex - 1;
+  this.loadClaims();
+}
+
+get totalPages(): number {
+  return Math.ceil(this.total / this.size);
+}
+goToPage(i: number): void {
+  this.page = i;
+  this.loadClaims();
+}
+
+nextPage(): void {
+  if (this.page < this.totalPages - 1) {
+    this.page++;
+    this.loadClaims();
   }
+}
+
+prevPage(): void {
+  if (this.page > 0) {
+    this.page--;
+    this.loadClaims();
+  }
+}
 
   loadOrders(): void {
     this.clientService.getMyRecharges().subscribe({

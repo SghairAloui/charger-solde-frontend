@@ -1,18 +1,18 @@
-import {Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
-import {Observable} from 'rxjs';
-import {map} from 'rxjs/operators';
-import {environment} from '../../../environments/environment';
-import {API} from '../constants/app.constants';
-import {ApiResponse} from '../models/api-response.model';
-import {AdminDashboard} from '../models/admin-dashboard.model';
-import {CreateClientRequest} from '../models/create-client-request.model';
-import {User} from '../models/user.model';
-import {Operator} from '../models/operator.model';
-import {RechargePlan} from '../models/recharge-plan.model';
-import {RechargePlanDTO} from '../models/recharge-plan-dto.model';
-import {RechargeRequest} from '../models/recharge-request.model';
-import {RechargeStatus} from '../enums/recharge-status.enum';
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { environment } from '../../../environments/environment';
+import { API } from '../constants/app.constants';
+import { ApiResponse } from '../models/api-response.model';
+import { AdminDashboard } from '../models/admin-dashboard.model';
+import { CreateClientRequest } from '../models/create-client-request.model';
+import { User } from '../models/user.model';
+import { Operator } from '../models/operator.model';
+import { RechargePlan } from '../models/recharge-plan.model';
+import { RechargePlanDTO } from '../models/recharge-plan-dto.model';
+import { RechargeRequest } from '../models/recharge-request.model';
+import { RechargeStatus } from '../enums/recharge-status.enum';
 
 export interface ClientRechargeSummary {
   clientId: number;
@@ -24,15 +24,15 @@ export interface ClientRechargeSummary {
   pendingCount: number;
   validatedCount: number;
   rejectedCount: number;
-    balance: number; // ✅ ajouter
+  balance: number; // ✅ ajouter
 
 }
 
-@Injectable({providedIn: 'root'})
+@Injectable({ providedIn: 'root' })
 export class AdminService {
   private readonly apiUrl = environment.apiUrl;
 
-  constructor(private readonly http: HttpClient) {}
+  constructor(private readonly http: HttpClient) { }
 
   getDashboard(): Observable<AdminDashboard> {
     return this.http.get<AdminDashboard>(`${this.apiUrl}${API.ADMIN.DASHBOARD}`);
@@ -59,25 +59,25 @@ export class AdminService {
     return this.http.patch<RechargeRequest>(
       `${this.apiUrl}${API.ADMIN.RECHARGE}/${id}`,
       {},
-      {params: {accept}}
+      { params: { accept } }
     );
   }
 
-getRechargeRequests(page: number = 0): Observable<any> {
-  return this.http.get<any>(
-    `${this.apiUrl}${API.ADMIN.RECHARGE}`,
-    { params: { page } }
-  );
-} 
+  getRechargeRequests(page: number = 0): Observable<any> {
+    return this.http.get<any>(
+      `${this.apiUrl}${API.ADMIN.RECHARGE}`,
+      { params: { page } }
+    );
+  }
 
-getRechargesByStatus(status: RechargeStatus, page: number = 0): Observable<any> {
-  return this.http.get<any>(
-    `${this.apiUrl}${API.ADMIN.RECHARGE}`,
-    {
-      params: { status, page }
-    }
-  );
-}
+  getRechargesByStatus(status: RechargeStatus, page: number = 0): Observable<any> {
+    return this.http.get<any>(
+      `${this.apiUrl}${API.ADMIN.RECHARGE}`,
+      {
+        params: { status, page }
+      }
+    );
+  }
 
   deleteOperator(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}${API.ADMIN.OPERATORS}/${id}`);
@@ -101,38 +101,38 @@ getRechargesByStatus(status: RechargeStatus, page: number = 0): Observable<any> 
   }
 
 
-getAllClients(): Observable<User[]> {
-  return this.http.get<User[]>(
-    `${this.apiUrl}${API.ADMIN.CLIENTS}/all`
-  );
-}
+  getAllClients(): Observable<User[]> {
+    return this.http.get<User[]>(
+      `${this.apiUrl}${API.ADMIN.CLIENTS}/all`
+    );
+  }
 
-approveClient(id: number): Observable<any> {
-  return this.http.put(
-    `${this.apiUrl}${API.ADMIN.CLIENTS}/${id}/approve`,
-    {}
-  );
-}
+  approveClient(id: number): Observable<any> {
+    return this.http.put(
+      `${this.apiUrl}${API.ADMIN.CLIENTS}/${id}/approve`,
+      {}
+    );
+  }
 
-rejectClient(id: number): Observable<any> {
-  return this.http.put(
-    `${this.apiUrl}${API.ADMIN.CLIENTS}/${id}/reject`,
-    {}
-  );
-}
+  rejectClient(id: number): Observable<any> {
+    return this.http.put(
+      `${this.apiUrl}${API.ADMIN.CLIENTS}/${id}/reject`,
+      {}
+    );
+  }
 
-togglePlanStatus(id: number, action: 'block' | 'unblock'): Observable<RechargePlan> {
-  return this.http.patch<RechargePlan>(
-    `${this.apiUrl}${API.ADMIN.PLANS}/${id}/${action}`,
-    {}
-  );
-}
+  togglePlanStatus(id: number, action: 'block' | 'unblock'): Observable<RechargePlan> {
+    return this.http.patch<RechargePlan>(
+      `${this.apiUrl}${API.ADMIN.PLANS}/${id}/${action}`,
+      {}
+    );
+  }
 
-cancelRecharge(id: number, message: string): Observable<RechargeRequest> {
-  return this.http.patch<RechargeRequest>(
-    `${this.apiUrl}${API.ADMIN.RECHARGE}/${id}/cancel`,
-    {},
-    { params: { message } }
-  );
-}
+  cancelRecharge(id: number, message: string): Observable<RechargeRequest> {
+    return this.http.patch<RechargeRequest>(
+      `${this.apiUrl}${API.ADMIN.RECHARGE}/${id}/cancel`,
+      {},
+      { params: { message } }
+    );
+  }
 }

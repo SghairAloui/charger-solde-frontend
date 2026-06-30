@@ -24,6 +24,10 @@ export class ClaimsComponent implements OnInit, OnDestroy {
   selectedClaim: ClaimDTO | null = null;
   responseText = '';
   errorMsg = '';
+
+  page = 0;
+size = 10;
+total = 0;
   private readonly destroy$ = new Subject<void>();
 
   get openCount(): number {
@@ -39,17 +43,47 @@ export class ClaimsComponent implements OnInit, OnDestroy {
     this.loadClaims();
   }
 
-  loadClaims(): void {
-    this.loading = true;
-    this.errorMsg = '';
-    this.claimService.getAllClaims()
-      .pipe(takeUntil(this.destroy$))
-      .subscribe({
-        next:  claims => { this.claims = claims; this.loading = false; },
-        error: () => { this.errorMsg = 'Impossible de charger les réclamations'; this.loading = false; this.message.error('Erreur lors du chargement des réclamations'); }
-      });
-  }
+loadClaims(): void {
+  this.loading = true;
+  this.errorMsg = '';
 
+  this.claimService.getAllClaims(this.page, this.size)
+    .pipe(takeUntil(this.destroy$))
+    .subscribe({
+      next: res => {
+        this.claims = res.content;
+        this.total = res.totalElements;
+        this.loading = false;
+      },
+      error: () => {
+        this.errorMsg = 'Impossible de charger les réclamations';
+        this.loading = false;
+        this.message.error('Erreur lors du chargement des réclamations');
+      }
+    });
+}
+get totalPages(): number {
+  return Math.ceil(this.total / this.size);
+}
+
+goToPage(i: number): void {
+  this.page = i;
+  this.loadClaims();
+}
+
+nextPage(): void {
+  if (this.page < this.totalPages - 1) {
+    this.page++;
+    this.loadClaims();
+  }
+}
+
+prevPage(): void {
+  if (this.page > 0) {
+    this.page--;
+    this.loadClaims();
+  }
+}
   openStatusModal(claim: ClaimDTO): void {
     this.selectedClaim  = claim;
     this.selectedStatus = 'IN_PROGRESS';
