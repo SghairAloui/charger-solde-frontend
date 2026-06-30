@@ -12,16 +12,13 @@
 
 <!-- Claims Grid -->
 <div class="claims-grid fade-in-up" *ngIf="!loading && claims.length > 0">
-  <div class="claim-card"
-       *ngFor="let claim of claims; let i = index"
-       [style.animation-delay]="(i * 0.07) + 's'">
+  <div class="claim-card" *ngFor="let claim of claims; let i = index" [style.animation-delay]="(i * 0.07) + 's'">
 
     <div class="claim-card__header">
       <div class="claim-card__left">
         <div class="claim-icon" [ngClass]="getStatusClass(claim.status)">
-          <span nz-icon
-                [nzType]="claim.status === 'RESOLVED' ? 'check-circle' : 'file-exclamation'"
-                nzTheme="outline"></span>
+          <span nz-icon [nzType]="claim.status === 'RESOLVED' ? 'check-circle' : 'file-exclamation'"
+            nzTheme="outline"></span>
         </div>
         <div>
           <span class="claim-subject">{{ claim.subject }}</span>
@@ -34,8 +31,16 @@
       </span>
     </div>
 
-    <p class="claim-desc">{{ claim.description }}</p>
+    <div class="claim-info">
+      <span class="claim-phone">
+        📞 &nbsp; {{ claim.phoneNumber }}
+      </span>
 
+      <p class="claim-subject">
+        <span nz-icon nzType="file-text" nzTheme="outline"></span>
+         🧾 &nbsp;&nbsp;&nbsp;{{ claim.subject }}
+      </p>
+    </div>
     <div class="claim-footer">
       <span class="claim-user" *ngIf="claim.updatedAt">
         <span nz-icon nzType="clock-circle" nzTheme="outline"></span>
@@ -62,41 +67,47 @@
 <!-- Modal -->
 <div class="modal-overlay" *ngIf="isModalVisible" (click)="closeModal()">
   <div class="modal-card" (click)="$event.stopPropagation()">
+
     <div class="modal-card__header">
-      <div class="modal-card__icon"><span nz-icon nzType="file-exclamation" nzTheme="outline"></span></div>
+      <div class="modal-card__icon">
+        <span nz-icon nzType="file-exclamation" nzTheme="outline"></span>
+      </div>
       <div>
         <h3 class="modal-card__title">Nouvelle réclamation</h3>
         <p class="modal-card__sub">Décrivez votre problème et notre équipe vous répondra</p>
       </div>
-      <button class="modal-card__close" (click)="closeModal()"><span nz-icon nzType="close" nzTheme="outline"></span></button>
+      <button class="modal-card__close" (click)="closeModal()">
+        <span nz-icon nzType="close" nzTheme="outline"></span>
+      </button>
     </div>
+
     <div class="modal-card__body">
+
+      <!-- PHONE -->
       <div class="field-group">
-        <label class="field-label">Concerne la commande (Optionnel)</label>
-        <select class="field-input" [(ngModel)]="newClaim.orderId">
-          <option [ngValue]="null">Général (Aucune commande spécifique)</option>
-          <option *ngFor="let order of orders" [ngValue]="order.id">
-            Commande #{{ order.id }} - {{ order.amount }} TND ({{ order.createdAt | dateFormat }})
-          </option>
-        </select>
+        <label class="field-label">Numéro de téléphone *</label>
+        <input class="field-input" [(ngModel)]="newClaim.phoneNumber" placeholder="+216 12 345 678" />
       </div>
+
+      <!-- SUBJECT -->
       <div class="field-group">
-        <label class="field-label">Sujet <span class="required">*</span></label>
-        <input class="field-input" [(ngModel)]="newClaim.subject"
-               placeholder="Ex: Recharge non reçue, Mauvais montant..." />
+        <label class="field-label">Sujet *</label>
+        <input class="field-input" [(ngModel)]="newClaim.subject" placeholder="Ex: problème recharge, paiement..." />
       </div>
-      <div class="field-group">
-        <label class="field-label">Description <span class="required">*</span></label>
-        <textarea class="field-textarea" rows="4" [(ngModel)]="newClaim.description"
-                  placeholder="Décrivez votre problème en détail..."></textarea>
-      </div>
+
     </div>
+
     <div class="modal-card__footer">
-      <button class="modal-btn modal-btn--cancel" (click)="closeModal()">Annuler</button>
+      <button class="modal-btn modal-btn--cancel" (click)="closeModal()">
+        Annuler
+      </button>
+
       <button class="modal-btn modal-btn--submit" (click)="submitClaim()" [disabled]="submitting">
+
         <span nz-icon [nzType]="submitting ? 'loading' : 'send'" nzTheme="outline"></span>
         Soumettre
       </button>
     </div>
+
   </div>
 </div>

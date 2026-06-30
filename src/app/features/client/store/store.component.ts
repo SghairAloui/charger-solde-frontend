@@ -1,17 +1,17 @@
-import {Component, OnInit, OnDestroy} from '@angular/core';
-import {CommonModule} from '@angular/common';
-import {FormsModule} from '@angular/forms';
-import {RouterLink} from '@angular/router';
-import {NzIconModule} from 'ng-zorro-antd/icon';
-import {NzMessageService} from 'ng-zorro-antd/message';
-import {Subject, takeUntil} from 'rxjs';
-import {OperatorService} from '../../../core/services/operator.service';
-import {ClientService} from '../../../core/services/client.service';
-import {Operator} from '../../../core/models/operator.model';
-import {RechargePlan} from '../../../core/models/recharge-plan.model';
-import {CreateRechargeRequestDTO} from '../../../core/models/create-recharge-request.model';
-import {PageHeaderComponent} from '../../../shared/components/page-header/page-header.component';
-import {PhoneFormatPipe} from '../../../shared/pipes/phone-format.pipe';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { RouterLink } from '@angular/router';
+import { NzIconModule } from 'ng-zorro-antd/icon';
+import { NzMessageService } from 'ng-zorro-antd/message';
+import { Subject, takeUntil } from 'rxjs';
+import { OperatorService } from '../../../core/services/operator.service';
+import { ClientService } from '../../../core/services/client.service';
+import { Operator } from '../../../core/models/operator.model';
+import { RechargePlan } from '../../../core/models/recharge-plan.model';
+import { CreateRechargeRequestDTO } from '../../../core/models/create-recharge-request.model';
+import { PageHeaderComponent } from '../../../shared/components/page-header/page-header.component';
+import { PhoneFormatPipe } from '../../../shared/pipes/phone-format.pipe';
 
 @Component({
   selector: 'app-client-store',
@@ -21,14 +21,14 @@ import {PhoneFormatPipe} from '../../../shared/pipes/phone-format.pipe';
   styleUrl: './store.component.scss'
 })
 export class StoreComponent implements OnInit, OnDestroy {
-  operators: Operator[]     = [];
-  plans:     RechargePlan[] = [];
-  selectedOperator: Operator | null     = null;
-  selectedPlan:     RechargePlan | null = null;
-  phoneNumber  = '';
-  phoneError   = '';
-  currentStep  = 0;
-  submitting   = false;
+  operators: Operator[] = [];
+  plans: RechargePlan[] = [];
+  selectedOperator: Operator | null = null;
+  selectedPlan: RechargePlan | null = null;
+  phoneNumber = '';
+  phoneError = '';
+  currentStep = 0;
+  submitting = false;
 
   readonly steps = ['Opérateur', 'Offre', 'Téléphone', 'Succès'];
 
@@ -42,7 +42,7 @@ export class StoreComponent implements OnInit, OnDestroy {
     private readonly operatorService: OperatorService,
     private readonly clientService: ClientService,
     private readonly message: NzMessageService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.operatorService.getAll()
@@ -56,7 +56,7 @@ export class StoreComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: data => {
-          this.plans       = data;
+          this.plans = data;
           this.currentStep = 1;
         },
         error: () => this.message.error('Erreur lors du chargement des offres')
@@ -65,7 +65,7 @@ export class StoreComponent implements OnInit, OnDestroy {
 
   selectPlan(plan: RechargePlan): void {
     this.selectedPlan = plan;
-    this.currentStep  = 2;
+    this.currentStep = 2;
   }
 
   onPhoneInput(event: Event): void {
@@ -90,25 +90,25 @@ export class StoreComponent implements OnInit, OnDestroy {
     this.submitting = true;
     const dto: CreateRechargeRequestDTO = {
       phoneNumber: this.phoneNumber,
-      planId:      this.selectedPlan.id,
-      amount:      this.selectedPlan.price
+      planId: this.selectedPlan.id,
+      amount: this.selectedPlan.price
     };
     this.clientService.createRecharge(dto)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
-next: () => { 
-  this.currentStep = 3; 
-  this.message.success('✅ Demande de recharge créée avec succès'); 
-},        error:    () => { this.message.error('Erreur lors de la création'); this.submitting = false; },
+        next: () => {
+          this.currentStep = 3;
+          this.message.success('✅ Demande de recharge créée avec succès');
+        }, error: () => { this.message.error('Erreur lors de la création'); this.submitting = false; },
         complete: () => { this.submitting = false; }
       });
   }
 
   resetStore(): void {
     this.selectedOperator = null;
-    this.selectedPlan     = null;
-    this.phoneNumber      = '';
-    this.currentStep      = 0;
+    this.selectedPlan = null;
+    this.phoneNumber = '';
+    this.currentStep = 0;
   }
 
   getOpColor(name?: string): string {

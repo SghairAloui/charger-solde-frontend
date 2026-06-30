@@ -3,7 +3,7 @@
   <div class="dash-welcome__left">
     <div class="dash-welcome__greeting">
       <span class="dash-welcome__emoji">{{ greeting.emoji }}</span>
-      
+
     </div>
   </div>
   <div class="dash-welcome__right">
@@ -126,33 +126,29 @@
       </tbody>
     </table>
   </div>
-<!-- ✅ PAGINATION MODERNE -->
-<div class="pagination" *ngIf="totalPages > 1">
+  <!-- ✅ PAGINATION MODERNE -->
+  <div class="pagination" *ngIf="totalPages > 1">
 
-  <button class="page-btn"
-          (click)="prevPage()"
-          [disabled]="currentPage === 0">
+    <button class="page-btn" (click)="prevPage()" [disabled]="currentPage === 0">
 
-    <span nz-icon nzType="left" nzTheme="outline"></span>
-    Prev
-  </button>
+      <span nz-icon nzType="left" nzTheme="outline"></span>
+      Prev
+    </button>
 
-  <div class="page-info">
-    Page
-    <span class="page-current">{{ currentPage + 1 }}</span>
-    /
-    <span class="page-total">{{ totalPages }}</span>
+    <div class="page-info">
+      Page
+      <span class="page-current">{{ currentPage + 1 }}</span>
+      /
+      <span class="page-total">{{ totalPages }}</span>
+    </div>
+
+    <button class="page-btn" (click)="nextPage()" [disabled]="currentPage === totalPages - 1">
+
+      Next
+      <span nz-icon nzType="right" nzTheme="outline"></span>
+    </button>
+
   </div>
-
-  <button class="page-btn"
-          (click)="nextPage()"
-          [disabled]="currentPage === totalPages - 1">
-
-    Next
-    <span nz-icon nzType="right" nzTheme="outline"></span>
-  </button>
-
-</div>
 
   <ng-template #tableLoading>
     <div class="table-skeleton">
@@ -180,7 +176,7 @@
           <th>Client</th>
           <th>Email</th>
           <th>Total</th>
-          <th>Montant total</th>
+          <th>Solde validé</th>
           <th>En attente</th>
           <th>Validées</th>
           <th>Rejetées</th>
@@ -199,7 +195,11 @@
           </td>
           <td>{{ s.email }}</td>
           <td><span class="amount-badge">{{ s.totalRecharges }}</span></td>
-          <td><span class="amount-badge">{{ s.totalAmount }} TND</span></td>
+          <td>
+            <span class="amount-badge amount-badge--success">
+              {{ s.balance || 0 }} TND
+            </span>
+          </td>
           <td><span class="status-badge status-badge--warning">{{ s.pendingCount }}</span></td>
           <td><span class="status-badge status-badge--success">{{ s.validatedCount }}</span></td>
           <td><span class="status-badge status-badge--danger">{{ s.rejectedCount }}</span></td>

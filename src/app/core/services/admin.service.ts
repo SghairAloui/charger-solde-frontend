@@ -24,6 +24,8 @@ export interface ClientRechargeSummary {
   pendingCount: number;
   validatedCount: number;
   rejectedCount: number;
+    balance: number; // ✅ ajouter
+
 }
 
 @Injectable({providedIn: 'root'})

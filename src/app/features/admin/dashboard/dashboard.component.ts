@@ -34,9 +34,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
   today = new Date();
 
   greeting = { emoji: '☀️', text: 'Bonjour' };
-currentPage = 0;
-pageSize = 10;
-totalPages = 0;
+  currentPage = 0;
+  pageSize = 10;
+  totalPages = 0;
   private readonly destroy$ = new Subject<void>();
 
   // Avatar color palette
@@ -61,58 +61,58 @@ totalPages = 0;
     else this.greeting = { emoji: '🌙', text: 'Bonsoir' };
   }
 
-loadData(): void {
-  this.loading = true;
+  loadData(): void {
+    this.loading = true;
 
-  this.adminService.getDashboard()
-    .pipe(takeUntil(this.destroy$))
-    .subscribe({
-      next: (data) => {
-        this.stats = data;
-      },
-      error: () => {
-        this.message.error('Erreur dashboard');
-      }
-    });
+    this.adminService.getDashboard()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (data) => {
+          this.stats = data;
+        },
+        error: () => {
+          this.message.error('Erreur dashboard');
+        }
+      });
 
-  this.adminService.getRechargeRequests(this.currentPage)
-    .pipe(takeUntil(this.destroy$))
-    .subscribe({
-      next: (res) => {
-        this.recentRecharges = res.content;   // ✅ les 10 commandes
-        this.totalPages = res.totalPages;
+    this.adminService.getRechargeRequests(this.currentPage)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (res) => {
+          this.recentRecharges = res.content;   // ✅ les 10 commandes
+          this.totalPages = res.totalPages;
 
-        this.pendingCount = res.content
-          .filter((r: RechargeRequest) => r.status === 'PENDING')
-          .length;
-      },
-      error: () => {
-        this.message.error('Erreur recharges');
-      },
-      complete: () => {
-        this.loading = false;
-      }
-    });
+          this.pendingCount = res.content
+            .filter((r: RechargeRequest) => r.status === 'PENDING')
+            .length;
+        },
+        error: () => {
+          this.message.error('Erreur recharges');
+        },
+        complete: () => {
+          this.loading = false;
+        }
+      });
 
-  this.adminService.getClientRechargeSummary()
-    .pipe(takeUntil(this.destroy$))
-    .subscribe(summaries => {
-      this.clientSummaries = summaries;
-    });
-}
-nextPage(): void {
-  if (this.currentPage < this.totalPages - 1) {
-    this.currentPage++;
-    this.loadData();
+    this.adminService.getClientRechargeSummary()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(summaries => {
+        this.clientSummaries = summaries;
+      });
   }
-}
-
-prevPage(): void {
-  if (this.currentPage > 0) {
-    this.currentPage--;
-    this.loadData();
+  nextPage(): void {
+    if (this.currentPage < this.totalPages - 1) {
+      this.currentPage++;
+      this.loadData();
+    }
   }
-}
+
+  prevPage(): void {
+    if (this.currentPage > 0) {
+      this.currentPage--;
+      this.loadData();
+    }
+  }
 
   refresh(): void { this.loadData(); }
 

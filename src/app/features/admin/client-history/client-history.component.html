@@ -11,8 +11,8 @@
 <div class="history-toolbar fade-in-up">
   <div class="search-box">
     <span nz-icon nzType="search" nzTheme="outline"></span>
-    <input class="search-box__input" placeholder="Rechercher par nom, prénom ou email..."
-           [(ngModel)]="searchTerm" (input)="onSearch()" />
+    <input class="search-box__input" placeholder="Rechercher par nom, prénom ou email..." [(ngModel)]="searchTerm"
+      (input)="onSearch()" />
     <button class="search-box__clear" *ngIf="searchTerm" (click)="clearSearch()">
       <span nz-icon nzType="close-circle" nzTheme="fill"></span>
     </button>
@@ -22,13 +22,16 @@
     <button class="filter-pill" [class.filter-pill--active]="statusFilter === 'ALL'" (click)="setFilter('ALL')">
       Tous <span class="pill-count">{{ clients.length }}</span>
     </button>
-    <button class="filter-pill filter-pill--warning" [class.filter-pill--active]="statusFilter === 'PENDING'" (click)="setFilter('PENDING')">
+    <button class="filter-pill filter-pill--warning" [class.filter-pill--active]="statusFilter === 'PENDING'"
+      (click)="setFilter('PENDING')">
       En attente <span class="pill-count" *ngIf="getPendingTotal() > 0">{{ getPendingTotal() }}</span>
     </button>
-    <button class="filter-pill filter-pill--success" [class.filter-pill--active]="statusFilter === 'VALIDATED'" (click)="setFilter('VALIDATED')">
+    <button class="filter-pill filter-pill--success" [class.filter-pill--active]="statusFilter === 'VALIDATED'"
+      (click)="setFilter('VALIDATED')">
       Validées
     </button>
-    <button class="filter-pill filter-pill--danger" [class.filter-pill--active]="statusFilter === 'REJECTED'" (click)="setFilter('REJECTED')">
+    <button class="filter-pill filter-pill--danger" [class.filter-pill--active]="statusFilter === 'REJECTED'"
+      (click)="setFilter('REJECTED')">
       Rejetées
     </button>
   </div>
@@ -40,7 +43,7 @@
 <div class="history-container fade-in-up" style="animation-delay:0.1s">
   <div class="history-grid" *ngIf="!loading; else skelLoader">
     <div class="client-card" *ngFor="let client of filteredClients; let i = index"
-         [style.animation-delay]="(i * 0.05) + 's'" (click)="viewClientDetail(client)">
+      [style.animation-delay]="(i * 0.05) + 's'" (click)="viewClientDetail(client)">
 
       <!-- Header -->
       <div class="client-card__header">
@@ -66,8 +69,13 @@
         </div>
         <div class="stat-divider"></div>
         <div class="stat-item">
-          <span class="stat-value stat-value--amount">{{ client.totalAmount }} TND</span>
-          <span class="stat-label">Montant total</span>
+          <span class="stat-value stat-value--amount">
+            {{ client.balance || 0 }} TND
+          </span>
+
+          <span class="stat-label">
+            Solde validé
+          </span>
         </div>
       </div>
 

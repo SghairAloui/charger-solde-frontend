@@ -24,10 +24,8 @@
 
 <!-- Cards grid -->
 <div class="claim-cards fade-in-up" *ngIf="!loading && !errorMsg">
-  <div class="claim-card"
-       *ngFor="let claim of claims; let i = index"
-       [style.animation-delay]="(i * 0.06) + 's'"
-       [ngClass]="getStatusClass(claim.status)">
+  <div class="claim-card" *ngFor="let claim of claims; let i = index" [style.animation-delay]="(i * 0.06) + 's'"
+    [ngClass]="getStatusClass(claim.status)">
 
     <div class="claim-card__header">
       <div class="claim-card__left">
@@ -46,8 +44,16 @@
       </div>
     </div>
 
-    <p class="claim-desc">{{ claim.description }}</p>
+    <div class="claim-info">
+      <span class="claim-phone">
+        📞 &nbsp; {{ claim.phoneNumber }}
+      </span>
 
+      <p class="claim-subject">
+        <span nz-icon nzType="file-text" nzTheme="outline"></span>
+         🧾 &nbsp;&nbsp;&nbsp;&nbsp;{{ claim.subject }}
+      </p>
+    </div>
     <div class="claim-admin-response" *ngIf="claim.adminResponse">
       <div class="response-icon"><span nz-icon nzType="message" nzTheme="outline"></span></div>
       <div class="response-text">{{ claim.adminResponse }}</div>
@@ -98,14 +104,14 @@
     <div class="modal-card__body">
       <div class="field-group">
         <label class="field-label">Réponse au client</label>
-        <textarea class="field-textarea" [(ngModel)]="responseText" placeholder="Écrivez votre réponse au client..."></textarea>
+        <textarea class="field-textarea" [(ngModel)]="responseText"
+          placeholder="Écrivez votre réponse au client..."></textarea>
       </div>
       <div class="field-group">
         <label class="field-label">Nouveau statut</label>
         <div class="status-options">
           <label class="status-option" *ngFor="let s of ['IN_PROGRESS', 'RESOLVED', 'REJECTED']"
-                 [class.status-option--active]="selectedStatus === s"
-                 (click)="selectedStatus = $any(s)">
+            [class.status-option--active]="selectedStatus === s" (click)="selectedStatus = $any(s)">
             <span class="status-option-dot" [ngClass]="getStatusClass($any(s))"></span>
             {{ getStatusLabel($any(s)) }}
           </label>

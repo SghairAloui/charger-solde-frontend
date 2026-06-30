@@ -11,8 +11,10 @@ export interface ClaimDTO {
   id: number;
   userId: number;
   userName: string;
+
+  phoneNumber: string; // ✅ ADD
   subject: string;
-  description: string;
+
   status: ClaimStatus;
   adminResponse?: string;
   createdAt: string;
@@ -20,8 +22,8 @@ export interface ClaimDTO {
 }
 
 export interface CreateClaimRequest {
+  phoneNumber: string;
   subject: string;
-  description: string;
 }
 
 @Injectable({providedIn: 'root'})

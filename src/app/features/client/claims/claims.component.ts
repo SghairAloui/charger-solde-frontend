@@ -22,8 +22,10 @@ export class ClaimsComponent implements OnInit {
   loading       = true;
   isModalVisible = false;
   submitting     = false;
-  newClaim       = {subject: '', description: '', orderId: null as number | null};
-
+newClaim = {
+  phoneNumber: '',
+  subject: ''
+};
   constructor(
     private readonly claimService: ClaimService,
     private readonly clientService: ClientService,
@@ -49,42 +51,40 @@ export class ClaimsComponent implements OnInit {
     });
   }
 
-  showCreateModal(): void {
-    this.isModalVisible = true;
-    this.newClaim = {subject: '', description: '', orderId: null};
-  }
+showCreateModal(): void {
+  this.isModalVisible = true;
+  this.newClaim = {
+    phoneNumber: '',
+    subject: ''
+  };
+}
 
   closeModal(): void { this.isModalVisible = false; }
 
-  submitClaim(): void {
-    if (!this.newClaim.subject.trim() || !this.newClaim.description.trim()) {
-      this.message.warning('Veuillez remplir tous les champs obligatoires');
-      return;
-    }
-    
-    // Append order info to subject if selected
-    let finalSubject = this.newClaim.subject;
-    if (this.newClaim.orderId) {
-      finalSubject = `${finalSubject} (Commande #${this.newClaim.orderId})`;
-    }
-
-    this.submitting = true;
-    this.claimService.createClaim({
-      subject:     finalSubject,
-      description: this.newClaim.description
-    }).subscribe({
-      next: claim => {
-        this.claims.unshift(claim);
-        this.isModalVisible = false;
-        this.submitting     = false;
-        this.message.success('✅ Réclamation soumise — notre équipe vous répondra sous 24h');
-      },
-      error: () => {
-        this.submitting = false;
-        this.message.error('Erreur lors de la soumission. Veuillez réessayer.');
-      }
-    });
+submitClaim(): void {
+  if (!this.newClaim.phoneNumber.trim() || !this.newClaim.subject.trim()) {
+    this.message.warning('Veuillez remplir tous les champs obligatoires');
+    return;
   }
+
+  this.submitting = true;
+
+  this.claimService.createClaim({
+    phoneNumber: this.newClaim.phoneNumber,
+    subject: this.newClaim.subject
+  }).subscribe({
+    next: claim => {
+      this.claims.unshift(claim);
+      this.isModalVisible = false;
+      this.submitting = false;
+      this.message.success('✅ Réclamation soumise avec succès');
+    },
+    error: () => {
+      this.submitting = false;
+      this.message.error('Erreur lors de la soumission');
+    }
+  });
+}
 
   getStatusClass(status: ClaimStatus): string {
     const map: Record<ClaimStatus, string> = {
