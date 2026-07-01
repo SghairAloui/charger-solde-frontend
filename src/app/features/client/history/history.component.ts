@@ -9,6 +9,7 @@ import {RechargeRequest} from '../../../core/models/recharge-request.model';
 import {PageHeaderComponent} from '../../../shared/components/page-header/page-header.component';
 import {StatusLabelPipe} from '../../../shared/pipes/status-label.pipe';
 import {DateFormatPipe} from '../../../shared/pipes/date-format.pipe';
+import { RechargeStatus } from '../../../core/enums/recharge-status.enum';
 
 @Component({
   selector: 'app-client-history',
@@ -77,4 +78,18 @@ export class HistoryComponent implements OnInit, OnDestroy {
     this.destroy$.next();
     this.destroy$.complete();
   }
-}
+
+getImpactAmount(order: RechargeRequest): string {
+  const amount = order.amount;
+  const status = (order.status || '').toString().trim().toUpperCase();
+
+  if (status === 'VALIDATED') {
+    return `- ${amount} TND`;
+  }
+
+  if (status === 'REJECTED'|| status === 'ADMIN_CANCELLED') {
+    return `+ ${amount} TND`;
+  }
+
+  return `0 TND`;
+}}

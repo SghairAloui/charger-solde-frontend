@@ -109,12 +109,14 @@
 
         <!-- PENDING -->
         <ng-container *ngIf="order.status === 'PENDING'">
-          <button class="action-btn action-btn--approve" (click)="confirmAction(order, true)">
+          <button class="action-btn action-btn--approve" (click)="confirmAction(order, true)"
+            [disabled]="isLocked(order)">
             <span nz-icon nzType="check"></span>
             Valider
           </button>
 
-          <button class="action-btn action-btn--reject" (click)="confirmAction(order, false)">
+          <button class="action-btn action-btn--reject" (click)="confirmAction(order, false)"
+            [disabled]="isLocked(order)">
             <span nz-icon nzType="close"></span>
             Rejeter
           </button>
@@ -122,14 +124,17 @@
 
         <!-- VALIDATED -->
         <ng-container *ngIf="order.status === 'VALIDATED'">
-          <button class="action-btn action-btn--reject" (click)="openCancelModal(order)">
+          <button class="action-btn action-btn--reject" (click)="openCancelModal(order)" [disabled]="isLocked(order)">
             <span nz-icon nzType="stop"></span>
             Annuler
           </button>
         </ng-container>
 
       </div>
-
+      <!-- ⚠️ MESSAGE ICI -->
+      <div class="lock-message" *ngIf="isLocked(order)">
+        🔒 Action bloquée jusqu’à 00:00 (forfait différé)
+      </div>
     </div>
 
     <!-- EMPTY STATE -->
@@ -249,8 +254,7 @@
       <p>Ajoute une raison pour informer le client</p>
     </div>
 
-    <textarea class="modal-textarea" [(ngModel)]="cancelMessage"
-      placeholder="Message ....." rows="4">
+    <textarea class="modal-textarea" [(ngModel)]="cancelMessage" placeholder="Message ....." rows="4">
     </textarea>
 
     <div class="modal-footer">

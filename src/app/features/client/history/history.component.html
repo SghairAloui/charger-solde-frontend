@@ -3,19 +3,16 @@
 <div class="history-wrap fade-in-up">
   <!-- Timeline -->
   <div class="timeline" *ngIf="orders.length > 0; else empty">
-    <div class="timeline-item"
-         *ngFor="let order of orders; let i = index"
-         [style.animation-delay]="(i * 0.06) + 's'">
+    <div class="timeline-item" *ngFor="let order of orders; let i = index" [style.animation-delay]="(i * 0.06) + 's'">
 
       <!-- Left: indicator -->
       <div class="timeline-indicator">
-        <div class="timeline-dot"
-             [class.timeline-dot--success]="order.status === 'VALIDATED'"
-             [class.timeline-dot--danger]="order.status === 'REJECTED'"
-             [class.timeline-dot--warning]="order.status === 'PENDING'">
+        <div class="timeline-dot" [class.timeline-dot--success]="order.status === 'VALIDATED'"
+          [class.timeline-dot--danger]="order.status === 'REJECTED'"
+          [class.timeline-dot--warning]="order.status === 'PENDING'">
           <span nz-icon
-                [nzType]="order.status === 'VALIDATED' ? 'check' : order.status === 'REJECTED' ? 'close' : 'clock-circle'"
-                nzTheme="outline"></span>
+            [nzType]="order.status === 'VALIDATED' ? 'check' : order.status === 'REJECTED' ? 'close' : 'clock-circle'"
+            nzTheme="outline"></span>
         </div>
         <div class="timeline-line" *ngIf="i < orders.length - 1"></div>
       </div>
@@ -33,18 +30,24 @@
             <span class="timeline-content__phone">{{ order.phoneNumber }}</span>
 
             <div class="order-detail" *ngIf="order.status === 'ADMIN_CANCELLED' && order.adminMessage">
-          <span nz-icon nzType="stop" nzTheme="outline"></span> Raison:
-          <span class="cancel-message">
-            {{ order.adminMessage }}
-          </span>
-        </div>
+              <span nz-icon nzType="stop" nzTheme="outline"></span> Raison:
+              <span class="cancel-message">
+                {{ order.adminMessage }}
+              </span>
+            </div>
           </div>
           <div class="timeline-content__meta">
-            <span class="timeline-amount">{{ order.amount }} TND</span>
-            <span class="status-badge"
-                  [class.status-badge--success]="order.status === 'VALIDATED'"
-                  [class.status-badge--danger]="order.status === 'REJECTED'"
-                  [class.status-badge--warning]="order.status === 'PENDING'">
+            <div class="impact-amount" [ngClass]="{
+       'positive': order.status === 'REJECTED' || order.status === 'ADMIN_CANCELLED',
+       'negative': order.status === 'VALIDATED'
+     }">
+
+              {{ getImpactAmount(order) }}
+
+            </div>
+            <span class="status-badge" [class.status-badge--success]="order.status === 'VALIDATED'"
+              [class.status-badge--danger]="order.status === 'REJECTED' || order.status === 'ADMIN_CANCELLED'"
+              [class.status-badge--warning]="order.status === 'PENDING'">
               {{ order.status | statusLabel }}
             </span>
           </div>
@@ -73,24 +76,18 @@
 <div class="pagination fade-in-up" *ngIf="totalPages > 1">
 
   <!-- Prev -->
-  <button class="page-btn nav"
-          (click)="prevPage()"
-          [disabled]="page === 0">
+  <button class="page-btn nav" (click)="prevPage()" [disabled]="page === 0">
     ‹
   </button>
 
   <!-- Pages -->
-  <button class="page-btn"
-          *ngFor="let _ of [].constructor(totalPages); let i = index"
-          (click)="goToPage(i)"
-          [class.active]="page === i">
+  <button class="page-btn" *ngFor="let _ of [].constructor(totalPages); let i = index" (click)="goToPage(i)"
+    [class.active]="page === i">
     {{ i + 1 }}
   </button>
 
   <!-- Next -->
-  <button class="page-btn nav"
-          (click)="nextPage()"
-          [disabled]="page >= totalPages - 1">
+  <button class="page-btn nav" (click)="nextPage()" [disabled]="page >= totalPages - 1">
     ›
   </button>
 

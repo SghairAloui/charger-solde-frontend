@@ -14,6 +14,31 @@ import { RechargePlanDTO } from '../models/recharge-plan-dto.model';
 import { RechargeRequest } from '../models/recharge-request.model';
 import { RechargeStatus } from '../enums/recharge-status.enum';
 
+
+export interface SystemAlert {
+
+  id: number;
+
+  title: string;
+
+  message: string;
+
+  active: boolean;
+
+  createdAt: string;
+
+}
+
+
+export interface CreateAlertDTO {
+
+  title: string;
+
+  message: string;
+
+}
+
+
 export interface ClientRechargeSummary {
   clientId: number;
   nom: string;
@@ -24,7 +49,7 @@ export interface ClientRechargeSummary {
   pendingCount: number;
   validatedCount: number;
   rejectedCount: number;
-    cancelledCount?: number;
+  cancelledCount?: number;
 
   balance: number; // ✅ ajouter
 
@@ -136,5 +161,61 @@ export class AdminService {
       {},
       { params: { message } }
     );
+  }
+
+  // =========================
+  // 🔔 SYSTEM ALERTS
+  // =========================
+
+
+  createAlert(
+    dto: CreateAlertDTO
+  ): Observable<SystemAlert> {
+
+
+    return this.http.post<SystemAlert>(
+
+      `${this.apiUrl}${API.ADMIN.ALERTS}`,
+
+      dto
+
+    );
+
+  }
+
+
+
+
+
+  getAlerts(): Observable<SystemAlert[]> {
+
+
+    return this.http.get<SystemAlert[]>(
+
+      `${this.apiUrl}${API.ADMIN.ALERTS}`
+
+    );
+
+
+  }
+
+
+
+
+
+  disableAlert(
+    id: number
+  ): Observable<void> {
+
+
+    return this.http.patch<void>(
+
+      `${this.apiUrl}${API.ADMIN.ALERT_DISABLE(id)}`,
+
+      {}
+
+    );
+
+
   }
 }

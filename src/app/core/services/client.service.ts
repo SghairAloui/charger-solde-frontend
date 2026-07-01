@@ -6,6 +6,7 @@ import {API} from '../constants/app.constants';
 import {CreateRechargeRequestDTO} from '../models/create-recharge-request.model';
 import {RechargeRequest} from '../models/recharge-request.model';
 import { PageResponse } from '../models/PageResponse';
+import { SystemAlert } from './admin.service';
 
 @Injectable({providedIn: 'root'})
 export class ClientService {
@@ -33,6 +34,13 @@ getAllMyRecharges(): Observable<RechargeRequest[]> {
     `${this.apiUrl}${API.CLIENT.RECHARGES}/all`
   ).pipe(
     map(r => r.data ?? r)   // ✅ FIX IMPORTANT
+  );
+}
+
+
+getActiveAlerts(): Observable<SystemAlert[]> {
+  return this.http.get<SystemAlert[]>(
+    `${this.apiUrl}${API.CLIENT.ALERTS}`
   );
 }
 }

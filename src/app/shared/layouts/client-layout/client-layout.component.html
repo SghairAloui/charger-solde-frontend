@@ -6,10 +6,10 @@
     <!-- Brand -->
     <div class="client-sidebar__brand">
       <div class="sidebar-logo-icon">
-        <img src="assets/outline/logo.png" alt="Rassidi" class="sidebar-logo-img" />
+        <img src="assets/outline/logo.jpeg" alt="WAHA NET" class="sidebar-logo-img" />
       </div>
       <span class="sidebar-brand-name">
-        <span>Rassidi</span>
+        <span>WAHA NET</span>
       </span>
     </div>
 
@@ -97,11 +97,9 @@
         <button class="header-toggle" (click)="toggleSidebar()" [attr.aria-expanded]="isMobileView ? sidebarOpen : !sidebarCollapsed" aria-label="Basculer le menu">
           <span nz-icon [nzType]="isMobileView ? (sidebarOpen ? 'menu-fold' : 'menu-unfold') : (sidebarCollapsed ? 'menu-unfold' : 'menu-fold')" nzTheme="outline"></span>
         </button>
-        &nbsp;&nbsp;&nbsp;
         <div class="header-greeting">
           <span class="greeting-name">{{ user?.prenom }} !</span>
         </div>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         <div class="header-total" title="Montant total validé">
           <span class="header-total__label">Montant total</span>
           <span class="header-total__value">{{ totalSpent | number:'1.2-2' }} TND</span>
@@ -133,7 +131,7 @@
         <!-- Avatar dropdown -->
         <div class="header-profile" (click)="toggleHeaderMenu()">
           <div class="header-profile__avatar-icon">
-            <img *ngIf="!user?.photoUrl; else userPhoto" src="assets/outline/logo.png" alt="Rassidi" class="header-logo-img" />
+            <img *ngIf="!user?.photoUrl; else userPhoto" src="assets/outline/logo.jpeg" alt="WAHA NET" class="header-logo-img" />
             <ng-template #userPhoto>
               <img [src]="user?.photoUrl" alt="Photo" class="header-logo-img" />
             </ng-template>

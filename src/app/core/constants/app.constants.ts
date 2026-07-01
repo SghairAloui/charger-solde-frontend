@@ -1,8 +1,8 @@
 export const APP = {
-  NAME: 'Rassidi',
-  SHORT_NAME: 'Rassidi',
+  NAME: 'WAHA NET',
+  SHORT_NAME: 'WAHA NET',
   VERSION: '1.0.0',
-  COMPANY: 'Rassidi Solutions',
+  COMPANY: 'WAHA NET Solutions',
   SUPPORT_EMAIL: 'support@tunitopup.tn',
   SUPPORT_PHONE: '+216 XX XXX XXX'
 };
@@ -51,11 +51,15 @@ export const API = {
     OPERATORS: '/admin/operators',
     PLANS: '/admin/plans',
     RECHARGE: '/admin/recharge',
-    DASHBOARD: '/admin'
+    DASHBOARD: '/admin',
+    ALERTS:'/admin/alerts',
+    ALERT_DISABLE:(id:number)=>`/admin/alerts/${id}/disable`
   },
   CLIENT: {
     RECHARGE: '/client/recharge',
-    RECHARGES: '/client/recharges'
+    RECHARGES: '/client/recharges',
+    ALERTS: '/client/alerts'
+
   },
   OPERATORS: {
     BASE: '/operators',

@@ -220,4 +220,7 @@ loadOrders(): void {
     });
 
   }
+  isLocked(order: RechargeRequest): boolean {
+  return !order.plan?.active;
+}
 }

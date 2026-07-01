@@ -529,3 +529,16 @@
   font-weight: 500;
   font-style: italic;
 }
+
+.action-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  filter: grayscale(1);
+}
+
+.lock-message {
+  margin-top: 8px;
+  font-size: 12px;
+  color: #ff3b30;
+  font-weight: 600;
+}

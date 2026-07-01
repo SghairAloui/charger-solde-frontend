@@ -76,7 +76,7 @@
           <th>Montant</th>
           <th>Statut</th>
           <th>Date</th>
-          <th>Actions</th>
+         <!-- <th>Actions</th>-->
 
         </tr>
       </thead>
@@ -103,7 +103,7 @@
             </span>
           </td>
           <td class="date-cell">{{ item.createdAt | dateFormat }}</td>
-          <td>
+          <!--<td>
             <div class="action-btns" *ngIf="item.status === 'PENDING'">
               <button class="action-btn action-btn--approve" (click)="validate(item.id, true)" nz-tooltip
                 nzTooltipTitle="Valider">
@@ -115,7 +115,7 @@
               </button>
             </div>
             <span class="no-action" *ngIf="item.status !== 'PENDING'">—</span>
-          </td>
+          </td>-->
         </tr>
         <tr *ngIf="recentRecharges.length === 0">
           <td colspan="6" class="empty-row">

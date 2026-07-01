@@ -9,9 +9,9 @@ export const authRoutes: Routes = [
     path: '',
     component: AuthLayoutComponent,
     children: [
-      {path: 'login', component: LoginComponent, title: 'Connexion - Rassidi'},
-      {path: 'forgot-password', component: ForgotPasswordComponent, title: 'Mot de passe oublié - Rassidi'},
-      {path: 'reset-password', component: ResetPasswordComponent, title: 'Réinitialiser le mot de passe - Rassidi'},
+      {path: 'login', component: LoginComponent, title: 'Connexion - WAHA NET'},
+      {path: 'forgot-password', component: ForgotPasswordComponent, title: 'Mot de passe oublié - WAHA NET'},
+      {path: 'reset-password', component: ResetPasswordComponent, title: 'Réinitialiser le mot de passe - WAHA NET'},
       {path: '', redirectTo: 'login', pathMatch: 'full'}
     ]
   }

@@ -6,10 +6,10 @@
     <!-- Brand -->
     <div class="sidebar__brand">
       <div class="sidebar__logo-icon">
-        <img src="assets/outline/logo.png" alt="Rassidi" class="sidebar-logo-img" />
+        <img src="assets/outline/logo.jpeg" alt="WAHA NET" class="sidebar-logo-img" />
       </div>
       <span class="sidebar__brand-name">
-        <span>Rassidi</span>
+        <span>WAHA NET</span>
       </span>
       <span class="sidebar__badge">Admin</span>
     </div>
@@ -21,8 +21,7 @@
     <nav class="sidebar__nav">
 
       <!-- Dashboard -->
-      <a class="nav-item" routerLink="/admin/dashboard" routerLinkActive="nav-item--active"
-         title="Tableau de bord">
+      <a class="nav-item" routerLink="/admin/dashboard" routerLinkActive="nav-item--active" title="Tableau de bord">
         <div class="nav-item__icon">
           <span nz-icon nzType="dashboard" nzTheme="outline"></span>
         </div>
@@ -34,40 +33,35 @@
         <span class="nav-group__label">Gestion</span>
       </div>
 
-      <a class="nav-item" routerLink="/admin/clients" routerLinkActive="nav-item--active"
-         title="Clients">
+      <a class="nav-item" routerLink="/admin/clients" routerLinkActive="nav-item--active" title="Clients">
         <div class="nav-item__icon">
           <span nz-icon nzType="team" nzTheme="outline"></span>
         </div>
         <span class="nav-item__label">Clients</span>
       </a>
 
-      <a class="nav-item" routerLink="/admin/operators" routerLinkActive="nav-item--active"
-         title="Opérateurs">
+      <a class="nav-item" routerLink="/admin/operators" routerLinkActive="nav-item--active" title="Opérateurs">
         <div class="nav-item__icon">
           <span nz-icon nzType="build" nzTheme="outline"></span>
         </div>
         <span class="nav-item__label">Opérateurs</span>
       </a>
 
-      <a class="nav-item" routerLink="/admin/offers" routerLinkActive="nav-item--active"
-         title="Offres">
+      <a class="nav-item" routerLink="/admin/offers" routerLinkActive="nav-item--active" title="Offres">
         <div class="nav-item__icon">
           <span nz-icon nzType="gift" nzTheme="outline"></span>
         </div>
         <span class="nav-item__label">Offres</span>
       </a>
 
-      <a class="nav-item" routerLink="/admin/orders" routerLinkActive="nav-item--active"
-         title="Commandes">
+      <a class="nav-item" routerLink="/admin/orders" routerLinkActive="nav-item--active" title="Commandes">
         <div class="nav-item__icon">
           <span nz-icon nzType="ordered-list" nzTheme="outline"></span>
         </div>
         <span class="nav-item__label">Commandes</span>
       </a>
 
-      <a class="nav-item" routerLink="/admin/client-history" routerLinkActive="nav-item--active"
-         title="Historique">
+      <a class="nav-item" routerLink="/admin/client-history" routerLinkActive="nav-item--active" title="Historique">
         <div class="nav-item__icon">
           <span nz-icon nzType="history" nzTheme="outline"></span>
         </div>
@@ -79,8 +73,7 @@
         <span class="nav-group__label">Communication</span>
       </div>
 
-      <a class="nav-item" routerLink="/admin/notifications" routerLinkActive="nav-item--active"
-         title="Notifications">
+      <a class="nav-item" routerLink="/admin/notifications" routerLinkActive="nav-item--active" title="Notifications">
         <div class="nav-item__icon">
           <span nz-icon nzType="bell" nzTheme="outline"></span>
           <span class="nav-item__badge" *ngIf="unreadCount > 0">{{ unreadCount > 9 ? '9+' : unreadCount }}</span>
@@ -89,22 +82,26 @@
         <span class="nav-item__count" *ngIf="unreadCount > 0">{{ unreadCount > 9 ? '9+' : unreadCount }}</span>
       </a>
 
-      <a class="nav-item" routerLink="/admin/messaging" routerLinkActive="nav-item--active"
-         title="Messagerie">
+      <a class="nav-item" routerLink="/admin/messaging" routerLinkActive="nav-item--active" title="Messagerie">
         <div class="nav-item__icon">
           <span nz-icon nzType="message" nzTheme="outline"></span>
         </div>
         <span class="nav-item__label">Messagerie</span>
       </a>
 
-      <a class="nav-item" routerLink="/admin/claims" routerLinkActive="nav-item--active"
-         title="Réclamations">
+      <a class="nav-item" routerLink="/admin/claims" routerLinkActive="nav-item--active" title="Réclamations">
         <div class="nav-item__icon">
           <span nz-icon nzType="file-exclamation" nzTheme="outline"></span>
         </div>
         <span class="nav-item__label">Réclamations</span>
       </a>
 
+      <a class="nav-item" routerLink="/admin/alert" routerLinkActive="nav-item--active" title="Alert">
+        <div class="nav-item__icon">
+          <span nz-icon nzType="exclamation-circle" nzTheme="outline"></span>
+        </div>
+        <span class="nav-item__label">Alerte</span>
+      </a>
     </nav>
 
     <!-- WS Status -->
@@ -117,7 +114,7 @@
     <div class="sidebar__divider"></div>
 
     <!-- User profile section -->
-  <!--  <div class="sidebar__user" nz-dropdown [nzDropdownMenu]="userMenu" nzTrigger="click"
+    <!--  <div class="sidebar__user" nz-dropdown [nzDropdownMenu]="userMenu" nzTrigger="click"
          nzPlacement="topLeft">
       <div class="sidebar-role-icon sidebar-role-icon--admin" *ngIf="!user?.photoUrl">
         <span nz-icon nzType="crown" nzTheme="outline"></span>
@@ -162,8 +159,11 @@
     <!-- HEADER -->
     <header class="app-header">
       <div class="app-header__left">
-        <button class="header-toggle" (click)="toggleSidebar()" [attr.aria-expanded]="isMobileView ? sidebarOpen : !sidebarCollapsed" aria-label="Basculer le menu">
-          <span nz-icon [nzType]="isMobileView ? (sidebarOpen ? 'menu-fold' : 'menu-unfold') : (sidebarCollapsed ? 'menu-unfold' : 'menu-fold')" nzTheme="outline"></span>
+        <button class="header-toggle" (click)="toggleSidebar()"
+          [attr.aria-expanded]="isMobileView ? sidebarOpen : !sidebarCollapsed" aria-label="Basculer le menu">
+          <span nz-icon
+            [nzType]="isMobileView ? (sidebarOpen ? 'menu-fold' : 'menu-unfold') : (sidebarCollapsed ? 'menu-unfold' : 'menu-fold')"
+            nzTheme="outline"></span>
         </button>
         <!--<div class="header-breadcrumb">
           <span class="greeting-text">Bonne journée, <span class="greeting-name">{{ user?.prenom }} !</span></span>
@@ -193,7 +193,8 @@
         </button>
 
         <!-- Notifications bell -->
-        <button class="header-notif-btn header-action-btn" (click)="toggleNotifPanel()" [class.header-notif-btn--active]="notifPanelOpen">
+        <button class="header-notif-btn header-action-btn" (click)="toggleNotifPanel()"
+          [class.header-notif-btn--active]="notifPanelOpen">
           <div class="custom-badge-wrapper">
             <span nz-icon nzType="bell" nzTheme="outline" class="bell-icon"></span>
             <span class="custom-badge" *ngIf="unreadCount > 0">{{ unreadCount > 9 ? '9+' : unreadCount }}</span>
@@ -204,14 +205,16 @@
         <button class="header-notif-btn header-action-btn" (click)="goToMessaging()" title="Messagerie">
           <div class="custom-badge-wrapper">
             <span nz-icon nzType="message" nzTheme="outline"></span>
-            <span class="custom-badge custom-badge--msg" *ngIf="unreadMessages > 0">{{ unreadMessages > 9 ? '9+' : unreadMessages }}</span>
+            <span class="custom-badge custom-badge--msg" *ngIf="unreadMessages > 0">{{ unreadMessages > 9 ? '9+' :
+              unreadMessages }}</span>
           </div>
         </button>
 
         <!-- Profile Dropdown -->
         <div class="header-profile" (click)="toggleHeaderMenu()">
           <div class="header-profile__avatar-icon">
-            <img *ngIf="!user?.photoUrl; else userPhoto" src="assets/outline/logo.png" alt="Rassidi" class="header-logo-img" />
+            <img *ngIf="!user?.photoUrl; else userPhoto" src="assets/outline/logo.jpeg" alt="WAHA NET"
+              class="header-logo-img" />
             <ng-template #userPhoto>
               <img [src]="user?.photoUrl" alt="Photo" class="header-logo-img" />
             </ng-template>
@@ -260,9 +263,8 @@
         </div>
 
         <div class="notif-panel__body" *ngIf="notifications.length > 0; else noNotif">
-          <div class="notif-item" *ngFor="let n of notifications"
-               [class.notif-item--unread]="!n.read"
-               (click)="goToNotif(n)">
+          <div class="notif-item" *ngFor="let n of notifications" [class.notif-item--unread]="!n.read"
+            (click)="goToNotif(n)">
             <div class="notif-item__icon" [ngClass]="'notif-icon--' + n.type.toLowerCase()">
               <span nz-icon [nzType]="getNotifIcon(n.type)" nzTheme="outline"></span>
             </div>

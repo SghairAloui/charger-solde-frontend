@@ -186,3 +186,17 @@
   cursor: not-allowed;
   transform: none;
 }
+
+
+.impact-amount {
+  font-weight: 600;
+  margin-top: 4px;
+}
+
+.impact-amount.positive {
+  color: #2ecc71; // green
+}
+
+.impact-amount.negative {
+  color: #e74c3c; // red
+}

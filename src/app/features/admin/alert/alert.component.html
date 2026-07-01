@@ -1,0 +1,104 @@
+<app-page-header title="Historique des alert" subtitle="Consultez l'historique complet des alerts par client"></app-page-header>
+
+<div class="alert-container">
+
+  <!-- CREATE CARD -->
+  <div class="create-card">
+
+    <div class="create-title">
+      <div class="icon">
+        <span nz-icon nzType="notification" nzTheme="outline"></span>
+      </div>
+
+      <div>
+        <h2>Créer une alerte</h2>
+        <p>Envoyer une notification instantanée</p>
+      </div>
+    </div>
+
+
+
+    <div class="grid">
+
+      <div class="field">
+        <label>Titre</label>
+        <input class="input" placeholder="Ex: Maintenance serveur" [(ngModel)]="title">
+      </div>
+
+      <div class="field full">
+        <label>Message</label>
+        <textarea rows="4" class="input" placeholder="Détails de l'alerte..." [(ngModel)]="message"></textarea>
+      </div>
+
+    </div>
+
+
+
+
+    <button class="primary-btn" (click)="sendAlert()" [disabled]="loading">
+      <span nz-icon nzType="send"></span>
+      {{ loading ? 'Envoi...' : 'Envoyer l’alerte' }}
+    </button>
+
+  </div>
+
+
+
+
+<app-page-header title="Historique des alertes" subtitle="Dernières notifications envoyées"></app-page-header>
+
+
+  <!-- CARDS -->
+  <div class="alert-card" *ngFor="let alert of alerts">
+
+    <div class="left">
+
+      <div class="icon-box">
+        <span nz-icon nzType="warning" nzTheme="fill"></span>
+      </div>
+
+
+      <div class="content">
+
+        <div class="top">
+          <h3>{{alert.title}}</h3>
+
+          <span class="badge">ACTIVE</span>
+        </div>
+
+
+        <p>{{alert.message}}</p>
+
+
+        <div class="meta">
+          <span nz-icon nzType="clock-circle"></span>
+          {{alert.createdAt | date:'dd/MM/yyyy HH:mm'}}
+        </div>
+
+      </div>
+
+    </div>
+
+
+
+
+    <button class="danger-btn" (click)="disableAlert(alert.id)">
+      <span nz-icon nzType="stop"></span>
+      Désactiver
+    </button>
+
+  </div>
+
+
+
+
+
+  <!-- EMPTY -->
+  <div class="empty" *ngIf="alerts.length === 0">
+
+    <span nz-icon nzType="inbox"></span>
+    <p>Aucune alerte disponible</p>
+
+  </div>
+
+</div>

@@ -58,12 +58,12 @@
   <div class="plan-grid">
 
     <div class="plan-card" *ngFor="let plan of plans" [class.plan-card--selected]="selectedPlan?.id === plan.id"
-      [class.plan-card--inactive]="!plan.active" (click)="plan.active && selectPlan(plan)">
+      [class.plan-card--inactive]="!plan.active" (click)="selectPlan(plan)">
 
 
       <!-- Badge populaire -->
       <div class="plan-card__badge" *ngIf="plan.active && plan.validityDays >= 30">
-        Populaire
+        disponible
       </div>
 
 
@@ -131,6 +131,17 @@
       <span nz-icon nzType="arrow-left" nzTheme="outline"></span> Retour
     </button>
     <h3 class="step-title">Numéro à recharger</h3>
+    <!-- ⚠️ MESSAGE ICI (STEP 2) -->
+<div class="info-message" *ngIf="selectedPlan && !selectedPlan.active">
+  <span class="info-icon">⚠️</span>
+
+  <div class="info-content">
+    <strong>Forfait temporairement indisponible</strong>
+    <p>
+      Votre demande sera traitée automatiquement à partir de <b>demain à 00:00</b>.
+    </p>
+  </div>
+</div>
   </div>
 
   <div class="phone-wrap">

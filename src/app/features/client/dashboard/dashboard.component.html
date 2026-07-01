@@ -1,5 +1,27 @@
 <div class="dashboard-page fade-in-up">
 
+  <!-- ── SYSTEM ALERTS ── -->
+  <div class="alerts-container" *ngIf="alerts.length > 0">
+
+    <div class="alert-card" *ngFor="let alert of alerts; let i = index">
+
+      <button class="close-btn" (click)="removeAlert(i)">
+        <span nz-icon nzType="close"></span>
+      </button>
+
+      <div class="alert-icon">
+        <span nz-icon nzType="exclamation-circle" nzTheme="outline"></span>
+      </div>
+
+      <div class="alert-content">
+        <h4 class="alert-title">{{ alert.title }}</h4>
+        <p class="alert-message">{{ alert.message }}</p>
+      </div>
+
+    </div>
+
+  </div>
+
   <!-- ── 1. Welcome Banner ── -->
   <div class="welcome-banner">
     <div class="welcome-banner__icon">
@@ -79,11 +101,20 @@
       <div class="order-card" *ngFor="let order of recentOrders">
         <div class="order-card__header">
           <span class="order-amount">{{ order.amount }} TND</span>
-          <nz-tag
-            [nzColor]="order.status === 'VALIDATED' ? 'success' : order.status === 'REJECTED' ? 'error' : 'warning'"
-            [nzBordered]="false">
-            <span nz-icon
-              [nzType]="order.status === 'VALIDATED' ? 'check-circle' : order.status === 'REJECTED' ? 'close-circle' : 'clock-circle'"></span>
+          <nz-tag class="status-tag" [ngClass]="{
+    'status-tag--success': order.status === 'VALIDATED',
+    'status-tag--danger':
+      order.status === 'REJECTED' || order.status === 'ADMIN_CANCELLED',
+    'status-tag--warning': order.status === 'PENDING'
+  }" [nzBordered]="false">
+            <span nz-icon [nzType]="
+      order.status === 'VALIDATED'
+        ? 'check-circle'
+        : order.status === 'REJECTED' || order.status === 'ADMIN_CANCELLED'
+        ? 'close-circle'
+        : 'clock-circle'
+    "></span>
+
             {{ order.status | statusLabel }}
           </nz-tag>
         </div>
@@ -104,11 +135,11 @@
             </span>
           </div>
           <div class="order-detail" *ngIf="order.status === 'ADMIN_CANCELLED' && order.adminMessage">
-          <span nz-icon nzType="stop" nzTheme="outline"></span> Raison:
-          <span class="cancel-message">
-            {{ order.adminMessage }}
-          </span>
-        </div>
+            <span nz-icon nzType="stop" nzTheme="outline"></span> Raison:
+            <span class="cancel-message">
+              {{ order.adminMessage }}
+            </span>
+          </div>
         </div>
       </div>
 
