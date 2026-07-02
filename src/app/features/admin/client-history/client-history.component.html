@@ -79,6 +79,16 @@
         </div>
       </div>
 
+
+<!-- juste avant la fermeture de .client-card, après client-card__status -->
+<div class="client-card__actions">
+  <button class="balance-detail-btn" (click)="openBalance(client, $event)">
+    <span nz-icon nzType="wallet" nzTheme="outline"></span>
+    Voir solde / Payer
+  </button>
+</div>
+
+
       <!-- Status Breakdown -->
       <div class="client-card__status">
         <div class="status-chip status-chip--warning" *ngIf="client.pendingCount > 0">

@@ -220,7 +220,18 @@ loadOrders(): void {
     });
 
   }
-  isLocked(order: RechargeRequest): boolean {
-  return !order.plan?.active;
+isLocked(order: RechargeRequest): boolean {
+
+  if (order.plan?.active) {
+    return false;
+  }
+
+  const created = new Date(order.createdAt);
+
+  const unlockDate = new Date(created);
+
+  unlockDate.setHours(24,0,0,0);
+
+  return new Date() < unlockDate;
 }
 }

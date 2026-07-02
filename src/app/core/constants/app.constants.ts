@@ -52,8 +52,11 @@ export const API = {
     PLANS: '/admin/plans',
     RECHARGE: '/admin/recharge',
     DASHBOARD: '/admin',
-    ALERTS:'/admin/alerts',
-    ALERT_DISABLE:(id:number)=>`/admin/alerts/${id}/disable`
+    ALERTS: '/admin/alerts',
+    ALERT_DISABLE: (id: number) => `/admin/alerts/${id}/disable`,
+    BALANCE: (id: number) => `/admin/clients/${id}/balance`,
+
+    PAY: (id: number) => `/admin/clients/${id}/pay`,
   },
   CLIENT: {
     RECHARGE: '/client/recharge',

@@ -55,6 +55,23 @@ export interface ClientRechargeSummary {
 
 }
 
+export interface DailyBalanceDTO {
+  date: string;
+  balance: number;   // ← renommé, correspond au JSON réel
+  orders: number;
+}
+
+
+export interface ClientBalanceResponse {
+  clientId: number;
+  email: string;
+  startDate: string;
+  endDate: string;
+  totalBalance: number;
+  totalOrders: number;
+  details: DailyBalanceDTO[];
+}
+
 @Injectable({ providedIn: 'root' })
 export class AdminService {
   private readonly apiUrl = environment.apiUrl;
@@ -216,6 +233,33 @@ export class AdminService {
 
     );
 
+
+  }
+
+
+getClientBalance(
+  clientId: number,
+  startDate: string,
+  endDate: string
+): Observable<ClientBalanceResponse> {
+
+  return this.http.get<ClientBalanceResponse>(
+    `${this.apiUrl}${API.ADMIN.BALANCE(clientId)}`,
+    {
+      params: {
+        startDate,
+        endDate
+      }
+    }
+  );
+}
+
+  payClient(id: number): Observable<any> {
+
+    return this.http.patch(
+      `${this.apiUrl}${API.ADMIN.PAY(id)}`,
+      {}
+    );
 
   }
 }

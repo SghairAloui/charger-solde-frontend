@@ -1,0 +1,91 @@
+<div class="balance-modal">
+
+    <!-- Header custom -->
+    <div class="balance-modal__header">
+        <div class="header-left">
+            <div class="header-avatar">{{ clientName.charAt(0) }}</div>
+            <div class="header-text">
+                <span class="header-title">{{ clientName }}</span>
+                <span class="header-subtitle">{{ clientEmail }}</span>
+            </div>
+        </div>
+        <button class="header-close" (click)="close()">
+            <span nz-icon nzType="close" nzTheme="outline"></span>
+        </button>
+    </div>
+
+    <!-- Filtres -->
+    <div class="balance-modal__filters">
+        <span class="filters-label">
+            <span nz-icon nzType="calendar" nzTheme="outline"></span>
+            Période
+        </span>
+        <nz-range-picker class="filters-picker" [(ngModel)]="dateRange" (ngModelChange)="onDateRangeChange($event)"
+            nzFormat="dd/MM/yyyy" [nzAllowClear]="false">
+        </nz-range-picker>
+    </div>
+
+    <!-- Body -->
+    <div class="balance-modal__body">
+
+        <div class="balance-loading" *ngIf="loading">
+            <span nz-icon nzType="loading" nzTheme="outline"></span>
+            <span>Chargement du solde...</span>
+        </div>
+
+        <ng-container *ngIf="!loading && balanceData">
+
+            <!-- Summary -->
+            <div class="summary-row">
+                <div class="summary-card summary-card--primary">
+                    <span nz-icon nzType="wallet" nzTheme="outline" class="summary-icon"></span>
+                    <div class="summary-text">
+                        <span class="summary-value">{{ balanceData.totalBalance || 0 }} TND</span>
+                        <span class="summary-label">Solde de la période</span>
+                    </div>
+                </div>
+                <div class="summary-card">
+                    <span nz-icon nzType="check-circle" nzTheme="outline"
+                        class="summary-icon summary-icon--success"></span>
+                    <div class="summary-text">
+                        <span class="summary-value">{{ balanceData.totalOrders || 0 }}</span>
+                        <span class="summary-label">Recharges validées</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Table -->
+            <div class="detail-table">
+                <div class="detail-table__head">
+                    <span>Date</span>
+                    <span>Recharges</span>
+                    <span>Montant</span>
+                </div>
+                <div class="detail-table__body">
+                    <div class="detail-row" *ngFor="let day of balanceData.details"
+                        [class.detail-row--empty]="!day.balance && !day.orders">
+                        <span class="cell-date">{{ day.date | date:'dd/MM/yyyy' }}</span>
+                        <span class="cell-orders">{{ day.orders || 0 }}</span>
+                        <span class="cell-amount">{{ (day.balance || 0) | number:'1.2-2' }} TND</span>
+                    </div>
+                    <div class="detail-empty" *ngIf="balanceData.details.length === 0">
+                        <span nz-icon nzType="inbox" nzTheme="outline"></span>
+                        <p>Aucune donnée pour cette période</p>
+                    </div>
+                </div>
+            </div>
+
+        </ng-container>
+    </div>
+
+    <!-- Footer -->
+    <div class="balance-modal__footer">
+        <button class="btn btn--ghost" (click)="close()">Fermer</button>
+        <button class="btn btn--pay" [disabled]="!balanceData || balanceData.totalBalance <= 0 || paying"
+            (click)="confirmPay()">
+            <span nz-icon [nzType]="paying ? 'loading' : 'check-circle'" nzTheme="outline"></span>
+            {{ paying ? 'Traitement...' : 'Marquer comme payé' }}
+        </button>
+    </div>
+
+</div>

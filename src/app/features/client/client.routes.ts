@@ -15,13 +15,13 @@ export const clientRoutes: Routes = [
     component: ClientLayoutComponent,
     canActivate: [ClientGuard],
     children: [
-      {path: 'dashboard', component: DashboardComponent, title: 'Tableau de bord - Client - WAHA NET'},
-      {path: 'store', component: StoreComponent, title: 'Boutique - WAHA NET'},
-      {path: 'orders', component: OrdersComponent, title: 'Mes commandes - WAHA NET'},
-      {path: 'history', component: HistoryComponent, title: 'Historique - WAHA NET'},
-      {path: 'messaging', component: MessagingComponent, title: 'Messages - WAHA NET'},
-      {path: 'claims', component: ClaimsComponent, title: 'Réclamations - WAHA NET'},
-      {path: 'profile', component: ProfileComponent, title: 'Mon profil - WAHA NET'},
+      {path: 'dashboard', component: DashboardComponent, title: 'Tableau de bord - Client - Rassidi'},
+      {path: 'store', component: StoreComponent, title: 'Boutique - Rassidi'},
+      {path: 'orders', component: OrdersComponent, title: 'Mes commandes - Rassidi'},
+      {path: 'history', component: HistoryComponent, title: 'Historique - Rassidi'},
+      {path: 'messaging', component: MessagingComponent, title: 'Messages - Rassidi'},
+      {path: 'claims', component: ClaimsComponent, title: 'Réclamations - Rassidi'},
+      {path: 'profile', component: ProfileComponent, title: 'Mon profil - Rassidi'},
       {path: '', redirectTo: 'dashboard', pathMatch: 'full'}
     ]
   }

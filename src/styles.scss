@@ -328,3 +328,69 @@ a {
 @media (max-width: 768px) {
   .hide-mobile { display: none !important; }
 }
+
+
+@media (max-width: 576px) {
+  .balance-modal-wrapper {
+    .ant-modal {
+      margin: 0 auto;
+      max-width: calc(100vw - 16px) !important;
+    }
+
+    .ant-modal-content {
+      border-radius: 14px;
+    }
+  }
+}
+
+// =========================================
+// Calendrier du nz-range-picker — responsive mobile
+// =========================================
+@media (max-width: 576px) {
+  .ant-picker-dropdown {
+    max-width: 94vw;
+
+    .ant-picker-panel-container {
+      max-width: 94vw;
+      overflow-x: auto;
+    }
+
+    .ant-picker-panels {
+      flex-direction: column; // empile les 2 mois au lieu de côte à côte
+    }
+
+    .ant-picker-panel {
+      max-width: 100%;
+    }
+
+    .ant-picker-date-panel,
+    .ant-picker-body {
+      width: 100%;
+    }
+
+    .ant-picker-cell {
+      padding: 2px 0;
+    }
+  }
+
+  // Modale balance — cale bien dans l'écran
+  .balance-modal-wrapper {
+    .ant-modal {
+      margin: 0 auto;
+      max-width: calc(100vw - 16px) !important;
+      top: 12px;
+    }
+
+    .ant-modal-content {
+      border-radius: 14px;
+    }
+  }
+}
+
+@media (max-width: 360px) {
+  .ant-picker-dropdown {
+    .ant-picker-cell-inner {
+      font-size: 11px;
+    }
+  }
+}

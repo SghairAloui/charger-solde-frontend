@@ -10,13 +10,15 @@ import {AdminService, ClientRechargeSummary} from '../../../core/services/admin.
 import {PageHeaderComponent} from '../../../shared/components/page-header/page-header.component';
 import {StatusLabelPipe} from '../../../shared/pipes/status-label.pipe';
 import {DateFormatPipe} from '../../../shared/pipes/date-format.pipe';
+import { NzModalModule, NzModalService } from 'ng-zorro-antd/modal';
+import { ClientBalanceDetailComponent } from '../client-balance-detail/client-balance-detail.component';
 
 @Component({
   selector: 'app-client-history',
   standalone: true,
   imports: [
     CommonModule, FormsModule,
-    NzIconModule, NzToolTipModule,
+    NzIconModule, NzToolTipModule, NzModalModule,
     PageHeaderComponent, StatusLabelPipe, DateFormatPipe
   ],
   templateUrl: './client-history.component.html',
@@ -35,7 +37,9 @@ export class ClientHistoryComponent implements OnInit, OnDestroy {
   constructor(
     private readonly adminService: AdminService,
     private readonly message: NzMessageService,
-    private readonly router: Router
+    private readonly router: Router,
+        private readonly modal: NzModalService   // ← ajouté
+
   ) {}
 
   ngOnInit(): void {
@@ -109,4 +113,21 @@ export class ClientHistoryComponent implements OnInit, OnDestroy {
     this.destroy$.next();
     this.destroy$.complete();
   }
+openBalance(client: ClientRechargeSummary, event: Event): void {
+  event.stopPropagation();
+  this.modal.create({
+    nzContent: ClientBalanceDetailComponent,
+    nzData: {
+      clientId: client.clientId,
+      clientName: `${client.prenom} ${client.nom}`,
+      clientEmail: client.email
+    },
+    nzFooter: null,
+    nzWidth: '92vw',           // ← responsive au lieu de 560 fixe
+    nzClassName: 'balance-modal-wrapper',
+    nzBodyStyle: { padding: '0' },
+    nzClosable: false,
+    nzStyle: { maxWidth: '560px', top: '20px' }  // ← plafonne sur desktop, colle en haut sur mobile
+  });
+}
 }
